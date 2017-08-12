@@ -98,13 +98,13 @@
 <meta name="description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
 <meta name="keywords" content="java,java并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入剖析volatile">
+<meta property="og:title" content="原子操作及CAS算法">
 <meta property="og:url" content="http://yoursite.com/2017/08/12/原子操作及CAS算法/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
 <meta property="og:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
-<meta property="og:updated_time" content="2017-08-12T13:49:12.826Z">
+<meta property="og:updated_time" content="2017-08-12T13:51:39.559Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入剖析volatile">
+<meta name="twitter:title" content="原子操作及CAS算法">
 <meta name="twitter:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
 
 
@@ -139,7 +139,7 @@
 
 
 
-  <title>深入剖析volatile | Wunian's Blog</title>
+  <title>原子操作及CAS算法 | Wunian's Blog</title>
   
 
 
@@ -315,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">深入剖析volatile</h1>
+          <h1 class="post-title" itemprop="name headline">原子操作及CAS算法</h1>
         
 
         <div class="post-meta">
