@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-13T08:15:13.064Z</updated>
+  <updated>2017-08-13T08:21:53.160Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://yoursite.com/2017/08/13/synchronized%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%8F%8A%E9%94%81%E7%9A%84%E5%8D%87%E7%BA%A7%E5%92%8C%E5%AF%B9%E6%AF%94/"/>
     <id>http://yoursite.com/2017/08/13/synchronized的实现原理及锁的升级和对比/</id>
     <published>2017-08-13T08:13:38.216Z</published>
-    <updated>2017-08-13T08:15:13.064Z</updated>
+    <updated>2017-08-13T08:21:53.160Z</updated>
     
-    <content type="html"><![CDATA[<p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]<br>categories: java  </p>
-<h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
+    <content type="html"><![CDATA[<p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]    </p>
+<h2 id="categories-java"><a href="#categories-java" class="headerlink" title="categories: java "></a>categories: java </h2><h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
 <p>由JVM规范，<strong>JVM基于进入和退出Monitor对象来实现方法同步和代码块同步</strong>，但两者实现细节不一样。<br><strong>1、代码块同步是使用monitorenter和monitorexit指令实现的。<br>2、方法同步则是依靠方法修饰符上的ACC_SYNCHRONIZED实现</strong>。  </p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>&emsp;&emsp;monitorenter指令是在编译后插入到同步代码块的开始位置，而monitorexit是插入到方法结束处和异常处。<strong>任何一个对象都有一个monitor与之关联。当且一个monitor被持有后，它将处于锁定状态。线程执行到monitorenter指令时，将会尝试获取对象所对应的monitor的所有权，即尝试获得对象的锁。</strong><br>&emsp;&emsp;<strong>而synchronized用的锁是存放在Java对象头中的。</strong></p>
 <h2 id="Java对象头"><a href="#Java对象头" class="headerlink" title="Java对象头"></a>Java对象头</h2><p>HotSpot虚拟机中，对象在内存中的布局分为三块区域：对象头、实例数据和对齐填充。  </p>
@@ -71,8 +71,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;title: synchronized的实现原理及锁的升级和对比&lt;br&gt;date: 2017-08-13 16:14:00&lt;br&gt;tags: [java,java并发]&lt;br&gt;categories: java  &lt;/p&gt;
-&lt;h1 id=&quot;一、synchronized的实现原
+      &lt;p&gt;title: synchronized的实现原理及锁的升级和对比&lt;br&gt;date: 2017-08-13 16:14:00&lt;br&gt;tags: [java,java并发]    &lt;/p&gt;
+&lt;h2 id=&quot;categories-java&quot;&gt;&lt;a href=&quot;#categorie
     
     </summary>
     

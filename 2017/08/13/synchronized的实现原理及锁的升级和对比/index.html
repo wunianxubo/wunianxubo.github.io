@@ -95,16 +95,16 @@
 
 
 
-<meta name="description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]categories: java   一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synch">
+<meta name="description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]     categories: java 一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Sy">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Wunian&#39;s Blog">
 <meta property="og:url" content="http://yoursite.com/2017/08/13/synchronized的实现原理及锁的升级和对比/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]categories: java   一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synch">
-<meta property="og:updated_time" content="2017-08-13T08:15:13.064Z">
+<meta property="og:description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]     categories: java 一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Sy">
+<meta property="og:updated_time" content="2017-08-13T08:21:53.160Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Wunian&#39;s Blog">
-<meta name="twitter:description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]categories: java   一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synch">
+<meta name="twitter:description" content="title: synchronized的实现原理及锁的升级和对比date: 2017-08-13 16:14:00tags: [java,java并发]     categories: java 一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Sy">
 
 
 
@@ -361,8 +361,8 @@
       
 
       
-        <p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]<br>categories: java  </p>
-<h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
+        <p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]    </p>
+<h2 id="categories-java"><a href="#categories-java" class="headerlink" title="categories: java "></a>categories: java </h2><h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
 <p>由JVM规范，<strong>JVM基于进入和退出Monitor对象来实现方法同步和代码块同步</strong>，但两者实现细节不一样。<br><strong>1、代码块同步是使用monitorenter和monitorexit指令实现的。<br>2、方法同步则是依靠方法修饰符上的ACC_SYNCHRONIZED实现</strong>。  </p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>&emsp;&emsp;monitorenter指令是在编译后插入到同步代码块的开始位置，而monitorexit是插入到方法结束处和异常处。<strong>任何一个对象都有一个monitor与之关联。当且一个monitor被持有后，它将处于锁定状态。线程执行到monitorenter指令时，将会尝试获取对象所对应的monitor的所有权，即尝试获得对象的锁。</strong><br>&emsp;&emsp;<strong>而synchronized用的锁是存放在Java对象头中的。</strong></p>
 <h2 id="Java对象头"><a href="#Java对象头" class="headerlink" title="Java对象头"></a>Java对象头</h2><p>HotSpot虚拟机中，对象在内存中的布局分为三块区域：对象头、实例数据和对齐填充。  </p>
@@ -660,7 +660,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、synchronized的实现原理"><span class="nav-number">1.</span> <span class="nav-text">一、synchronized的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">1.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java对象头"><span class="nav-number">1.2.</span> <span class="nav-text">Java对象头</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象头"><span class="nav-number">1.2.1.</span> <span class="nav-text">对象头</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mark-Word"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Mark Word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型指针"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">类型指针</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁的升级和对比"><span class="nav-number">2.</span> <span class="nav-text">锁的升级和对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁"><span class="nav-number">2.1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#轻量级锁"><span class="nav-number">2.2.</span> <span class="nav-text">轻量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重量级锁"><span class="nav-number">2.3.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的优缺点对比"><span class="nav-number">2.4.</span> <span class="nav-text">锁的优缺点对比</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#categories-java"><span class="nav-number">1.</span> <span class="nav-text">categories: java </span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、synchronized的实现原理"><span class="nav-number"></span> <span class="nav-text">一、synchronized的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java对象头"><span class="nav-number">2.</span> <span class="nav-text">Java对象头</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象头"><span class="nav-number">2.1.</span> <span class="nav-text">对象头</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mark-Word"><span class="nav-number">2.1.1.</span> <span class="nav-text">Mark Word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型指针"><span class="nav-number">2.1.2.</span> <span class="nav-text">类型指针</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁的升级和对比"><span class="nav-number"></span> <span class="nav-text">锁的升级和对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁"><span class="nav-number">1.</span> <span class="nav-text">偏向锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#轻量级锁"><span class="nav-number">2.</span> <span class="nav-text">轻量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重量级锁"><span class="nav-number">3.</span> <span class="nav-text">重量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的优缺点对比"><span class="nav-number">4.</span> <span class="nav-text">锁的优缺点对比</span></a></li></ol></div>
             
 
           </div>
