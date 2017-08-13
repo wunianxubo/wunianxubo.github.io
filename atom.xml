@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-13T08:28:30.434Z</updated>
+  <updated>2017-08-13T08:35:11.964Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://yoursite.com/2017/08/13/synchronized%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%8F%8A%E9%94%81%E7%9A%84%E5%8D%87%E7%BA%A7%E5%92%8C%E5%AF%B9%E6%AF%94/"/>
     <id>http://yoursite.com/2017/08/13/synchronized的实现原理及锁的升级和对比/</id>
     <published>2017-08-13T08:13:38.216Z</published>
-    <updated>2017-08-13T08:28:30.434Z</updated>
+    <updated>2017-08-13T08:35:11.964Z</updated>
     
-    <content type="html"><![CDATA[<p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]    </p>
+    <content type="html"><![CDATA[<hr>
+<p>title: synchronized的实现原理及锁的升级和对比<br>date: 2017-08-13 16:14:00<br>tags: [java,java并发]    </p>
 <h2 id="categories-java"><a href="#categories-java" class="headerlink" title="categories: java "></a>categories: java </h2><h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
 <p>由JVM规范，<strong>JVM基于进入和退出Monitor对象来实现方法同步和代码块同步</strong>，但两者实现细节不一样。<br><strong>1、代码块同步是使用monitorenter和monitorexit指令实现的。<br>2、方法同步则是依靠方法修饰符上的ACC_SYNCHRONIZED实现</strong>。  </p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>monitorenter指令是在编译后插入到同步代码块的开始位置，而monitorexit是插入到方法结束处和异常处。<strong>任何一个对象都有一个monitor与之关联。当且一个monitor被持有后，它将处于锁定状态。线程执行到monitorenter指令时，将会尝试获取对象所对应的monitor的所有权，即尝试获得对象的锁。</strong><br>&emsp;&emsp;<strong>而synchronized用的锁是存放在Java对象头中的。</strong></p>
@@ -71,8 +72,9 @@
     
     <summary type="html">
     
-      &lt;p&gt;title: synchronized的实现原理及锁的升级和对比&lt;br&gt;date: 2017-08-13 16:14:00&lt;br&gt;tags: [java,java并发]    &lt;/p&gt;
-&lt;h2 id=&quot;categories-java&quot;&gt;&lt;a href=&quot;#categorie
+      &lt;hr&gt;
+&lt;p&gt;title: synchronized的实现原理及锁的升级和对比&lt;br&gt;date: 2017-08-13 16:14:00&lt;br&gt;tags: [java,java并发]    &lt;/p&gt;
+&lt;h2 id=&quot;categories-java&quot;&gt;&lt;a href=&quot;#cate
     
     </summary>
     
@@ -84,7 +86,7 @@
     <link href="http://yoursite.com/2017/08/12/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%8F%8ACAS%E7%AE%97%E6%B3%95/"/>
     <id>http://yoursite.com/2017/08/12/原子操作及CAS算法/</id>
     <published>2017-08-12T13:48:04.000Z</published>
-    <updated>2017-08-12T13:51:39.559Z</updated>
+    <updated>2017-08-13T08:35:11.965Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、原子操作的实现原理"><a href="#一、原子操作的实现原理" class="headerlink" title="一、原子操作的实现原理"></a>一、原子操作的实现原理</h1><h2 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h2><p><strong>1. 使用总线锁保证原子性</strong><br>&emsp;&emsp;<strong>总线锁</strong>就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。<br><strong>2. 使用缓存锁保证原子性</strong><br>&emsp;&emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期间，其他的处理器不能操作其他内存地址的数据，所以总线锁定开销较大，在某些场合用缓存锁代替总线锁。<br>&emsp;&emsp;<strong>缓存锁定</strong>是指内存区域如果被缓存在处理器的缓存行中，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上声言LOCK#信号，而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，<strong>因为缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</strong>  </p>
 <h2 id="Java如何实现原子操作"><a href="#Java如何实现原子操作" class="headerlink" title="Java如何实现原子操作"></a>Java如何实现原子操作</h2><p>&emsp;&emsp;Java中可以通过<strong>循环CAS</strong>和<strong>锁</strong>的方式来实现原子操作。<br><strong>1. 使用循环CAS实现原子操</strong><br>&emsp;&emsp;JVM中的CAS操作是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作，所以能保证原子操作的实现。<br><strong>2. 使用锁机制实现原子操作</strong><br>&emsp;&emsp;锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>除了偏向锁，JVM实现锁的方式都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁。</strong>  </p>
