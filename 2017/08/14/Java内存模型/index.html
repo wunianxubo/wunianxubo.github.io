@@ -95,17 +95,27 @@
 
 
 
-<meta name="description" content="一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synchronized括号中配置的对象.    由JVM规范，JVM基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者实现细节不一样。1、代码块同步是使用monitorenter和m">
+<meta name="description" content="一、Java内存模型的抽象结构&amp;emsp;&amp;emsp;java线程之间的通信由java内存模型（JMM）控制，JMM决定一个线程对共享变量（实例域、静态域和数组）的写入何时对另一个线程可见&amp;emsp;&amp;emsp;JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读、写共享变量的副本。 线程A与B之间要通信的话，必须经历">
 <meta name="keywords" content="java,java并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="synchronized的实现原理及锁的升级">
-<meta property="og:url" content="http://yoursite.com/2017/08/13/synchronized/index.html">
+<meta property="og:title" content="Java内存模型">
+<meta property="og:url" content="http://yoursite.com/2017/08/14/Java内存模型/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synchronized括号中配置的对象.    由JVM规范，JVM基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者实现细节不一样。1、代码块同步是使用monitorenter和m">
-<meta property="og:updated_time" content="2017-08-13T08:56:51.229Z">
+<meta property="og:description" content="一、Java内存模型的抽象结构&amp;emsp;&amp;emsp;java线程之间的通信由java内存模型（JMM）控制，JMM决定一个线程对共享变量（实例域、静态域和数组）的写入何时对另一个线程可见&amp;emsp;&amp;emsp;JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读、写共享变量的副本。 线程A与B之间要通信的话，必须经历">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/22.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm1.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm2.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm3.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm4.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm5.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm6.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/jvm6.png">
+<meta property="og:updated_time" content="2017-08-14T11:58:56.244Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="synchronized的实现原理及锁的升级">
-<meta name="twitter:description" content="一、synchronized的实现原理Java中的每一个对象都可以作为锁，有三种形式：1、对于普通同步方法，锁是当前实例对象。2、对于静态同步方法，锁是当前类的Class对象。3、对于同步代码块，锁是Synchronized括号中配置的对象.    由JVM规范，JVM基于进入和退出Monitor对象来实现方法同步和代码块同步，但两者实现细节不一样。1、代码块同步是使用monitorenter和m">
+<meta name="twitter:title" content="Java内存模型">
+<meta name="twitter:description" content="一、Java内存模型的抽象结构&amp;emsp;&amp;emsp;java线程之间的通信由java内存模型（JMM）控制，JMM决定一个线程对共享变量（实例域、静态域和数组）的写入何时对另一个线程可见&amp;emsp;&amp;emsp;JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读、写共享变量的副本。 线程A与B之间要通信的话，必须经历">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
 
 
 
@@ -133,13 +143,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/13/synchronized/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/14/Java内存模型/"/>
 
 
 
 
 
-  <title>synchronized的实现原理及锁的升级 | Wunian's Blog</title>
+  <title>Java内存模型 | Wunian's Blog</title>
   
 
 
@@ -298,7 +308,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/13/synchronized/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/14/Java内存模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -315,7 +325,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">synchronized的实现原理及锁的升级</h1>
+          <h1 class="post-title" itemprop="name headline">Java内存模型</h1>
         
 
         <div class="post-meta">
@@ -327,8 +337,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-13T16:37:25+08:00">
-                2017-08-13
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-14T19:58:00+08:00">
+                2017-08-14
               </time>
             
 
@@ -384,50 +394,23 @@
       
 
       
-        <h1 id="一、synchronized的实现原理"><a href="#一、synchronized的实现原理" class="headerlink" title="一、synchronized的实现原理"></a>一、synchronized的实现原理</h1><p>Java中的每一个对象都可以作为锁，有三种形式：<br><strong>1、对于普通同步方法，锁是当前实例对象。<br>2、对于静态同步方法，锁是当前类的Class对象。<br>3、对于同步代码块，锁是Synchronized括号中配置的对象.</strong>   </p>
-<p>由JVM规范，<strong>JVM基于进入和退出Monitor对象来实现方法同步和代码块同步</strong>，但两者实现细节不一样。<br><strong>1、代码块同步是使用monitorenter和monitorexit指令实现的。<br>2、方法同步则是依靠方法修饰符上的ACC_SYNCHRONIZED实现</strong>。  </p>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>monitorenter指令是在编译后插入到同步代码块的开始位置，而monitorexit是插入到方法结束处和异常处。<strong>任何一个对象都有一个monitor与之关联。当且一个monitor被持有后，它将处于锁定状态。线程执行到monitorenter指令时，将会尝试获取对象所对应的monitor的所有权，即尝试获得对象的锁。</strong><br>&emsp;&emsp;<strong>而synchronized用的锁是存放在Java对象头中的。</strong></p>
-<h2 id="Java对象头"><a href="#Java对象头" class="headerlink" title="Java对象头"></a>Java对象头</h2><p>HotSpot虚拟机中，对象在内存中的布局分为三块区域：对象头、实例数据和对齐填充。  </p>
-<h3 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h3><p><strong>对象头包括两部分：Mark Word 和 类型指针</strong>。  </p>
-<p><strong>Mark Word</strong><br><strong>Mark Word用于存储对象自身的运行时数据，如哈希吗（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳</strong>等，占用的内存大小和虚拟机的位长一致。  </p>
-<p><strong>类型指针</strong><br><strong>类型指针指向对象的类元数据，虚拟机通过这个指针确定该对象是哪个类的实例。</strong>   </p>
-<p>&emsp;&emsp;在对象处于未被锁定的情况下，mark word的32bit空间中有25bit存储对象的哈希吗、4bit存储对象的分代年龄、2bit存储锁的标记位、1bit固定为0。</p>
-<h1 id="锁的升级和对比"><a href="#锁的升级和对比" class="headerlink" title="锁的升级和对比"></a>锁的升级和对比</h1><p>&emsp;&emsp;为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”，锁共有四种状态：<strong>无锁状态、偏向锁状态、轻量级锁状态、重量级锁状态。</strong>  </p>
-<h2 id="1、偏向锁"><a href="#1、偏向锁" class="headerlink" title="1、偏向锁"></a>1、偏向锁</h2><p>&emsp;&emsp;大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低引入了偏向锁。<br>&emsp;&emsp;<strong>当一个线程访问同步块并获取锁时，会在对象头和栈帧中的锁记录里存储锁偏向的线程ID，以后该线程在进入和退出同步块时不需要进行CAS操作来加锁和解锁。轻量级锁的获取及释放依赖多次CAS原子指令，而偏向锁只需要一次CAS原子指令来置换线程ID</strong>。<br><strong>（1）偏向锁的获取</strong><br>1、通过 markOop mark = obj-&gt;mark() 获取对象的markOop数据mark，即对象头的Mark Word；<br>2、判断mark是否为可偏向状态，即Mark的偏向锁标志位为1，锁标志位为01；<br>3、判断mark中Java Thread的状态：如果为空，则进入步骤4；如果指向当前线程，则执行同步代码块；如果指向其它线程，进入步骤5；<br>4、通过CAS原子指令设置mark中Java Thread为当前线程ID，如果执行CAS成功，则执行同步代码块，否则进入步骤5；<br>5、如果CAS执行失败，表示当前存在多个线程竞争锁，当达到全局安全点（safepoint），获得偏向锁的线程被挂起，撤销偏向锁，并升级为轻量级锁，升级完成后被阻塞在安全点的线程继续执行同步代码块。<br><strong>（2）偏向锁的撤销</strong><br>①偏向锁使用了一种等到竞争出现才会释放锁的机制，所以当其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁。<br>②偏向锁的撤销，需要等待全局安全点（在这个时间点上没有正在执行的字节码）。<br>③暂停拥有偏向锁的线程，然后检查持有偏向锁的线程是否活着。<br>④如果线程不处于活动状态，则将对象头设置成无锁状态；撤销偏向锁，恢复到无锁（标志位为01）或轻量级锁（标志位为00）的状态。<br><strong>（3）偏向锁的关闭</strong><br>偏向锁默认开启，但会在应用程序启动几秒后才激活。使用JVM参数关闭延迟：-XX：BiasedLockingStartupDelay=0。如果确定应用程序里所有的锁通常都处于竞争状态下，通过JVM参数关闭偏向锁：-XX:-UseBiasedLocking=false，那么程序会默认进入轻量级锁状态。  </p>
-<h2 id="2、轻量级锁"><a href="#2、轻量级锁" class="headerlink" title="2、轻量级锁"></a>2、轻量级锁</h2><p>&emsp;&emsp;<strong>引入轻量级锁的目的：</strong>在多线程<strong>交替执行</strong>同步块时，尽量避免重量级锁引起的性能消耗，<strong>但是如果多个线程在同一时刻进入临界区，会导致轻量级锁膨胀升级为重量级锁。</strong><br><strong>（1）轻量级锁的获取</strong><br>当关闭偏向锁功能，或多个线程竞争偏向锁导致偏向锁升级为轻量级锁时，会尝试去获取轻量级锁。<br>1、通过 markOop mark = obj-&gt;mark() 获取对象的markOop数据mark，即对象头的Mark Word；<br>2、通过mark-&gt;is_neutral()方法判断mark是否为无锁状态：mark的偏向锁标志位为0（偏向锁关闭），锁标志位为01（无锁状态）；<br>3、如果mark处于无锁状态，则进入步骤4，否则进入步骤6；<br>4、把mark（对象头的Mark Word）复制到锁记录中（线程在执行同步块之前，JVM会现在当前线程的栈帧中创建用于存储锁记录的空间，_displaced_header字段）；<br>5、通过CAS尝试将Mark Word更新为指向锁记录的指针，如果更新成功，表示竞争到锁，执行同步代码，否则执行步骤6；<br>6、如果当前mark处于加锁状态，并且mark中的ptr指针指向当前线程的栈帧，则执行同步代码，否则说明有多个线程竞争轻量级锁，轻量级锁需要膨胀升级为重量级锁。  </p>
-<p><strong>假设线程A和B同时执行到临界区</strong><br>1、线程A、B都把Mark Word复制到各自的锁记录（_displaced_header字段），该数据保存在线程的栈帧上，是线程私有的；<br>2、CAS操作保证只有一个线程可以将Mark Word更新为指向锁记录的指针，假设A执行成功，并返回继续执行同步代码块；<br>3、线程B的CAS操作失败，退出临界区，通过 ObjectSynchronizer::inflate方法开始膨胀锁。  </p>
-<p><strong>（2）轻量级锁的解锁 </strong><br>轻量级锁解锁时，会使用CAS操作将锁记录中复制来的Mark Word重新替换回对象头。如果CAS成功，表示没有竞争发生，解锁成功；如果CAS失败，表示当前锁竞争存在，锁就会膨胀成重量级锁。  </p>
-<h2 id="3、重量级锁"><a href="#3、重量级锁" class="headerlink" title="3、重量级锁"></a>3、重量级锁</h2><p>&emsp;&emsp;重量级锁通过对象内部的监视器（monitor）实现，其中monitor的本质是依赖于底层操作系统的Mutex Lock实现，操作系统实现线程之间的切换需要从用户态切换到内核态，切换成本非常高。<br>&emsp;&emsp;<strong>因为自旋会消耗CPU，为了避免无用的自旋（比如获得锁的线程被阻塞住了），一旦锁升级成重量级锁，就不会再恢复到轻量级锁状态。</strong> 在这个状态下，其他线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后才会唤醒这些线程，被唤醒的线程就会进行新的一轮夺锁之争。  </p>
-<h2 id="锁的优缺点对比"><a href="#锁的优缺点对比" class="headerlink" title="锁的优缺点对比"></a>锁的优缺点对比</h2><table>
-<thead>
-<tr>
-<th>锁</th>
-<th>优点</th>
-<th>缺点</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>偏向锁</td>
-<td>加锁和解锁不需要额外的消耗,和执行非同步方法相比仅存在纳米级的差距</td>
-<td>如果线程间存在锁竞争，会带来额外的锁撤销的消耗</td>
-<td>适用于只有一个线程访问同步块的场景</td>
-</tr>
-<tr>
-<td>轻量级锁</td>
-<td>竞争的线程不会阻塞，提高了程序的响应速度</td>
-<td>如果始终得不到锁竞争的线程，使用自旋会消耗CPU</td>
-<td>追求响应时间，同步块执行速度非常快</td>
-</tr>
-<tr>
-<td>重量级锁</td>
-<td>线程竞争不使用自旋，不会消耗CPU</td>
-<td>线程阻塞，响应时间缓慢</td>
-<td>追求吞吐量，同步块执行速度较长</td>
-</tr>
-</tbody>
-</table>
+        <h1 id="一、Java内存模型的抽象结构"><a href="#一、Java内存模型的抽象结构" class="headerlink" title="一、Java内存模型的抽象结构"></a>一、Java内存模型的抽象结构</h1><p>&emsp;&emsp;<strong>java线程之间的通信由java内存模型（JMM）控制，JMM决定一个线程对共享变量（实例域、静态域和数组）的写入何时对另一个线程可见</strong><br>&emsp;&emsp;JMM定义了线程和主内存之间的抽象关系：<strong>线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读、写共享变量的副本。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" alt="image"></p>
+<p>线程A与B之间要通信的话，必须经历以下两个步骤：<br><strong>1、线程A把本地内存A中更新过的共享变量刷新到主内存中<br>2、线程B到主内存中去读取线程A之前已更新过的共享变量</strong>  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/22.png" alt="image">  </p>
+<h2 id="1、指令重排序"><a href="#1、指令重排序" class="headerlink" title="1、指令重排序"></a>1、指令重排序</h2><p>重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。<br><strong>①编译器优化的重排序</strong>：编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。<br><strong>②指令级并行的重排序</strong>：如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。<br><strong>③内存系统的重排序</strong>：由于处理器使用缓存和读、写缓冲区，这使得加载和存储操作看上去可能在乱序执行。<br>&emsp;&emsp;①属于编译器重排序，②、③属于处理器重排序。<strong>对于编译器，JMM的编译器重排序规则会禁止特定类型的编译器重排序。对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令，通过内存屏障指令来禁止特定类型的处理器重排序。</strong> 通过禁止特定类型的编译器重排序和处理器重排序，提供了一致的内存可见性保证。  </p>
+<h3 id="内存屏障（Memory-Barrier）"><a href="#内存屏障（Memory-Barrier）" class="headerlink" title="内存屏障（Memory Barrier）"></a>内存屏障（Memory Barrier）</h3><p>内存屏障，又称内存栅栏，是一个CPU指令，主要实现两个功能：<br><strong>1、保证特定操作的执行顺序。插入一条内存屏障，会告诉编译器和CPU，不管什么指令都不能和这条内存屏障指令重排序。<br>2、强制刷出各种CPU缓存，确保内存数据的可见性。</strong>  </p>
+<h3 id="数据依赖性"><a href="#数据依赖性" class="headerlink" title="数据依赖性"></a>数据依赖性</h3><p>如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作之间就存在数据依赖性。<strong>编译器和处理器在重排序时，会遵守数据依赖性，不会改变存在数据依赖性关系的两个操作的执行顺序。</strong>  </p>
+<h3 id="as-if-serial语义"><a href="#as-if-serial语义" class="headerlink" title="as-if-serial语义"></a>as-if-serial语义</h3><p><strong>as-if-serial语义的意思是：不管怎么重排序，（单线程）程序的执行结果不能被改变。</strong> 所以编译器和处理器不会改变存在数据依赖性关系的两个操作的执行顺序。</p>
+<h2 id="2、happens-before规则"><a href="#2、happens-before规则" class="headerlink" title="2、happens-before规则"></a>2、happens-before规则</h2><p>在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。<br><strong>一个happens-before规则对应于一个或者多个编译器和处理器重排序规则。</strong><br>①程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。<br>②监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。<br>③volatile变量规则：对一个volatile域的写，happens-before于任意后序对这个volatile域的读。<br>④传递性：如果A happens-before B，且B happens-before C，那么A happens-before C。<br><strong>注意：两个操作之间具有happens-before关系，并不意味着前一个操作必须在后一个操作之前执行！仅仅是要求前一个操作（执行的结果）对后一个操作是可见的，且前一个操作按顺序在第二个操作之前。</strong>  </p>
+<h1 id="二、JVM对Java内存模型的实现"><a href="#二、JVM对Java内存模型的实现" class="headerlink" title="二、JVM对Java内存模型的实现"></a>二、JVM对Java内存模型的实现</h1><p>在JVM内部，Java内存模型把内存分成了两部分：线程栈区和堆区，如下图：<br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm1.png" alt="image"><br><strong>JVM中运行的每个线程都拥有自己的线程栈，包含了当前线程执行的方法调用信息，还包含了当前方法的所有本地变量信息，是线程私有的。<br>堆区包含了Java应用创建的所有对象信息，不管对象的引用是属于一个成员变量还是方法中的本地变量，对象都会被存储在堆区。</strong>  </p>
+<p>下图展示了调用方法和本地变量存储在栈区，对象都存储在堆区：<br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm2.png" alt="image">  </p>
+<p><strong>1、一个本地变量如果是原始类型，那么存储在栈区；<br>2、一个本地变量可能是一个对象的引用，这种情况下，这个引用会被存储在栈中，但是对象本身仍然存储在堆区；<br>3、对于一个对象的成员方法，这些方法中包含本地变量，需要存储在栈中，即使所属的对象在堆区；<br>4、对于一个对象的成员变量，不管是原始类型还是包装类型，都被存储在堆区；<br>5、static类型的变量存储在堆区</strong>  </p>
+<p><strong>堆中的对象可以被多线程共享。如果一个线程获得一个对象的引用，它就可以访问这个对象的成员变量；如果两个线程同时调用了同一个对象的同一个方法，那么这两个线程便可以同时访问这个对象的成员变量，但是对于对象的本地变量，每个线程都会拷贝一份到自己的线程栈中。</strong> 如下图所示：<br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm3.png" alt="image">  </p>
+<h2 id="硬件内存架构"><a href="#硬件内存架构" class="headerlink" title="硬件内存架构"></a>硬件内存架构</h2><p><strong>当一个CPU需要访问主存时，会先去读取一部分主存数据到CPU缓存（CPU Cache），再读取CPU缓存到寄存器（CPU Registers）。当CPU需要写数据到主存时，同样会先flush寄存器到CPU缓存，然后在适当的时候把缓存数据flush到主存。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm4.png" alt="image">  </p>
+<h2 id="Java内存模型和硬件内存架构之间的关系"><a href="#Java内存模型和硬件内存架构之间的关系" class="headerlink" title="Java内存模型和硬件内存架构之间的关系"></a>Java内存模型和硬件内存架构之间的关系</h2><p><strong>Java内存模型和硬件内存架构不是一致的。硬件架构中并没有区分栈和堆，从硬件上看，不管是栈还是堆，大部分数据都会存到主存中，还有一部分会存到缓存和寄存器中。</strong> 他们之间的关系如下图：<br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm5.png" alt="image">  </p>
+<p>当对象和变量存储到不同的内存区域后，会出现一些问题：<br><strong>1、共享对象对各个线程的可见性<br>2、共享对象的竞争现象</strong>  </p>
+<h3 id="共享对象的可见性"><a href="#共享对象的可见性" class="headerlink" title="共享对象的可见性"></a>共享对象的可见性</h3><p><strong>当多个线程同时操作一个共享对象时，如果没有合理使用volatile和synchronized关键字，一个线程对共享对象的更新可能导致其他线程不可见。</strong><br>左边CPU中运行的线程从主存中拷贝共享对象obj到它的缓存，把obj的count改为2。但这个更新对右边CPU不可见，因为这个更新还没flush到主存中。可以使用volatile关键字解决问题。<br>如下图：<br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm6.png" alt="image"></p>
+<h3 id="竞争现象"><a href="#竞争现象" class="headerlink" title="竞争现象"></a>竞争现象</h3><p>如果多个线程共享一个对象，如果它们同时修改这个共享对象，这就产生了竞争现象。如下图所示，线程A、B共享一个对象obj，假设线程A、B从主存读取obj.count变量到自己的CPU缓存，并且两个线程都对obj.count做了加1操作，加1操作被执行了两个，最后count的值却为2。使用synchronized代码块解决问题，<strong>synchronized代码块可以保证同一个时刻只能有一个线程进入代码块，也能保证代码块中的所有变量从主存中去读，当线程退出代码块时，对所有变量的更新都会立即flush到主存。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/jvm6.png" alt="image"></p>
 
       
     </div>
@@ -472,8 +455,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/12/原子操作及CAS算法/" rel="next" title="原子操作及CAS算法">
-                <i class="fa fa-chevron-left"></i> 原子操作及CAS算法
+              <a href="/2017/08/13/synchronized/" rel="next" title="synchronized的实现原理及锁的升级">
+                <i class="fa fa-chevron-left"></i> synchronized的实现原理及锁的升级
               </a>
             
           </div>
@@ -481,10 +464,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/14/Java内存模型/" rel="prev" title="Java内存模型">
-                Java内存模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -694,7 +673,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、synchronized的实现原理"><span class="nav-number">1.</span> <span class="nav-text">一、synchronized的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">1.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java对象头"><span class="nav-number">1.2.</span> <span class="nav-text">Java对象头</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象头"><span class="nav-number">1.2.1.</span> <span class="nav-text">对象头</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁的升级和对比"><span class="nav-number">2.</span> <span class="nav-text">锁的升级和对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、偏向锁"><span class="nav-number">2.1.</span> <span class="nav-text">1、偏向锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、轻量级锁"><span class="nav-number">2.2.</span> <span class="nav-text">2、轻量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、重量级锁"><span class="nav-number">2.3.</span> <span class="nav-text">3、重量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的优缺点对比"><span class="nav-number">2.4.</span> <span class="nav-text">锁的优缺点对比</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、Java内存模型的抽象结构"><span class="nav-number">1.</span> <span class="nav-text">一、Java内存模型的抽象结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、指令重排序"><span class="nav-number">1.1.</span> <span class="nav-text">1、指令重排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存屏障（Memory-Barrier）"><span class="nav-number">1.1.1.</span> <span class="nav-text">内存屏障（Memory Barrier）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据依赖性"><span class="nav-number">1.1.2.</span> <span class="nav-text">数据依赖性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#as-if-serial语义"><span class="nav-number">1.1.3.</span> <span class="nav-text">as-if-serial语义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、happens-before规则"><span class="nav-number">1.2.</span> <span class="nav-text">2、happens-before规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、JVM对Java内存模型的实现"><span class="nav-number">2.</span> <span class="nav-text">二、JVM对Java内存模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#硬件内存架构"><span class="nav-number">2.1.</span> <span class="nav-text">硬件内存架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型和硬件内存架构之间的关系"><span class="nav-number">2.2.</span> <span class="nav-text">Java内存模型和硬件内存架构之间的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#共享对象的可见性"><span class="nav-number">2.2.1.</span> <span class="nav-text">共享对象的可见性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#竞争现象"><span class="nav-number">2.2.2.</span> <span class="nav-text">竞争现象</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
