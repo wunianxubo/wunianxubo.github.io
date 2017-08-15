@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="Wunian&#39;s Blog">
 <meta property="og:description" content="简述在java.util.concurrent.locks包中有很多Lock的实现类，常用的有ReetrantLock、ReadWriteLock，以及CountDownLatch，内部实现都依赖AbstractQueuedSynchronizer（AQS）类，AQS又称为队列同步器，完成代码块的并发访问控制。   定义12345678910public abstract class Abstra">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/aqs1.png">
-<meta property="og:updated_time" content="2017-08-15T08:38:21.126Z">
+<meta property="og:updated_time" content="2017-08-15T12:32:34.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java队列同步器AQS">
 <meta name="twitter:description" content="简述在java.util.concurrent.locks包中有很多Lock的实现类，常用的有ReetrantLock、ReadWriteLock，以及CountDownLatch，内部实现都依赖AbstractQueuedSynchronizer（AQS）类，AQS又称为队列同步器，完成代码块的并发访问控制。   定义12345678910public abstract class Abstra">
@@ -392,7 +392,7 @@
 <h3 id="Node结点"><a href="#Node结点" class="headerlink" title="Node结点"></a>Node结点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">static final class Node&#123;</div><div class="line">    static final Node SHARED = new Node();</div><div class="line">    static final Node EXCLUSIVE = null;</div><div class="line">    static final int CANCELLED =  1;</div><div class="line">    static final int SIGNAL    = -1;</div><div class="line">    static final int CONDITION = -2;</div><div class="line">    static final int PROPAGATE = -3;</div><div class="line">    volatile int waitStatus;//描述对应线程的状态</div><div class="line">    volatile Node prev;//上一个节点</div><div class="line">    volatile Node next;//后一个节点</div><div class="line">    volatile Thread thread;//当前线程</div><div class="line">    Node nextwaiter;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>内部的FIFO队列（先进先出）：<br><img src="http://osrmzp0jr.bkt.clouddn.com/aqs1.png" alt="image"><br>黄色结点是head结点，是一个空节点，也就是代表当前持有锁的线程。每当有线程竞争失败，都会插入到队列的尾节点，tail节点始终指向队列的最后一个元素。<br>每个节点，除了存储了当前线程，前后节点的引用外，还有一个waitStatus变量，用于描述对应线程的状态：有的线程可能获取到锁，有的可能因为某些原因放弃竞争，有的线程可能在等待满足条件，满足后再执行。共四个状态：<br><strong>1、CANCELLED 取消状态  1<br>2、SIGNAL 等待触发状态  -1<br>3、CONDITION 等待条件状态  -2<br>4、PROPAGATE 状态需要向后传播  -3</strong><br>等待队列是FIFO先进先出，<strong>只有当前一个节点的状态是SIGNAL时，当前节点的线程才能被挂起。</strong>  </p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>子类重写tryAcquire和tryRelease方法，并通过CAS指令修改状态变量state。  </p>
-<h3 id="线程获取锁的过程"><a href="#线程获取锁的过程" class="headerlink" title="线程获取锁的过程"></a>线程获取锁的过程</h3><p>如线程A和线程B进行竞争：<br>1、如果线程A执行CAS指令修改state成功，那么state被修改并返回true，线程A继续执行。<br>2、如果线程A执行CAS指令修改state失败，说明线程B此时执行CAS指令成功了，这时线程A会执行步骤3。<br>3、生成新Node节点node，通过CAS指令插入到等待队列的队尾（因为在同一时刻可能会有多个Node节点插入到等待队列中）。<br>4、<strong>node插入到队尾后，线程不会立马被挂起，而是会进行自旋操作。因为在node的插入过程中，线程B可能已经执行完成，所以要判断该node的前一个节点prev是否为head节点（代表线程B），如果prev==head，说明当前节点是队列中的第一个有效的节点，因此会再次尝试tryAcquire获取锁：</strong><br>&emsp;&emsp;①、如果成功获取到锁，表明线程B已经执行完成，线程A不需要挂起；<br>&emsp;&emsp;②、如果获取锁失败，表示线程B还未完成，至少state值还未被修改，那么执行步骤5。<br>5、只有当前一个节点的的状态是SIGNAL时，当前节点的线程才能被挂起，那么：<br>&emsp;&emsp;<strong>①如果prev的waitStatus=0，那么当前线程通过CAS指令修改waitStatus为Node.SIGNAL；</strong><br>&emsp;&emsp;<strong>②如果prev的waitStatus&gt;0，表明prev的线程状态是CANCELLED，需要从队列中删除；</strong><br>&emsp;&emsp;<strong>③如果prev的waitStatus为Node.SIGNAL，那么通过LockSupport.park()方法把线程A挂起，并等待被唤醒，被唤醒后进入步骤6。</strong><br>6、线程每次被唤醒时，都要进行中断检测，如果发现当前线程被中断，就抛出InterruptedException并退出循环。并不是被唤醒的线程就一定能获得锁，必须调用tryAcquire重新竞争。  </p>
+<h3 id="线程获取锁的过程"><a href="#线程获取锁的过程" class="headerlink" title="线程获取锁的过程"></a>线程获取锁的过程</h3><p>如线程A和线程B进行竞争：<br>1、如果线程A执行CAS指令修改state成功，那么state被修改并返回true，线程A继续执行。<br>2、如果线程A执行CAS指令修改state失败，说明线程B此时执行CAS指令成功了，这时线程A会执行步骤3。<br>3、生成新Node节点node，通过CAS指令插入到等待队列的队尾（因为在同一时刻可能会有多个Node节点插入到等待队列中）。<br>4、<strong>node插入到队尾后，线程不会立马被挂起，而是会进行自旋操作。因为在node的插入过程中，线程B可能已经执行完成，所以要判断该node的前一个节点prev是否为head节点（代表线程B），如果prev==head，说明当前节点是队列中的第一个有效的节点，因此会再次尝试tryAcquire获取锁：</strong><br>&emsp;&emsp;①、如果成功获取到锁，表明线程B已经执行完成，线程A不需要挂起；<br>&emsp;&emsp;②、如果获取锁失败，表示线程B还未完成，至少state值还未被修改，那么执行步骤5。<br>5、只有在前一个节点的的状态是SIGNAL时，当前节点的线程才能被挂起，那么：<br>&emsp;&emsp;<strong>①如果prev的waitStatus=0，那么当前线程通过CAS指令修改waitStatus为Node.SIGNAL；</strong><br>&emsp;&emsp;<strong>②如果prev的waitStatus&gt;0，表明prev的线程状态是CANCELLED，需要从队列中删除；</strong><br>&emsp;&emsp;<strong>③如果prev的waitStatus为Node.SIGNAL，那么通过LockSupport.park()方法把线程A挂起，并等待被唤醒，被唤醒后进入步骤6。</strong><br>6、线程每次被唤醒时，都要进行中断检测，如果发现当前线程被中断，就抛出InterruptedException并退出循环。并不是被唤醒的线程就一定能获得锁，必须调用tryAcquire重新竞争。  </p>
 <h3 id="线程释放锁的过程"><a href="#线程释放锁的过程" class="headerlink" title="线程释放锁的过程"></a>线程释放锁的过程</h3><p><strong>1、如果头节点head的waitStatus的值为-1，则用CAS指令重置为0；<br>2、找到waitStatus的值小于0的节点s，通过LockSupport.unpark(s.thread)唤醒线程。</strong>  </p>
 
       
@@ -447,6 +447,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/15/CountDownLatch/" rel="prev" title="CountDownLatch">
+                CountDownLatch <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -541,7 +545,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>

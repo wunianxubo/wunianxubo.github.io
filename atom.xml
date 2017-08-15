@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-15T08:38:21.126Z</updated>
+  <updated>2017-08-15T12:33:23.314Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,11 +16,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CountDownLatch</title>
+    <link href="http://yoursite.com/2017/08/15/CountDownLatch/"/>
+    <id>http://yoursite.com/2017/08/15/CountDownLatch/</id>
+    <published>2017-08-15T12:33:00.000Z</published>
+    <updated>2017-08-15T12:33:23.314Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是CountDownLatch"><a href="#什么是CountDownLatch" class="headerlink" title="什么是CountDownLatch"></a>什么是CountDownLatch</h2><p><strong>CountDownLatch也叫闭锁，在jdk1.5中引入，允许一个或多个线程等待其他线程完成操作后再执行。<br>CountDownLatch内部会维护一个初始值等于线程数量的计数器，主线程执行await方法，如果计数器大于0，那么主线程就阻塞等待。每当一个线程完成任务，计数器值就减一。当计数器为0时，表示所有的线程都已经完成任务，阻塞等待的主线程被唤醒，继续执行。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/countdownlatch1.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">public class TestCountDownLatch&#123;</div><div class="line">	public static void main(String[] args)&#123;</div><div class="line">	final CountDownLatch latch = new CountDownLatch(5);</div><div class="line">	LatchDemo ld = new LatchDemo(latch);</div><div class="line"></div><div class="line">	long start = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	for(int i = 0; i&lt;5; i++)&#123;</div><div class="line">		new Thread(ld).start();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	try&#123;</div><div class="line">		latch.await();//await方法挂起主线程</div><div class="line">	&#125;catch(InterruptedException e)&#123;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	long end = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	System.out.println(&quot;耗费时间：&quot;+(end-start));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class LatchDemo implements Runnable&#123;</div><div class="line">	private CountDownLatch latch;</div><div class="line">	public LatchDemo(CountDownLatch latch)&#123;</div><div class="line">		this.latch=latch;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void run()&#123;</div><div class="line">		synchronized(this)&#123;</div><div class="line">			try&#123;</div><div class="line">				for(int i=0; i&lt;50000; i++)&#123;</div><div class="line">					if(i%2==0)&#123;</div><div class="line">						System.out.println(i);</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;finally&#123;</div><div class="line">				latch.countDown();//计数器减一</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>CountDownLatch的实现主要是基于Java同步器AQS。其内部维护了一个AQS子类，并重写了相关的方法。  </p>
+<h3 id="await实现"><a href="#await实现" class="headerlink" title="await实现"></a>await实现</h3><p>主线程执行await方法，tryAcquireShared方法中，如果state（state为未完成线程任务的线程个数）不等于0，返回-1，将主线程加入到等待队列中，主线程通过LockSupport.park(this)被挂起。<br>await():使当前线程在计数器至零之前一直等待，除非线程被中断。  </p>
+<h3 id="countDown实现"><a href="#countDown实现" class="headerlink" title="countDown实现"></a>countDown实现</h3><p>countDown方法实现state的减1操作，即通过unsafe.compareAndSwapInt方法设置state值。<br>如果state的值为0，那么通过LockSupport.unpark唤醒await方法中挂起的主线程。  </p>
+<h2 id="join方法"><a href="#join方法" class="headerlink" title="join方法"></a>join方法</h2><p><strong>join用于让当前的执行线程等待join线程执行结束。其实现原理是不停检查join线程是否存活，如果join线程存活就让当前线程继续等待下去。</strong> CountDownLatch也实现了join功能，并且比join功能更丰富。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;什么是CountDownLatch&quot;&gt;&lt;a href=&quot;#什么是CountDownLatch&quot; class=&quot;headerlink&quot; title=&quot;什么是CountDownLatch&quot;&gt;&lt;/a&gt;什么是CountDownLatch&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Co
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Java队列同步器AQS</title>
     <link href="http://yoursite.com/2017/08/15/java%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8AQS/"/>
     <id>http://yoursite.com/2017/08/15/java队列同步器AQS/</id>
     <published>2017-08-15T08:37:00.000Z</published>
-    <updated>2017-08-15T08:38:21.126Z</updated>
+    <updated>2017-08-15T12:32:34.015Z</updated>
     
     <content type="html"><![CDATA[<h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>在java.util.concurrent.locks包中有很多Lock的实现类，<strong>常用的有ReetrantLock、ReadWriteLock，以及CountDownLatch，内部实现都依赖AbstractQueuedSynchronizer（AQS）类，AQS又称为队列同步器，完成代码块的并发访问控制。</strong>  </p>
 <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchronizer implements java.io.Serializable&#123;</div><div class="line">    //等待队列的头结点</div><div class="line">    private transient volatile Node head;</div><div class="line">    //等待队列的尾结点</div><div class="line">    priivate transient volatile Node tail;</div><div class="line">    //同步状态</div><div class="line">    private volatile int state;</div><div class="line">    protected final int getState()&#123; return state; &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -28,7 +57,7 @@
 <h3 id="Node结点"><a href="#Node结点" class="headerlink" title="Node结点"></a>Node结点</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">static final class Node&#123;</div><div class="line">    static final Node SHARED = new Node();</div><div class="line">    static final Node EXCLUSIVE = null;</div><div class="line">    static final int CANCELLED =  1;</div><div class="line">    static final int SIGNAL    = -1;</div><div class="line">    static final int CONDITION = -2;</div><div class="line">    static final int PROPAGATE = -3;</div><div class="line">    volatile int waitStatus;//描述对应线程的状态</div><div class="line">    volatile Node prev;//上一个节点</div><div class="line">    volatile Node next;//后一个节点</div><div class="line">    volatile Thread thread;//当前线程</div><div class="line">    Node nextwaiter;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>内部的FIFO队列（先进先出）：<br><img src="http://osrmzp0jr.bkt.clouddn.com/aqs1.png" alt="image"><br>黄色结点是head结点，是一个空节点，也就是代表当前持有锁的线程。每当有线程竞争失败，都会插入到队列的尾节点，tail节点始终指向队列的最后一个元素。<br>每个节点，除了存储了当前线程，前后节点的引用外，还有一个waitStatus变量，用于描述对应线程的状态：有的线程可能获取到锁，有的可能因为某些原因放弃竞争，有的线程可能在等待满足条件，满足后再执行。共四个状态：<br><strong>1、CANCELLED 取消状态  1<br>2、SIGNAL 等待触发状态  -1<br>3、CONDITION 等待条件状态  -2<br>4、PROPAGATE 状态需要向后传播  -3</strong><br>等待队列是FIFO先进先出，<strong>只有当前一个节点的状态是SIGNAL时，当前节点的线程才能被挂起。</strong>  </p>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>子类重写tryAcquire和tryRelease方法，并通过CAS指令修改状态变量state。  </p>
-<h3 id="线程获取锁的过程"><a href="#线程获取锁的过程" class="headerlink" title="线程获取锁的过程"></a>线程获取锁的过程</h3><p>如线程A和线程B进行竞争：<br>1、如果线程A执行CAS指令修改state成功，那么state被修改并返回true，线程A继续执行。<br>2、如果线程A执行CAS指令修改state失败，说明线程B此时执行CAS指令成功了，这时线程A会执行步骤3。<br>3、生成新Node节点node，通过CAS指令插入到等待队列的队尾（因为在同一时刻可能会有多个Node节点插入到等待队列中）。<br>4、<strong>node插入到队尾后，线程不会立马被挂起，而是会进行自旋操作。因为在node的插入过程中，线程B可能已经执行完成，所以要判断该node的前一个节点prev是否为head节点（代表线程B），如果prev==head，说明当前节点是队列中的第一个有效的节点，因此会再次尝试tryAcquire获取锁：</strong><br>&emsp;&emsp;①、如果成功获取到锁，表明线程B已经执行完成，线程A不需要挂起；<br>&emsp;&emsp;②、如果获取锁失败，表示线程B还未完成，至少state值还未被修改，那么执行步骤5。<br>5、只有当前一个节点的的状态是SIGNAL时，当前节点的线程才能被挂起，那么：<br>&emsp;&emsp;<strong>①如果prev的waitStatus=0，那么当前线程通过CAS指令修改waitStatus为Node.SIGNAL；</strong><br>&emsp;&emsp;<strong>②如果prev的waitStatus&gt;0，表明prev的线程状态是CANCELLED，需要从队列中删除；</strong><br>&emsp;&emsp;<strong>③如果prev的waitStatus为Node.SIGNAL，那么通过LockSupport.park()方法把线程A挂起，并等待被唤醒，被唤醒后进入步骤6。</strong><br>6、线程每次被唤醒时，都要进行中断检测，如果发现当前线程被中断，就抛出InterruptedException并退出循环。并不是被唤醒的线程就一定能获得锁，必须调用tryAcquire重新竞争。  </p>
+<h3 id="线程获取锁的过程"><a href="#线程获取锁的过程" class="headerlink" title="线程获取锁的过程"></a>线程获取锁的过程</h3><p>如线程A和线程B进行竞争：<br>1、如果线程A执行CAS指令修改state成功，那么state被修改并返回true，线程A继续执行。<br>2、如果线程A执行CAS指令修改state失败，说明线程B此时执行CAS指令成功了，这时线程A会执行步骤3。<br>3、生成新Node节点node，通过CAS指令插入到等待队列的队尾（因为在同一时刻可能会有多个Node节点插入到等待队列中）。<br>4、<strong>node插入到队尾后，线程不会立马被挂起，而是会进行自旋操作。因为在node的插入过程中，线程B可能已经执行完成，所以要判断该node的前一个节点prev是否为head节点（代表线程B），如果prev==head，说明当前节点是队列中的第一个有效的节点，因此会再次尝试tryAcquire获取锁：</strong><br>&emsp;&emsp;①、如果成功获取到锁，表明线程B已经执行完成，线程A不需要挂起；<br>&emsp;&emsp;②、如果获取锁失败，表示线程B还未完成，至少state值还未被修改，那么执行步骤5。<br>5、只有在前一个节点的的状态是SIGNAL时，当前节点的线程才能被挂起，那么：<br>&emsp;&emsp;<strong>①如果prev的waitStatus=0，那么当前线程通过CAS指令修改waitStatus为Node.SIGNAL；</strong><br>&emsp;&emsp;<strong>②如果prev的waitStatus&gt;0，表明prev的线程状态是CANCELLED，需要从队列中删除；</strong><br>&emsp;&emsp;<strong>③如果prev的waitStatus为Node.SIGNAL，那么通过LockSupport.park()方法把线程A挂起，并等待被唤醒，被唤醒后进入步骤6。</strong><br>6、线程每次被唤醒时，都要进行中断检测，如果发现当前线程被中断，就抛出InterruptedException并退出循环。并不是被唤醒的线程就一定能获得锁，必须调用tryAcquire重新竞争。  </p>
 <h3 id="线程释放锁的过程"><a href="#线程释放锁的过程" class="headerlink" title="线程释放锁的过程"></a>线程释放锁的过程</h3><p><strong>1、如果头节点head的waitStatus的值为-1，则用CAS指令重置为0；<br>2、找到waitStatus的值小于0的节点s，通过LockSupport.unpark(s.thread)唤醒线程。</strong>  </p>
 ]]></content>
     
