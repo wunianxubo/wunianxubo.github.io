@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-15T13:50:43.118Z</updated>
+  <updated>2017-08-16T13:34:53.538Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CyclicBarrier</title>
+    <link href="http://yoursite.com/2017/08/16/CyclicBarrier/"/>
+    <id>http://yoursite.com/2017/08/16/CyclicBarrier/</id>
+    <published>2017-08-16T13:34:00.000Z</published>
+    <updated>2017-08-16T13:34:53.538Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是CyclicBarrier"><a href="#什么是CyclicBarrier" class="headerlink" title="什么是CyclicBarrier"></a>什么是CyclicBarrier</h2><p>CyclicBarrier也叫同步屏障，在jdk1.5中引入，<strong>可以让一组线程到达一个屏障时被阻塞，直到最后一个线程到达屏障时，所有被阻塞的线程才能继续执行。</strong><br>CyclicBarrier就好比是一扇门，默认情况是关闭的，堵住所有线程执行的路径，只有所有线程都到达时，门才会打开。  </p>
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><p>1、<strong>默认的构造方法是CyclicBarrier(int parties)，参数parties表示屏障拦截的线程数量，每个线程会调用await方法来告诉CyclicBarrier它已经到达了屏障，然后当前线程就被阻塞。</strong><br>2、<strong>更高级的构造函数是CyclicBarrier(int parties, Runnable barrierAction)用于在所有线程到达屏障时，优先执行barrierAction。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/CyclicBarrier.png" alt="image">  </p>
+<h2 id="CyclicBarrier的实现原理"><a href="#CyclicBarrier的实现原理" class="headerlink" title="CyclicBarrier的实现原理"></a>CyclicBarrier的实现原理</h2><p>CyclicBarrier的实现主要基于ReentrantLock。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class CyclicBarrier&#123;</div><div class="line">    private static class Generation&#123;</div><div class="line">        boolean broken = false;</div><div class="line">    &#125;</div><div class="line">    private final ReentrantLock lock = new ReentrantLock();</div><div class="line">    private final Condition trip = lock.newCondition();</div><div class="line">    private final int parties;</div><div class="line">    private final Runnable barrierCommand;</div><div class="line">    private Generation generation = new Generation();</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中，<strong>Generation用来控制屏障的循环使用，如果generation.broken为true的话，说明这个屏障已经损坏了，当某个线程await的时候，直接抛出异常。</strong>  </p>
+<h3 id="await实现原理"><a href="#await实现原理" class="headerlink" title="await实现原理"></a>await实现原理</h3><p><strong>1、每当线程执行await方法时，内部变量count就减1，如果count!=0，说明有线程还没有到达屏障处，那么在锁的条件变量trip上等待。</strong><br><strong>2、当count==0时，说明所有的线程都到达屏障处，执行条件变量trip的signAll方法来唤醒等待的线程。</strong><br>其中nextGeneration可以实现屏障的循环使用：可以实现重新生成Generation对象和恢复count值。  </p>
+<h2 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h2><p><strong>1、CountDownLatch的计数器只可以使用一次；而CyclicBarrier的计数器可以使用reset()方法重置，能够重复利用。</strong><br><strong>2、CountDownLatch是减计数器方式，构造方法中参数是要等待的线程的个数，当计数器为0时，说明所有线程的任务已经执行完，阻塞等待的线程被唤醒继续执行；CyclicBarrier是加计数器方式，构造方法中参数是屏障拦截的线程数量，当计数达到指定值时，释放所有阻塞在屏障的线程。</strong><br><strong>3、CountDownLatch中，调用countDown方法实现计数器减1，调用await()方法只进行阻塞，对计数没有影响；CyclicBarrier中，调用await()方法计数器加1，加1后的值没有到达屏障拦截的数量，那么线程被阻塞。</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;什么是CyclicBarrier&quot;&gt;&lt;a href=&quot;#什么是CyclicBarrier&quot; class=&quot;headerlink&quot; title=&quot;什么是CyclicBarrier&quot;&gt;&lt;/a&gt;什么是CyclicBarrier&lt;/h2&gt;&lt;p&gt;CyclicBarrier也
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>CountDownLatch</title>
