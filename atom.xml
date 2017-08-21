@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-17T12:13:41.578Z</updated>
+  <updated>2017-08-21T13:18:36.593Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java中的锁</title>
+    <link href="http://yoursite.com/2017/08/21/Java%E4%B8%AD%E7%9A%84%E9%94%81/"/>
+    <id>http://yoursite.com/2017/08/21/Java中的锁/</id>
+    <published>2017-08-21T13:18:04.000Z</published>
+    <updated>2017-08-21T13:18:36.593Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="锁的相关概念"><a href="#锁的相关概念" class="headerlink" title="锁的相关概念"></a>锁的相关概念</h1><p><strong>1、独占锁</strong><br>在同一时刻只能有一个线程获取到锁，而其他获取锁的线程只能处于同步队列中等待，只有获取锁的线程释放了锁，后继的线程才能获取锁。<br><strong>2、重入锁</strong><br>重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞，表示该锁能够支持一个线程对资源的重复加锁。<br><strong>3、公平锁和非公平锁</strong><br>如果一个锁是公平的，那么锁的获取顺序应该符合先进先出的。公平锁保证了锁的获取符合FIFO原则，代价是进行大量的线程切换。非公平锁可能造成线程“饥饿”，但极少的线程切换，保证了更大的吞吐量。<br><strong>4、读写锁</strong><br>同一时刻允许多个读线程访问，但是在写线程访问时，所有的读线程和其他写线程都会被阻塞。在读大于写的情况下，读写锁可以提供比排它锁更好的并发性和吞吐量。  </p>
+<h1 id="一、Lock接口"><a href="#一、Lock接口" class="headerlink" title="一、Lock接口"></a>一、Lock接口</h1><p>在Lock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，在java5之后，并发包中增加了Lock接口（以及相关实现类）用来实现锁功能，它提供了与synchronized类似的功能，但是在使用时需要显式地获取和释放锁。虽然缺少了synchronized隐式获取释放锁的便捷性，但是却拥有锁获取和释放的可操作性、可中断的获取锁、超时获取锁等多种synchronized不具备的同步特性。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Lock lock = new ReetrantLock();</div><div class="line">Condition condition = lock.newCondition();</div><div class="line">lock.lock();</div><div class="line">try&#123;</div><div class="line">    while(条件判断)&#123;</div><div class="line">        condition.await();</div><div class="line">    &#125;</div><div class="line">&#125;finally&#123;</div><div class="line">    lock.unlock();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>需要显式的获取锁，并在finally块中显式的释放锁，保证在获取锁之后，最终能够被释放。  </p>
+<h2 id="非公平锁实现"><a href="#非公平锁实现" class="headerlink" title="非公平锁实现"></a>非公平锁实现</h2><p><strong>1、线程A和B同时执行CAS指令，假设线程A成功，线程B失败，表示线程A成功获取锁，并把同步器中的exclusiveOwnerThread设置为线程A。</strong><br><strong>2、竞争失败的线程B，在nonfairTryAcquire方法中，会再次尝试获取锁，在这段时间如果线程A释放锁，线程B就可以直接获取锁而不用挂起。</strong>  </p>
+<h2 id="公平锁实现"><a href="#公平锁实现" class="headerlink" title="公平锁实现"></a>公平锁实现</h2><p><strong>在公平锁中，每当线程执行lock方法时，如果同步器的队列中有线程等待，则直接加入到队列中。</strong>  </p>
+<h2 id="重入锁实现"><a href="#重入锁实现" class="headerlink" title="重入锁实现"></a>重入锁实现</h2><p>重入锁ReentrantLock，即线程可以重复获取已经持有的锁。通过ReentrantLock的构造函数，还支持选择获取锁时的公平和非公平选择。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if(current == getExclusiveOwnerThread())&#123;</div><div class="line">    int nextc = c + acquires;</div><div class="line">    if(nextc &lt; 0)</div><div class="line">        throw new Error(&quot;Maximum lock count exceeded&quot;);</div><div class="line">    setState(nextc);</div><div class="line">    return true;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="二、Condition接口"><a href="#二、Condition接口" class="headerlink" title="二、Condition接口"></a>二、Condition接口</h1><p>任意一个Java对象，都拥有一组监视器方法（定义在java.lang.Object上），主要包括wait()、wait(long timeout)、notify()、notifyAll()方法，这些方法和synchronized配合，可以实现等待/通知模式。<br>Condition接口也提供了类似Object的监视器方法，和Lock配合来实现等待/通知模式。但两者存在差异。<br><strong>1、synchronized中，所有的线程都在同一个object的等待队列上等待；在ReentrantLock中，每个condition都维护了一个条件队列。</strong><br><strong>2、Condition是与Lock绑定的，所有就有Lock的公平性特性：如果是公平锁，线程按照FIFO的顺序从Condition.await的等待队列中释放；如果是非公平锁，那么后续的锁竞争就不保证FIFO顺序了。</strong>  </p>
+<h3 id="conditon在生产者消费者中的应用场景"><a href="#conditon在生产者消费者中的应用场景" class="headerlink" title="conditon在生产者消费者中的应用场景"></a>conditon在生产者消费者中的应用场景</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">class ConditionTest&#123;</div><div class="line">    final Lock lock = new ReentrantLock();</div><div class="line">    final Condition notFull = lock.newCondition();//生产</div><div class="line">    final Condition notEmpty = lock.newCondition();//消费</div><div class="line">    final Object[] items = new Object[100];//存储商品的容器</div><div class="line">    int putptr, takeptr, count;//生产者角标、消费者角标、计数器</div><div class="line">    //往容器中存储商品</div><div class="line">    public void put(Object x)throws InterruptedException&#123;&#123;</div><div class="line">        lock.lock();</div><div class="line">        try&#123;</div><div class="line">            while(count == items.length)//容器满，生产就等待</div><div class="line">                notFull.await();</div><div class="line">            items[putptr] = x;</div><div class="line">            if(++putptr == items.length)//角标到容器最后，归零</div><div class="line">                putptr = 0;</div><div class="line">            ++count;</div><div class="line">            notEmpty.signal();//唤醒一个消费者</div><div class="line">        &#125;finally&#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    //从容器出取出商品</div><div class="line">    public Object take()throws InterruptedException&#123;&#123;</div><div class="line">        lock.lock();</div><div class="line">        try&#123;</div><div class="line">            while(count == 0)</div><div class="line">                notEmpty.await();</div><div class="line">            Object x = items[takeptr];</div><div class="line">            if(++takeptr == items.length)</div><div class="line">                takeptr = 0;</div><div class="line">            --count;</div><div class="line">            notFull.signal();</div><div class="line">            return x;</div><div class="line">        &#125;finally&#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1、await方法实现"><a href="#1、await方法实现" class="headerlink" title="1、await方法实现"></a>1、await方法实现</h2><p><strong>当调用await()方法后，当前线程会释放锁并在此等待，而其他线程调用Condition的signal()方法时，通知当前线程后，当前线程之后从await()方法处返回，并在返回前已经获取到了锁。</strong>  </p>
+<p>如果线程A执行await方法：<br>1、将线程A加入到conditon的等待队列中，如果最后一个节点的状态是CANCELLED，就从队列中删除。<br>2、线程A释放锁，线程A修改AQS的状态state为0，并唤醒AQS同步队列中的线程B，线程B唤醒后，尝试获取锁。<br>3、线程A释放锁并唤醒线程B后，如果线程A不在AQS同步队列中，就通过LockSupport.park进行挂起操作。<br>4、当线程A被唤醒时，会通过acquireQueued方法竞争锁，如果失败，继续挂起；如果成功，线程A从await位置恢复。  </p>
+<p><strong>acquireQueued方法：节点进入同步队列之后，就进入了一个自旋的过程，每个节点（每个线程）都在自省地观察，当条件满足，获取到了同步状态，就可以从这个自旋的过程中退出，否则依旧留在这个自旋的过程中（并会阻塞节点的线程）。</strong><br>如下图所示：<br><img src="http://osrmzp0jr.bkt.clouddn.com/d_%E5%89%AF%E6%9C%AC.jpg" alt="image"></p>
+<h2 id="2、notify方法实现"><a href="#2、notify方法实现" class="headerlink" title="2、notify方法实现"></a>2、notify方法实现</h2><p>如果线程B执行notify方法：<br>1、接着上述场景，线程B执行signal方法，取出等待队列的第一个非CANCELLED的节点线程，即线程A。遇到CANCELLED线程就需要将其从队列中删除。<br>2、通过CAS修改线程A的waitStatus为0，表示该节点已经不是处于等待队列状态，并将A插入到AQS的同步队列中。<br>3、唤醒线程A，线程A和别的线程进行锁的竞争。  </p>
+<h2 id="从队列角度看await方法和notify方法"><a href="#从队列角度看await方法和notify方法" class="headerlink" title="从队列角度看await方法和notify方法"></a>从队列角度看await方法和notify方法</h2><p>1、当调用await()方法时，相当于同步队列的首节点（获取了锁的节点）移动到Condition的等待队列中。<br><img src="http://osrmzp0jr.bkt.clouddn.com/a_%E5%89%AF%E6%9C%AC.jpg" alt="image">  </p>
+<p>2、当调用notify()方法时，将会唤醒在等待队列中等待时间最长的节点（首节点），在唤醒节点之前，会将节点已到同步队列中。<br><img src="http://osrmzp0jr.bkt.clouddn.com/b_%E5%89%AF%E6%9C%AC.jpg" alt="image">  </p>
+<h1 id="三、synchronized和lock的区别"><a href="#三、synchronized和lock的区别" class="headerlink" title="三、synchronized和lock的区别"></a>三、synchronized和lock的区别</h1><p><strong>1、用法上：<br>synchronized是隐式锁，在需要同步的地方加上，可以加在方法上，也可以加在同步块上；<br>lock是显式锁，需要指定起始位置和终止位置，在加锁和解锁出通过lock()和unlock()显式指出，需要在finally中释放锁。<br>2、功能上：<br>ReentrantLock提供了和内置锁synchronized类似的功能和内存语义。此外，ReentrantLock还提供了更丰富的功能。包括定时的锁等待、公平性、实现非块结构的加锁，对线程的等待和唤醒操作更加灵活，一个ReentrantLock可以有多个Condition实例，所以更有扩展性。<br>3、性能上：<br>synchronized是托管给JVM执行的，而lock是java写的控制锁的代码。在java1.5中，synchronized是性能低效的，相比之下，lock的性能更高。<br>但是到了java1.6，发生了变化。synchronized进行了很多优化，有适应自旋、锁消除、锁粗化、轻量级锁、偏向锁等等，导致在java1.6上，synchronized的性能并不比lock差。<br>4、机制上：<br>synchronized采用的是悲观锁机制，即线程获得的是独占锁，意味着其他线程只能阻塞来等待线程释放锁；<br>而Lock用的是乐观锁方式，乐观锁就是每次不加锁，而是假设没有冲突去完成某项操作，如果因为冲突失败就重试，知道成功为止。乐观锁实现的机制就是CAS操作。</strong>  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;锁的相关概念&quot;&gt;&lt;a href=&quot;#锁的相关概念&quot; class=&quot;headerlink&quot; title=&quot;锁的相关概念&quot;&gt;&lt;/a&gt;锁的相关概念&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;1、独占锁&lt;/strong&gt;&lt;br&gt;在同一时刻只能有一个线程获取到锁，而其他获取锁的线程只能
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>Semaphore</title>
