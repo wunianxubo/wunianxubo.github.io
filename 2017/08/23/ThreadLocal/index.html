@@ -1,0 +1,846 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,java并发," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wunian's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="icon" type="image/x-icon" href="<%-theme.favicon %>">
+
+
+
+
+
+
+<meta name="description" content="一、ThreadLocal简述ThreadLocal，又叫线程本地变量，ThreadLocal变量为每个线程都创建了一个副本，每个线程都可以访问自己内部的副本变量，不同线程之间互不干扰。   二、深入解析ThreadLocall类实现原理从线程Thread的角度来看，每个线程内部都会持有一个对ThreadLocalMap实例的引用threadLocals，而ThreadLocalMap实例相当于线">
+<meta name="keywords" content="java,java并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal">
+<meta property="og:url" content="http://yoursite.com/2017/08/23/ThreadLocal/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="一、ThreadLocal简述ThreadLocal，又叫线程本地变量，ThreadLocal变量为每个线程都创建了一个副本，每个线程都可以访问自己内部的副本变量，不同线程之间互不干扰。   二、深入解析ThreadLocall类实现原理从线程Thread的角度来看，每个线程内部都会持有一个对ThreadLocalMap实例的引用threadLocals，而ThreadLocalMap实例相当于线">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/threadLocal.png">
+<meta property="og:updated_time" content="2017-08-23T11:04:04.122Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ThreadLocal">
+<meta name="twitter:description" content="一、ThreadLocal简述ThreadLocal，又叫线程本地变量，ThreadLocal变量为每个线程都创建了一个副本，每个线程都可以访问自己内部的副本变量，不同线程之间互不干扰。   二、深入解析ThreadLocall类实现原理从线程Thread的角度来看，每个线程内部都会持有一个对ThreadLocalMap实例的引用threadLocals，而ThreadLocalMap实例相当于线">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/threadLocal.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/23/ThreadLocal/"/>
+
+
+
+
+
+  <title>ThreadLocal | Wunian's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wunian's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">清风徐来，水波不兴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-love">
+          <a href="/love" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            love
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-album">
+          <a href="/album" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            Album
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/23/ThreadLocal/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Xu Bo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://osrmzp0jr.bkt.clouddn.com/618991108587536653.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wunian's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ThreadLocal</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-23T19:03:04+08:00">
+                2017-08-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、ThreadLocal简述"><a href="#一、ThreadLocal简述" class="headerlink" title="一、ThreadLocal简述"></a>一、ThreadLocal简述</h1><p><strong>ThreadLocal，又叫线程本地变量，ThreadLocal变量为每个线程都创建了一个副本，每个线程都可以访问自己内部的副本变量，不同线程之间互不干扰。</strong>  </p>
+<h1 id="二、深入解析ThreadLocall类"><a href="#二、深入解析ThreadLocall类" class="headerlink" title="二、深入解析ThreadLocall类"></a>二、深入解析ThreadLocall类</h1><h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p><strong>从线程Thread的角度来看，每个线程内部都会持有一个对ThreadLocalMap实例的引用threadLocals，而ThreadLocalMap实例相当于线程的局部变量空间。引用threadLocals是用来存储实际的变量副本的，键值（key）是当前的ThreadLocal变量，value为变量副本（即ThreadLocal类型的变量值）。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/threadLocal.png" alt="image">  </p>
+<h2 id="ThreadLocalMap"><a href="#ThreadLocalMap" class="headerlink" title="ThreadLocalMap"></a>ThreadLocalMap</h2><p>内部使用table数组来存储Entry，默认的大小为INITIAL_CAPACITY(16)，其中两个参数：<br>1、size：table中元素的数量，其实就是ThreadLocal变量的数量，因为一个ThreadLocal变量对应table数组中的一个Entry。<br>2、threshold：等于table大小的2/3，当size&gt;=threshold时，遍历table并删除key为null的元素；如果删除后size&gt;=threshold的3/4，需要对table进行扩容。  </p>
+<h2 id="ThreadLocal类提供的几个方法"><a href="#ThreadLocal类提供的几个方法" class="headerlink" title="ThreadLocal类提供的几个方法"></a>ThreadLocal类提供的几个方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public T get()&#123; &#125;</div><div class="line">public void set(T value)&#123; &#125;</div><div class="line">public void remove()&#123; &#125;</div><div class="line">protected T initiailValue()&#123; &#125;</div></pre></td></tr></table></figure>
+<p>set(T value)方法用来设置当前线程中变量的副本；get()方法是用来获取ThreadLocal在当前线程中保存的变量副本；remove()用来移除当前线程中变量的副本。  </p>
+<h3 id="1、ThreadLocal-set-T-value-实现"><a href="#1、ThreadLocal-set-T-value-实现" class="headerlink" title="1、ThreadLocal.set(T value)实现"></a>1、ThreadLocal.set(T value)实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void set(T value)&#123;</div><div class="line">    Thread t = Thread.currentThread();</div><div class="line">    ThreadLocalMap map = getMap(t);//从当前线程获取ThreadLocalMap实例</div><div class="line">    if(map != null)</div><div class="line">        map.set(this, value);//将ThreadLocal实例和value封装成Entry存入ThreadLocalMap中</div><div class="line">    else</div><div class="line">        createMap(t, value);</div><div class="line">&#125;</div><div class="line"></div><div class="line">ThreadLocalMap getMap(Thread t)&#123;</div><div class="line">    return t.threadLocals;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上看出：<br><strong>1、从当前线程获取ThreadLocalMap实例<br>2、将ThreadLocal实例和value封装成Entry存入ThreadLocalMap中</strong>  </p>
+<p><strong>map.set(this, value)的内部实现：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private void set(ThreadLocal&lt;?&gt; key, Object value)&#123;</div><div class="line">    Entry[] tab = table;</div><div class="line">    int len = tab.length;</div><div class="line">    int i = key.threadLocalHashCode &amp; (len-1);</div><div class="line">    </div><div class="line">    for(Entry e = tab[i]; e != null; e = tab[i = nextIndex(i,len)])&#123;</div><div class="line">        ThreadLocal&lt;?&gt; k = e.get();</div><div class="line">        if(k == key)&#123;</div><div class="line">            e.value = value;</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        if(k == null)&#123;</div><div class="line">            replaceStaleEntry(key, value, i);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    tab[i] = new Entry(key, value);</div><div class="line">    int sz = ++size;</div><div class="line">    if(!cleanSomeSlots(i,sz) &amp;&amp; sz &gt;= threshold)</div><div class="line">        rehash();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1、通过key.threadLocalHashCode方法生成hash值；<br>2、通过 hash &amp; (len-1)，定位到table的位置i，假设table中位置i的元素为a；<br>3、如果a != null，假设a中的ThreadLocal的引用为k（即Entry的key）；<br>①如果引用k的实例和当前ThreadLocal实例一致，那么修改value值，返回<br>②如果引用k为null，说明元素a是陈旧的元素，删除并插入新元素，返回<br>③否则通过nextIndex方法找到下一个元素f，继续步骤3<br>4、如果a == null，那么把Entry加入到table的位置i上；<br>5、通过cleanSomeSlots删除陈旧的元素，如果table中没有元素删除，需要判断当前情况下是否要进行扩容</p>
+<h3 id="2、ThreadLocal-get-实现"><a href="#2、ThreadLocal-get-实现" class="headerlink" title="2、ThreadLocal.get()实现"></a>2、ThreadLocal.get()实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">public T get()&#123;</div><div class="line">    Thread t = Thread.currentThread();</div><div class="line">    ThreadLocalMap map = getMap();//获取当前线程的threadLocals引用</div><div class="line">    if(map != null)&#123;</div><div class="line">        ThreadLocalMap.Entry e = map.getEntry(this);//根据this找到对应的Entry,this为当前ThreadLocal</div><div class="line">        if(e != null)&#123;</div><div class="line">            T result = (T)e.value;</div><div class="line">            return result;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return setInitialValue();</div><div class="line">&#125;</div><div class="line"></div><div class="line">private Entry getEntry(ThreadLocal&lt;?&gt; key)&#123;</div><div class="line">    int i = key,threadLocalHashCode &amp; (table.length - 1);</div><div class="line">    Entry e = table[i];</div><div class="line">    if(e != null &amp;&amp; e.get() == key)</div><div class="line">        return e;</div><div class="line">    else</div><div class="line">        return getEntryAfterMiss(key, i, e);</div><div class="line">&#125;</div><div class="line"></div><div class="line">private T setInitialValue()&#123;</div><div class="line">    T value = initialValue();</div><div class="line">    Thread t = Thread.currentThread();</div><div class="line">    ThreadLocalMap map = getMap(t);</div><div class="line">    if(map != null)</div><div class="line">        map.set(this, value);</div><div class="line">    else</div><div class="line">        createMap(t, value);</div><div class="line">    return value;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获取当前线程的threadLocals引用：<br>1、如果threadLocals不为null，那么通过ThreadLocalMap.getEntry(this)方法找到对应的entry，返回e.value<br>2、如果threadLocals为null，那么通过setInitialValue方法初始化，并返回  </p>
+<h3 id="3、table扩容"><a href="#3、table扩容" class="headerlink" title="3、table扩容"></a>3、table扩容</h3><p><strong>当table中的元素数量达到阈值threshold的3/4时，会进行扩容操作：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">private void resize()&#123;</div><div class="line">    Entry[] oldTab = table;</div><div class="line">    int oldLen = oldTab.length;</div><div class="line">    int newLen = oldLen * 2;</div><div class="line">    Entry[] newTab = new Entry[newLen];</div><div class="line">    int count = 0;</div><div class="line">    </div><div class="line">    for(int j = 0; j &lt; oldLen; ++j)&#123;</div><div class="line">        Entry e = oldTab[j];</div><div class="line">        if(e != null)&#123;</div><div class="line">            ThreadLocal&lt;?&gt; k = e.get();</div><div class="line">            if(k == nunll)&#123;</div><div class="line">                e.value = nunll;</div><div class="line">            &#125;else&#123;</div><div class="line">                int h = k.threadLocalHashCode &amp; (newLen - 1);</div><div class="line">                while(newTab[h] != null)</div><div class="line">                    h = nextIndex(h,newLen);</div><div class="line">                newTab[h] = e;</div><div class="line">                count++;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    setThreshold(newLen);</div><div class="line">    size = count;</div><div class="line">    table = newTab;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1、新建新的数组newTab，大小为原来的2倍<br>2、复制table的元素到newTab，忽略陈旧的元素，假设table中的元素需要复制到newTab的位置i上，如果位置i存在元素，那么找下一个空位置进行插入  </p>
+<h1 id="三、应用场景"><a href="#三、应用场景" class="headerlink" title="三、应用场景"></a>三、应用场景</h1><p>ThreadLocal不是用来解决对象共享访问的问题的，而主要是<strong>提供了保持对象的方法和避免参数传递的一种便捷的访问对象的方式：</strong><br><strong>1、每个线程中都有一个自己的ThreadLocalMap类对象，可以将线程自己的对象保存在其中，自己管自己的，线程可以正确的访问到自己的对象</strong><br><strong>2、将一个共有的ThreadLocal静态实例作为Key，将不同对象的引用保存到不同线程的ThreadLocalMap中，然后在线程执行的各处通过这个静态ThreadLocal实例的get()方法取出自己线程保存的哪个对象，避免了将这个对象作为参数传递的麻烦。</strong>  </p>
+<p>最常用的ThreadLocal使用场景是用来解决<strong>数据库连接、Session管理</strong>等，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">private static final ThreadLocal threadSession = new ThreadLocal();</div><div class="line">public static Session getSession() throws InfrastructureException&#123;</div><div class="line">    Session s = (Session) threadSession.get();</div><div class="line">    try&#123;</div><div class="line">        if(s == null)&#123;</div><div class="line">            s = getSessionFactory().openSession();</div><div class="line">            threadSession.set(s);</div><div class="line">        &#125;</div><div class="line">    &#125;catch(HibernateException ex)&#123;</div><div class="line">        throw new  InfrastructureException(ex);</div><div class="line">    &#125;</div><div class="line">    return s;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，在方法getSession()中，首先通过threadSession.get()判断当前线程有没有放进去session，如果还没有，那么通过getSessionFactory().openSession()来创建一个session，再把session用set放进去，实际上是放到当前线程的ThreadLocalMap中。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/java并发/" rel="tag"># java并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/21/Java中的锁/" rel="next" title="Java中的锁">
+                <i class="fa fa-chevron-left"></i> Java中的锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://osrmzp0jr.bkt.clouddn.com/618991108587536653.jpg"
+               alt="Xu Bo" />
+          <p class="site-author-name" itemprop="name">Xu Bo</p>
+           
+              <p class="site-description motion-element" itemprop="description">Wunian</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wunianxubo" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/wechat" target="_blank" title="Wechat">
+                  
+                    <i class="fa fa-fw fa-wechat"></i>
+                  
+                  Wechat
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/wu-nian-34-58" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-commenting"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/wunian_930124" title="csdn博客" target="_blank">csdn博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://youngforzy.github.io/" title="zy" target="_blank">zy</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+<br>
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 
+src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></iframe>
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、ThreadLocal简述"><span class="nav-number">1.</span> <span class="nav-text">一、ThreadLocal简述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、深入解析ThreadLocall类"><span class="nav-number">2.</span> <span class="nav-text">二、深入解析ThreadLocall类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">2.1.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocalMap"><span class="nav-number">2.2.</span> <span class="nav-text">ThreadLocalMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal类提供的几个方法"><span class="nav-number">2.3.</span> <span class="nav-text">ThreadLocal类提供的几个方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、ThreadLocal-set-T-value-实现"><span class="nav-number">2.3.1.</span> <span class="nav-text">1、ThreadLocal.set(T value)实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、ThreadLocal-get-实现"><span class="nav-number">2.3.2.</span> <span class="nav-text">2、ThreadLocal.get()实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、table扩容"><span class="nav-number">2.3.3.</span> <span class="nav-text">3、table扩容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、应用场景"><span class="nav-number">3.</span> <span class="nav-text">三、应用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xu Bo</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!--页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
