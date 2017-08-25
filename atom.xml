@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-08-25T03:47:31.277Z</updated>
+  <updated>2017-08-25T09:22:49.333Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>cglib动态代理</title>
+    <link href="http://yoursite.com/2017/08/25/cglib%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/"/>
+    <id>http://yoursite.com/2017/08/25/cglib动态代理/</id>
+    <published>2017-08-25T09:22:04.000Z</published>
+    <updated>2017-08-25T09:22:49.333Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、cglib实现动态代理步骤"><a href="#一、cglib实现动态代理步骤" class="headerlink" title="一、cglib实现动态代理步骤"></a>一、cglib实现动态代理步骤</h1><p>使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。  </p>
+<h2 id="1、定义业务逻辑"><a href="#1、定义业务逻辑" class="headerlink" title="1、定义业务逻辑"></a>1、定义业务逻辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class UserService&#123;</div><div class="line">    public void add()&#123;</div><div class="line">        System.ou.println(&quot;This is add service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、实现MethodInterceptor接口，定义方法的拦截器"><a href="#2、实现MethodInterceptor接口，定义方法的拦截器" class="headerlink" title="2、实现MethodInterceptor接口，定义方法的拦截器"></a>2、实现MethodInterceptor接口，定义方法的拦截器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class MyMethodInterceptor implements MethodInterceptor&#123;</div><div class="line">    public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">        System.ou.println(&quot;Before:&quot; + method);</div><div class="line">        Object object = proxy.invokeSuper(obj, arg);</div><div class="line">        System.ou.println(&quot;After:&quot; + method);</div><div class="line">        return object;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、使用Enhancer类生成代理类"><a href="#3、使用Enhancer类生成代理类" class="headerlink" title="3、使用Enhancer类生成代理类"></a>3、使用Enhancer类生成代理类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Enhancer enhancer = new Enhancer();</div><div class="line">enhancer.setSuperClass(UserService.class);</div><div class="line">enhancer.setCallback(new MyMethodInterceptor());</div><div class="line">UserService userService = (UserService)enhancer.create();</div></pre></td></tr></table></figure>
+<h2 id="4、userService-add-的执行结果"><a href="#4、userService-add-的执行结果" class="headerlink" title="4、userService.add()的执行结果"></a>4、userService.add()的执行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before: add</div><div class="line">This is add service</div><div class="line">After: add</div></pre></td></tr></table></figure>
+<h1 id="二、cglib字节码生成"><a href="#二、cglib字节码生成" class="headerlink" title="二、cglib字节码生成"></a>二、cglib字节码生成</h1><p><strong>Enhancer</strong>是cglib字节码增强器，可以方便的对类进行扩展，<strong>内部调用GeneratorStrategy.generate方法生成代理类的字节码</strong><br>内部实现：<br><strong>1、代理类UserService$$EnhancerByCGLIB$$394dddeb继承了委托类UserService，且委托类的final方法不能被代理；<br>2、代理类为每个委托方法都生成两个方法，以add方法为例，一个是重写的add方法，一个是CGLIB$add$0方法，该方法直接调用委托类的add方法；<br>3、当执行代理对象的add方法时，会先判断是否存在实现了MethodInterceptor接口的对象cglib$CALLBACK_0（也就是这里的MyMethodInterceptor），如果存在，那么调用MethodInterceptor对象的intercept方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">    System.ou.println(&quot;Before:&quot; + method);</div><div class="line">    Object object = proxy.invokeSuper(obj, arg);//最终调用的委托类中的method方法</div><div class="line">    System.ou.println(&quot;After:&quot; + method);</div><div class="line">    return object;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>参数分别是：①代理对象；②委托类方法；③方法参数；④代理方法的MethodProxy对象<br><strong>4、每个被代理的方法都对应一个MethodProxy对象，methodProxy.invokeSuper最终调用的是委托类的add方法</strong>，实现如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public Object invokeSuper(Object obj, Object[] args)throws Throwable&#123;</div><div class="line">    try&#123;</div><div class="line">        init();</div><div class="line">        FastClassInfo fci = fastClassInfo;</div><div class="line">        //fci.f2:代理类对象</div><div class="line">        //fci.i2:方法CGLIB$add$0在对象中的索引位置</div><div class="line">        return fci.f2.invoke(fci.i2, obj, args);//调用代理类对象的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在MethodProxy实现中，通过FastClassInfo维护了委托类和代理类的FastClass：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private static class FastClassInfo&#123;</div><div class="line">    FastClass f1;//指向委托类对象</div><div class="line">    FastClass f2;//指向代理类对象</div><div class="line">    int i1;//方法add在对象中的索引位置</div><div class="line">    int i2;//方法CGLIB$add$0在对象中的索引位置</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>FastClass提出概念下标index，通过索引来保存方法的引用信息，将原先的反射调用，转化为方法的直接调用，从而实现fast。当调用methodProxy.invokeSuper方法时，实际上是调用代理类的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法，避免了使用反射机制来调用委托类的方法。</strong>  </p>
+<h1 id="三、jdk和cglib动态代理的区别"><a href="#三、jdk和cglib动态代理的区别" class="headerlink" title="三、jdk和cglib动态代理的区别"></a>三、jdk和cglib动态代理的区别</h1><p>1、jdk动态代理生成的代理类和委托类必须实现相同的接口；cglib动态代理则不需要。<br>2、cglib动态代理中，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法；<br>3、jdk采用反射机制来调用委托类的方法，cglib采用类似索引的方式直接调用委托类的方法。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、cglib实现动态代理步骤&quot;&gt;&lt;a href=&quot;#一、cglib实现动态代理步骤&quot; class=&quot;headerlink&quot; title=&quot;一、cglib实现动态代理步骤&quot;&gt;&lt;/a&gt;一、cglib实现动态代理步骤&lt;/h1&gt;&lt;p&gt;使用cglib实现动态代理，并不要求
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java，java基础" scheme="http://yoursite.com/tags/java%EF%BC%8Cjava%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>JDK动态代理</title>

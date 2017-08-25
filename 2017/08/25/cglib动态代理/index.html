@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,java并发," />
+  <meta name="keywords" content="java，java基础," />
 
 
 
@@ -95,17 +95,17 @@
 
 
 
-<meta name="description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
-<meta name="keywords" content="java,java并发">
+<meta name="description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
+<meta name="keywords" content="java，java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="原子操作及CAS算法">
-<meta property="og:url" content="http://yoursite.com/2017/08/12/原子操作及CAS算法/index.html">
+<meta property="og:title" content="cglib动态代理">
+<meta property="og:url" content="http://yoursite.com/2017/08/25/cglib动态代理/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
-<meta property="og:updated_time" content="2017-08-13T08:35:11.965Z">
+<meta property="og:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
+<meta property="og:updated_time" content="2017-08-25T09:22:49.333Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="原子操作及CAS算法">
-<meta name="twitter:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
+<meta name="twitter:title" content="cglib动态代理">
+<meta name="twitter:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
 
 
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/12/原子操作及CAS算法/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/25/cglib动态代理/"/>
 
 
 
 
 
-  <title>原子操作及CAS算法 | Wunian's Blog</title>
+  <title>cglib动态代理 | Wunian's Blog</title>
   
 
 
@@ -298,7 +298,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/原子操作及CAS算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/cglib动态代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -315,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">原子操作及CAS算法</h1>
+          <h1 class="post-title" itemprop="name headline">cglib动态代理</h1>
         
 
         <div class="post-meta">
@@ -327,8 +327,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-12T21:48:04+08:00">
-                2017-08-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T17:22:04+08:00">
+                2017-08-25
               </time>
             
 
@@ -384,28 +384,16 @@
       
 
       
-        <h1 id="一、原子操作的实现原理"><a href="#一、原子操作的实现原理" class="headerlink" title="一、原子操作的实现原理"></a>一、原子操作的实现原理</h1><h2 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h2><p><strong>1. 使用总线锁保证原子性</strong><br>&emsp;&emsp;<strong>总线锁</strong>就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。<br><strong>2. 使用缓存锁保证原子性</strong><br>&emsp;&emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期间，其他的处理器不能操作其他内存地址的数据，所以总线锁定开销较大，在某些场合用缓存锁代替总线锁。<br>&emsp;&emsp;<strong>缓存锁定</strong>是指内存区域如果被缓存在处理器的缓存行中，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上声言LOCK#信号，而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，<strong>因为缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</strong>  </p>
-<h2 id="Java如何实现原子操作"><a href="#Java如何实现原子操作" class="headerlink" title="Java如何实现原子操作"></a>Java如何实现原子操作</h2><p>&emsp;&emsp;Java中可以通过<strong>循环CAS</strong>和<strong>锁</strong>的方式来实现原子操作。<br><strong>1. 使用循环CAS实现原子操</strong><br>&emsp;&emsp;JVM中的CAS操作是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作，所以能保证原子操作的实现。<br><strong>2. 使用锁机制实现原子操作</strong><br>&emsp;&emsp;锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>除了偏向锁，JVM实现锁的方式都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁。</strong>  </p>
-<h1 id="二、CAS算法剖析"><a href="#二、CAS算法剖析" class="headerlink" title="二、CAS算法剖析"></a>二、CAS算法剖析</h1><p>&emsp;&emsp;<strong>CAS(Compare And Swap)，即比较并替换。三个操作数：内存值V，预估值A，更新值B，当且仅当V==A时，V=B。CAS的比较和替换是一组原子操作，不会被外部打断，属于硬件级别的操作，效率比加锁高</strong> </p>
-<h2 id="AtomicInteger为例："><a href="#AtomicInteger为例：" class="headerlink" title="AtomicInteger为例："></a><strong>AtomicInteger为例：</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class AtomicInteger extends Number implements java.io.Serializable&#123;</div><div class="line">    private static final Unsafe unsafe = Unsafe.getUnsafe();</div><div class="line">    private static final long valueOffset;</div><div class="line">    static&#123;</div><div class="line">        valueOffset = unsafe.objectFieldOffset(AtomicInteger.class.getDeclaredField(&quot;value&quot;))</div><div class="line">    &#125;</div><div class="line">    private volatile int value;</div><div class="line">    public final int get()&#123;</div><div class="line">        return value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>①<strong>Unsafe</strong>是CAS的核心类，它提供了<strong>硬件级别的原子操作</strong>。<br>②<strong>valueOffset</strong>表示变量值在内存中的偏移地址，因为Unsafe就是根据内存偏移地址来获取数据的原值的。<br>③<strong>value</strong>是用<strong>volatile</strong>修饰的，保证了value的可见性。  </p>
-<p>AtomicInteger在并发下的累加操作过程：<br>&emsp;&emsp;在jdk1.8中，比较和替换操作放在Unsafe类中实现。假设线程A和B同时执行getAndAdd操作：  </p>
-<ol>
-<li>AtomicInteger中的value值为3，即内存中value为3，根据Java内存模型，线程A和B各持有一份value的副本，值为3.</li>
-<li>线程A通过getIntVolatile(var1,var2)方法获取value值为3，此时线程切换，线程A挂起。</li>
-<li>线程B通过getIntVolatile(var1,var2)方法获取value值为3，并利用<strong>compareAndSwapInt</strong>方法比较和替换，修改内存值为4，线程切换，线程B挂起。</li>
-<li>线程A恢复，利用<strong>compareAndSwapInt</strong>方法比较，发现手中的值3和内存值4不一致，此时value正在被另一个线程修改，线程A不能修改value值。</li>
-<li>线程的<strong>compareAndSwapInt</strong>实现，循环判断，重新获取value的值，value为volatile修饰变量，其他线程的修改，线程A总是能看到。直到<strong>compareAndSwapInt</strong>修改成功并返回true。 </li>
-</ol>
-<p>&emsp;&emsp;<strong>整个过程中，使用CAS保证了value修改的线程安全性。</strong>  </p>
-<h3 id="compareAndSwapInt方法："><a href="#compareAndSwapInt方法：" class="headerlink" title="compareAndSwapInt方法："></a>compareAndSwapInt方法：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public final native boolean compareAndSwapInt(...)</div></pre></td></tr></table></figure>
-<p>&emsp;&emsp;<strong>compareAndSwapInt是一个本地方法的调用，会根据处理器的类型来决定是否为CMPXCHG指令添加lock前缀。</strong>多处理器，为CMPXCHG指令添加lock前缀；单处理器则省略lock前缀（不需为单处理器提供内存屏障效果）。  </p>
-<h3 id="lock前缀："><a href="#lock前缀：" class="headerlink" title="lock前缀："></a>lock前缀：</h3><p>&emsp;&emsp;lock前缀的指令<strong>在多核处理器下</strong>会引发两件事：</p>
-<ol>
-<li><strong>将当前处理器缓存行的数据写回到系统内存。</strong></li>
-<li><strong>这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。</strong>  </li>
-</ol>
-<h2 id="CAS实现原子操作的三大问题"><a href="#CAS实现原子操作的三大问题" class="headerlink" title="CAS实现原子操作的三大问题"></a>CAS实现原子操作的三大问题</h2><p><strong>（1）ABA问题</strong><br>&emsp;&emsp;CAS在操作值的时候，需要检查值有没有发生变化，如果没有变化则更新。但如果一个值原来是A，变成了B，最后又变成A，那么使用CAS检查变化时会发现他的值没有发生变化，而实际上却变化了。<br><strong>解决方法：在变量前面加上版本号，每次变量更新时把版本号加1，那么A-&gt;B-&gt;C变成1A-&gt;2B-&gt;3A,在Atomic里提供了一个类AtomicStampedReference</strong>来解决ABA问题。<br><strong>（2）循环时间长开销大</strong><br>&emsp;&emsp;自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。<br><strong>（3）只能保证一个共享变量的原子操作</strong><br>&emsp;&emsp;当对一个共享变量执行操作时，可以使用循环CAS的方式保证原子操作，但对多个共享变量操作时，循环CAS就不能保证操作的原子性，这时候可以用锁。<strong>jdk提供AtomicReference保证了引用之间的原子性，就可以把多个变量放在一个对象里进行CAS操作。</strong></p>
+        <h1 id="一、cglib实现动态代理步骤"><a href="#一、cglib实现动态代理步骤" class="headerlink" title="一、cglib实现动态代理步骤"></a>一、cglib实现动态代理步骤</h1><p>使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。  </p>
+<h2 id="1、定义业务逻辑"><a href="#1、定义业务逻辑" class="headerlink" title="1、定义业务逻辑"></a>1、定义业务逻辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class UserService&#123;</div><div class="line">    public void add()&#123;</div><div class="line">        System.ou.println(&quot;This is add service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、实现MethodInterceptor接口，定义方法的拦截器"><a href="#2、实现MethodInterceptor接口，定义方法的拦截器" class="headerlink" title="2、实现MethodInterceptor接口，定义方法的拦截器"></a>2、实现MethodInterceptor接口，定义方法的拦截器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class MyMethodInterceptor implements MethodInterceptor&#123;</div><div class="line">    public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">        System.ou.println(&quot;Before:&quot; + method);</div><div class="line">        Object object = proxy.invokeSuper(obj, arg);</div><div class="line">        System.ou.println(&quot;After:&quot; + method);</div><div class="line">        return object;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、使用Enhancer类生成代理类"><a href="#3、使用Enhancer类生成代理类" class="headerlink" title="3、使用Enhancer类生成代理类"></a>3、使用Enhancer类生成代理类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Enhancer enhancer = new Enhancer();</div><div class="line">enhancer.setSuperClass(UserService.class);</div><div class="line">enhancer.setCallback(new MyMethodInterceptor());</div><div class="line">UserService userService = (UserService)enhancer.create();</div></pre></td></tr></table></figure>
+<h2 id="4、userService-add-的执行结果"><a href="#4、userService-add-的执行结果" class="headerlink" title="4、userService.add()的执行结果"></a>4、userService.add()的执行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before: add</div><div class="line">This is add service</div><div class="line">After: add</div></pre></td></tr></table></figure>
+<h1 id="二、cglib字节码生成"><a href="#二、cglib字节码生成" class="headerlink" title="二、cglib字节码生成"></a>二、cglib字节码生成</h1><p><strong>Enhancer</strong>是cglib字节码增强器，可以方便的对类进行扩展，<strong>内部调用GeneratorStrategy.generate方法生成代理类的字节码</strong><br>内部实现：<br><strong>1、代理类UserService$$EnhancerByCGLIB$$394dddeb继承了委托类UserService，且委托类的final方法不能被代理；<br>2、代理类为每个委托方法都生成两个方法，以add方法为例，一个是重写的add方法，一个是CGLIB$add$0方法，该方法直接调用委托类的add方法；<br>3、当执行代理对象的add方法时，会先判断是否存在实现了MethodInterceptor接口的对象cglib$CALLBACK_0（也就是这里的MyMethodInterceptor），如果存在，那么调用MethodInterceptor对象的intercept方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">    System.ou.println(&quot;Before:&quot; + method);</div><div class="line">    Object object = proxy.invokeSuper(obj, arg);//最终调用的委托类中的method方法</div><div class="line">    System.ou.println(&quot;After:&quot; + method);</div><div class="line">    return object;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>参数分别是：①代理对象；②委托类方法；③方法参数；④代理方法的MethodProxy对象<br><strong>4、每个被代理的方法都对应一个MethodProxy对象，methodProxy.invokeSuper最终调用的是委托类的add方法</strong>，实现如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public Object invokeSuper(Object obj, Object[] args)throws Throwable&#123;</div><div class="line">    try&#123;</div><div class="line">        init();</div><div class="line">        FastClassInfo fci = fastClassInfo;</div><div class="line">        //fci.f2:代理类对象</div><div class="line">        //fci.i2:方法CGLIB$add$0在对象中的索引位置</div><div class="line">        return fci.f2.invoke(fci.i2, obj, args);//调用代理类对象的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在MethodProxy实现中，通过FastClassInfo维护了委托类和代理类的FastClass：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private static class FastClassInfo&#123;</div><div class="line">    FastClass f1;//指向委托类对象</div><div class="line">    FastClass f2;//指向代理类对象</div><div class="line">    int i1;//方法add在对象中的索引位置</div><div class="line">    int i2;//方法CGLIB$add$0在对象中的索引位置</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>FastClass提出概念下标index，通过索引来保存方法的引用信息，将原先的反射调用，转化为方法的直接调用，从而实现fast。当调用methodProxy.invokeSuper方法时，实际上是调用代理类的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法，避免了使用反射机制来调用委托类的方法。</strong>  </p>
+<h1 id="三、jdk和cglib动态代理的区别"><a href="#三、jdk和cglib动态代理的区别" class="headerlink" title="三、jdk和cglib动态代理的区别"></a>三、jdk和cglib动态代理的区别</h1><p>1、jdk动态代理生成的代理类和委托类必须实现相同的接口；cglib动态代理则不需要。<br>2、cglib动态代理中，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法；<br>3、jdk采用反射机制来调用委托类的方法，cglib采用类似索引的方式直接调用委托类的方法。</p>
 
       
     </div>
@@ -435,9 +423,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/java并发/" rel="tag"># java并发</a>
+            <a href="/tags/java，java基础/" rel="tag"># java，java基础</a>
           
         </div>
       
@@ -450,8 +436,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/11/深入剖析volatile/" rel="next" title="深入剖析volatile">
-                <i class="fa fa-chevron-left"></i> 深入剖析volatile
+              <a href="/2017/08/25/JDK动态代理/" rel="next" title="JDK动态代理">
+                <i class="fa fa-chevron-left"></i> JDK动态代理
               </a>
             
           </div>
@@ -459,10 +445,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/13/synchronized的实现原理及锁的升级/" rel="prev" title="synchronized的实现原理及锁的升级">
-                synchronized的实现原理及锁的升级 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -672,7 +654,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、原子操作的实现原理"><span class="nav-number">1.</span> <span class="nav-text">一、原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理器如何实现原子操作"><span class="nav-number">1.1.</span> <span class="nav-text">处理器如何实现原子操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java如何实现原子操作"><span class="nav-number">1.2.</span> <span class="nav-text">Java如何实现原子操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、CAS算法剖析"><span class="nav-number">2.</span> <span class="nav-text">二、CAS算法剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AtomicInteger为例："><span class="nav-number">2.1.</span> <span class="nav-text">AtomicInteger为例：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#compareAndSwapInt方法："><span class="nav-number">2.1.1.</span> <span class="nav-text">compareAndSwapInt方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lock前缀："><span class="nav-number">2.1.2.</span> <span class="nav-text">lock前缀：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS实现原子操作的三大问题"><span class="nav-number">2.2.</span> <span class="nav-text">CAS实现原子操作的三大问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、cglib实现动态代理步骤"><span class="nav-number">1.</span> <span class="nav-text">一、cglib实现动态代理步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、定义业务逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">1、定义业务逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、实现MethodInterceptor接口，定义方法的拦截器"><span class="nav-number">1.2.</span> <span class="nav-text">2、实现MethodInterceptor接口，定义方法的拦截器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、使用Enhancer类生成代理类"><span class="nav-number">1.3.</span> <span class="nav-text">3、使用Enhancer类生成代理类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、userService-add-的执行结果"><span class="nav-number">1.4.</span> <span class="nav-text">4、userService.add()的执行结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、cglib字节码生成"><span class="nav-number">2.</span> <span class="nav-text">二、cglib字节码生成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、jdk和cglib动态代理的区别"><span class="nav-number">3.</span> <span class="nav-text">三、jdk和cglib动态代理的区别</span></a></li></ol></div>
             
 
           </div>
