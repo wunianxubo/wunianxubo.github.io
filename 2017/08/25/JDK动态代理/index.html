@@ -1,0 +1,842 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java，java基础," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Wunian's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="icon" type="image/x-icon" href="<%-theme.favicon %>">
+
+
+
+
+
+
+<meta name="description" content="一、静态代理1、RealSubject是委托类，Proxy是代理类2、Subject是委托类和代理类的接口3、request()是委托类和代理类的共同方法代码如下：123456789101112131415161718192021222324252627282930//接口interface Subject&amp;#123;    abstract void request();&amp;#125;//委托类c">
+<meta name="keywords" content="java，java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK动态代理">
+<meta property="og:url" content="http://yoursite.com/2017/08/25/JDK动态代理/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="一、静态代理1、RealSubject是委托类，Proxy是代理类2、Subject是委托类和代理类的接口3、request()是委托类和代理类的共同方法代码如下：123456789101112131415161718192021222324252627282930//接口interface Subject&amp;#123;    abstract void request();&amp;#125;//委托类c">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E4%BB%A3%E7%90%86.png">
+<meta property="og:updated_time" content="2017-08-25T03:47:31.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JDK动态代理">
+<meta name="twitter:description" content="一、静态代理1、RealSubject是委托类，Proxy是代理类2、Subject是委托类和代理类的接口3、request()是委托类和代理类的共同方法代码如下：123456789101112131415161718192021222324252627282930//接口interface Subject&amp;#123;    abstract void request();&amp;#125;//委托类c">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/25/JDK动态代理/"/>
+
+
+
+
+
+  <title>JDK动态代理 | Wunian's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Wunian's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">清风徐来，水波不兴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-love">
+          <a href="/love" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            love
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-album">
+          <a href="/album" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-camera"></i> <br />
+            
+            Album
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/JDK动态代理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Xu Bo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://osrmzp0jr.bkt.clouddn.com/618991108587536653.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wunian's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JDK动态代理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T11:47:04+08:00">
+                2017-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、静态代理"><a href="#一、静态代理" class="headerlink" title="一、静态代理"></a>一、静态代理</h1><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86.png" alt="image"><br>1、RealSubject是委托类，Proxy是代理类<br>2、Subject是委托类和代理类的接口<br>3、request()是委托类和代理类的共同方法<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">//接口</div><div class="line">interface Subject&#123;</div><div class="line">    abstract void request();</div><div class="line">&#125;</div><div class="line">//委托类</div><div class="line">class RealSubject implements Subject&#123;</div><div class="line">    public void request()&#123;</div><div class="line">        System.out.println(&quot;RealSubject&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//代理类</div><div class="line">class Proxy implements Subject&#123;</div><div class="line">    private Subject subject;</div><div class="line">    public Proxy(Subject subject)&#123;</div><div class="line">        this.subject = subject;</div><div class="line">    &#125;</div><div class="line">    public void request()&#123;</div><div class="line">        System.out.println(&quot;start&quot;);//前置通知</div><div class="line">        subject.request();</div><div class="line">        System.out.println(&quot;stop&quot;);//后置处理</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class ProxyTest&#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        RealSubject subject = new RealSubject();</div><div class="line">        Proxy p = new Proxy(subject);//代理类要传入委托类作为参数</div><div class="line">        p.request();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>静态代理</strong>实现中，一个委托类对应一个代理类，<strong>代理类在编译期间就已经确定了</strong>。</p>
+<h1 id="二、动态代理"><a href="#二、动态代理" class="headerlink" title="二、动态代理"></a>二、动态代理</h1><p>动态代理中，必须让代理类和目标类实现相同的接口，客户端通过代理类来调用目标类的方法，<strong>代理类会将所有的方法调用分派到目标对象上反射执行</strong>，在分派的过程中，还可以添加“前置通知”和“后置处理”（如在调用目标方法前校验权限，在调用完目标方法后打印日志等）等功能。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BB%A3%E7%90%86.png" alt="image"><br>相比于静态代理，<strong>动态代理不需要编写各个繁琐的静态代理类</strong>，只需要简单地指定一组接口及目标类对象就可以动态的获得代理对象了。  </p>
+<h2 id="1、定义业务逻辑"><a href="#1、定义业务逻辑" class="headerlink" title="1、定义业务逻辑"></a>1、定义业务逻辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//接口</div><div class="line">public interface Service&#123;</div><div class="line">    //目标方法</div><div class="line">    public abstract void add();</div><div class="line">&#125;</div><div class="line">//委托类</div><div class="line">public class UserServiceImpl implements Service&#123;</div><div class="line">    public void add()&#123;</div><div class="line">        System.out.println(&quot;This is add service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、利用java-lang-reflect-Proxy类和java-lang-reflect-InvocationHandler接口定义代理类的实现"><a href="#2、利用java-lang-reflect-Proxy类和java-lang-reflect-InvocationHandler接口定义代理类的实现" class="headerlink" title="2、利用java.lang.reflect.Proxy类和java.lang.reflect.InvocationHandler接口定义代理类的实现"></a>2、利用java.lang.reflect.Proxy类和java.lang.reflect.InvocationHandler接口定义代理类的实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">class MyInvocationHandler implements InvocationHandler&#123;</div><div class="line">    private Object target;</div><div class="line">    </div><div class="line">    public MyInvocationHandler(Object target)&#123;</div><div class="line">        this.target = target;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    @Override</div><div class="line">    public Object invoke(Object proxy, Method method, Object[] args)throws Throwable&#123;</div><div class="line">        System.out.println(&quot;------before--------&quot;);</div><div class="line">        Object result = method.invoke(target,args);//调用target的method方法，参数为args</div><div class="line">        System.out.println(&quot;------end--------&quot;);</div><div class="line">        return result;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //生成代理对象</div><div class="line">    public Object getProxy()&#123;</div><div class="line">        ClassLoader loader = Thread.currentThread().getContextClassLoader();</div><div class="line">        Class&lt;?&gt;[] interfaces = target.getClass().getInterfaces();</div><div class="line">        return Proxy.newProxyInstance(loader, interfaces, this);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、使用动态代理"><a href="#3、使用动态代理" class="headerlink" title="3、使用动态代理"></a>3、使用动态代理</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class ProxyTest&#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        Service service = new UserServiceImpl();</div><div class="line">        MyInvocationHandler handler = new MyInvocationHandler(service);</div><div class="line">        Service serviceProxy = (Service)handler.getProxy();</div><div class="line">        serviceProxy.add();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">------before--------</div><div class="line">This is add service</div><div class="line">------end--------</div></pre></td></tr></table></figure></p>
+<p>代理对象的生成过程由<strong>Proxy类的newProxyInstance方法</strong>实现，分为三个步骤：<br><strong>①ProxyGenerator.generateProxyClass方法负责生成代理类的字节码</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//proxyName：格式如&quot;com.sun.proxy.$Proxy.1&quot;</div><div class="line">//interfaces：代理类需要实现的接口数组</div><div class="line">byte[] proxyClassFile = ProxyGenerator.generateProxyClass(proxyName, interfaces);</div></pre></td></tr></table></figure></p>
+<p><strong>②native方法Proxy.defineClass0负责字节码加载的实现，并返回对应的Class对象</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class clazz = defineClass0(loader, proxyName, proxyClassFile, 0, proxyClassFile.length);</div></pre></td></tr></table></figure></p>
+<p><strong>③使用clazz.newInstance反射机制生成代理类对象</strong>  </p>
+<h3 id="内部实现："><a href="#内部实现：" class="headerlink" title="内部实现："></a>内部实现：</h3><p><strong>1、生成的代理类$Proxy1继承自Proxy类，并且实现了Service接口<br>2、执行代理对象的方法serviceProxy.add()，其实就是执行InvocationHandler对象的invoke方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public final void add()&#123;</div><div class="line">    try&#123;</div><div class="line">        super.h.invoke(this, m, null);//传入的参数分别是当前代理对象、当前执行的方法和参数</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="InvocationHandler的作用"><a href="#InvocationHandler的作用" class="headerlink" title="InvocationHandler的作用"></a>InvocationHandler的作用</h3><p><strong>在动态代理中，InvocationHandler是核心，每个代理实例都有一个关联的调用处理程序（InvocationHandler）。对代理实例调用方法时，将对方法调用进行编码并将其指派到它的InvocationHandler的invoke()方法。所以对代理方法的调用，内部都是通过InvocationHandler的invoke()实现的，invoke()根据传入的当前代理对象、当前执行的方法和参数来决定调用委托类的哪个方法。</strong></p>
+<h2 id="jdk动态代理的局限性"><a href="#jdk动态代理的局限性" class="headerlink" title="jdk动态代理的局限性"></a>jdk动态代理的局限性</h2><p>通过反射类Proxy和InvocationHandler回调接口实现的jdk动态代理，<strong>要求委托类必须实现一个接口</strong>，但其实并不是每个类都有接口，对于没有实现接口的类，就无法使用这种方式实现动态代理。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java，java基础/" rel="tag"># java，java基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/24/Java反射机制/" rel="next" title="Java反射机制">
+                <i class="fa fa-chevron-left"></i> Java反射机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://osrmzp0jr.bkt.clouddn.com/618991108587536653.jpg"
+               alt="Xu Bo" />
+          <p class="site-author-name" itemprop="name">Xu Bo</p>
+           
+              <p class="site-description motion-element" itemprop="description">Wunian</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wunianxubo" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/wechat" target="_blank" title="Wechat">
+                  
+                    <i class="fa fa-fw fa-wechat"></i>
+                  
+                  Wechat
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/wu-nian-34-58" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-commenting"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/wunian_930124" title="csdn博客" target="_blank">csdn博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://youngforzy.github.io/" title="zy" target="_blank">zy</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+<br>
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 
+src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></iframe>
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、静态代理"><span class="nav-number">1.</span> <span class="nav-text">一、静态代理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、动态代理"><span class="nav-number">2.</span> <span class="nav-text">二、动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、定义业务逻辑"><span class="nav-number">2.1.</span> <span class="nav-text">1、定义业务逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、利用java-lang-reflect-Proxy类和java-lang-reflect-InvocationHandler接口定义代理类的实现"><span class="nav-number">2.2.</span> <span class="nav-text">2、利用java.lang.reflect.Proxy类和java.lang.reflect.InvocationHandler接口定义代理类的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、使用动态代理"><span class="nav-number">2.3.</span> <span class="nav-text">3、使用动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部实现："><span class="nav-number">2.3.1.</span> <span class="nav-text">内部实现：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InvocationHandler的作用"><span class="nav-number">2.3.2.</span> <span class="nav-text">InvocationHandler的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jdk动态代理的局限性"><span class="nav-number">2.4.</span> <span class="nav-text">jdk动态代理的局限性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xu Bo</span>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!--页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
