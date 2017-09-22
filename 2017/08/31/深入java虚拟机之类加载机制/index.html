@@ -98,15 +98,15 @@
 <meta name="description" content="一、类加载过程类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了加载、验证、准备、解析和初始化五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会">
 <meta name="keywords" content="java,java虚拟机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中的线程池">
+<meta property="og:title" content="深入java虚拟机之类加载机制">
 <meta property="og:url" content="http://yoursite.com/2017/08/31/深入java虚拟机之类加载机制/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
 <meta property="og:description" content="一、类加载过程类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了加载、验证、准备、解析和初始化五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD1.png">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD2.png">
-<meta property="og:updated_time" content="2017-08-31T08:17:57.001Z">
+<meta property="og:updated_time" content="2017-09-22T11:34:28.130Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java中的线程池">
+<meta name="twitter:title" content="深入java虚拟机之类加载机制">
 <meta name="twitter:description" content="一、类加载过程类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了加载、验证、准备、解析和初始化五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会">
 <meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD1.png">
 
@@ -142,7 +142,7 @@
 
 
 
-  <title>Java中的线程池 | Wunian's Blog</title>
+  <title>深入java虚拟机之类加载机制 | Wunian's Blog</title>
   
 
 
@@ -318,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java中的线程池</h1>
+          <h1 class="post-title" itemprop="name headline">深入java虚拟机之类加载机制</h1>
         
 
         <div class="post-meta">
