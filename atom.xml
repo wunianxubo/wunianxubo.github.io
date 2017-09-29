@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-09-29T08:34:41.352Z</updated>
+  <updated>2017-09-29T10:36:06.916Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>27、二叉搜索树转双向链表</title>
+    <link href="http://yoursite.com/2017/09/29/27%E3%80%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/"/>
+    <id>http://yoursite.com/2017/09/29/27、二叉搜索树转双向链表/</id>
+    <published>2017-09-29T10:35:00.000Z</published>
+    <updated>2017-09-29T10:36:06.916Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="27、二叉搜索树转双向链表"><a href="#27、二叉搜索树转双向链表" class="headerlink" title="27、二叉搜索树转双向链表"></a>27、二叉搜索树转双向链表</h1><p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">public class TreeNode &#123;</div><div class="line">    int val = 0;</div><div class="line">    TreeNode left = null;</div><div class="line">    TreeNode right = null;</div><div class="line"></div><div class="line">    public TreeNode(int val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    TreeNode leftHead=null;</div><div class="line">    TreeNode rightHead=null;</div><div class="line">    public TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        if(pRootOfTree==null)</div><div class="line">            return null;</div><div class="line">        Convert(pRootOfTree.left);</div><div class="line">        if(leftHead==null)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;else&#123;</div><div class="line">            rightHead.right=pRootOfTree;</div><div class="line">            pRootOfTree.left=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.right);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;27、二叉搜索树转双向链表&quot;&gt;&lt;a href=&quot;#27、二叉搜索树转双向链表&quot; class=&quot;headerlink&quot; title=&quot;27、二叉搜索树转双向链表&quot;&gt;&lt;/a&gt;27、二叉搜索树转双向链表&lt;/h1&gt;&lt;p&gt;&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成
+    
+    </summary>
+    
+      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
+    
+    
+      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
+    
+  </entry>
   
   <entry>
     <title>28、字符串的排列</title>
