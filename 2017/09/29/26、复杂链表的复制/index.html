@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,java并发," />
+  <meta name="keywords" content="算法，剑指offer," />
 
 
 
@@ -95,17 +95,21 @@
 
 
 
-<meta name="description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
-<meta name="keywords" content="java,java并发">
+<meta name="description" content="&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head   一、思路1、复制链表2、复制random3、拆分链表   二、代码实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/">
+<meta name="keywords" content="算法，剑指offer">
 <meta property="og:type" content="article">
-<meta property="og:title" content="原子操作及CAS算法">
-<meta property="og:url" content="http://yoursite.com/2017/08/12/原子操作及CAS算法/index.html">
+<meta property="og:title" content="26、复杂链表的复制">
+<meta property="og:url" content="http://yoursite.com/2017/09/29/26、复杂链表的复制/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
-<meta property="og:updated_time" content="2017-08-13T08:35:11.965Z">
+<meta property="og:description" content="&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head   一、思路1、复制链表2、复制random3、拆分链表   二、代码实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg">
+<meta property="og:updated_time" content="2017-09-29T11:47:14.092Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="原子操作及CAS算法">
-<meta name="twitter:description" content="一、原子操作的实现原理处理器如何实现原子操作1. 使用总线锁保证原子性&amp;emsp;&amp;emsp;总线锁就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。2. 使用缓存锁保证原子性&amp;emsp;&amp;emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期">
+<meta name="twitter:title" content="26、复杂链表的复制">
+<meta name="twitter:description" content="&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head   一、思路1、复制链表2、复制random3、拆分链表   二、代码实现1234567891011121314151617181920212223242526272829303132333435363738394041424344454647/">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg">
 
 
 
@@ -133,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/12/原子操作及CAS算法/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/29/26、复杂链表的复制/"/>
 
 
 
 
 
-  <title>原子操作及CAS算法 | Wunian's Blog</title>
+  <title>26、复杂链表的复制 | Wunian's Blog</title>
   
 
 
@@ -298,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/原子操作及CAS算法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/26、复杂链表的复制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -315,7 +319,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">原子操作及CAS算法</h1>
+          <h1 class="post-title" itemprop="name headline">26、复杂链表的复制</h1>
         
 
         <div class="post-meta">
@@ -327,8 +331,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-12T21:48:04+08:00">
-                2017-08-12
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-29T17:46:00+08:00">
+                2017-09-29
               </time>
             
 
@@ -350,8 +354,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/剑指offer/" itemprop="url" rel="index">
+                    <span itemprop="name">剑指offer</span>
                   </a>
                 </span>
 
@@ -384,28 +388,9 @@
       
 
       
-        <h1 id="一、原子操作的实现原理"><a href="#一、原子操作的实现原理" class="headerlink" title="一、原子操作的实现原理"></a>一、原子操作的实现原理</h1><h2 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h2><p><strong>1. 使用总线锁保证原子性</strong><br>&emsp;&emsp;<strong>总线锁</strong>就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。<br><strong>2. 使用缓存锁保证原子性</strong><br>&emsp;&emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期间，其他的处理器不能操作其他内存地址的数据，所以总线锁定开销较大，在某些场合用缓存锁代替总线锁。<br>&emsp;&emsp;<strong>缓存锁定</strong>是指内存区域如果被缓存在处理器的缓存行中，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上声言LOCK#信号，而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，<strong>因为缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</strong>  </p>
-<h2 id="Java如何实现原子操作"><a href="#Java如何实现原子操作" class="headerlink" title="Java如何实现原子操作"></a>Java如何实现原子操作</h2><p>&emsp;&emsp;Java中可以通过<strong>循环CAS</strong>和<strong>锁</strong>的方式来实现原子操作。<br><strong>1. 使用循环CAS实现原子操</strong><br>&emsp;&emsp;JVM中的CAS操作是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作，所以能保证原子操作的实现。<br><strong>2. 使用锁机制实现原子操作</strong><br>&emsp;&emsp;锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>除了偏向锁，JVM实现锁的方式都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁。</strong>  </p>
-<h1 id="二、CAS算法剖析"><a href="#二、CAS算法剖析" class="headerlink" title="二、CAS算法剖析"></a>二、CAS算法剖析</h1><p>&emsp;&emsp;<strong>CAS(Compare And Swap)，即比较并替换。三个操作数：内存值V，预估值A，更新值B，当且仅当V==A时，V=B。CAS的比较和替换是一组原子操作，不会被外部打断，属于硬件级别的操作，效率比加锁高</strong> </p>
-<h2 id="AtomicInteger为例："><a href="#AtomicInteger为例：" class="headerlink" title="AtomicInteger为例："></a><strong>AtomicInteger为例：</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class AtomicInteger extends Number implements java.io.Serializable&#123;</div><div class="line">    private static final Unsafe unsafe = Unsafe.getUnsafe();</div><div class="line">    private static final long valueOffset;</div><div class="line">    static&#123;</div><div class="line">        valueOffset = unsafe.objectFieldOffset(AtomicInteger.class.getDeclaredField(&quot;value&quot;))</div><div class="line">    &#125;</div><div class="line">    private volatile int value;</div><div class="line">    public final int get()&#123;</div><div class="line">        return value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>①<strong>Unsafe</strong>是CAS的核心类，它提供了<strong>硬件级别的原子操作</strong>。<br>②<strong>valueOffset</strong>表示变量值在内存中的偏移地址，因为Unsafe就是根据内存偏移地址来获取数据的原值的。<br>③<strong>value</strong>是用<strong>volatile</strong>修饰的，保证了value的可见性。  </p>
-<p>AtomicInteger在并发下的累加操作过程：<br>&emsp;&emsp;在jdk1.8中，比较和替换操作放在Unsafe类中实现。假设线程A和B同时执行getAndAdd操作：  </p>
-<ol>
-<li>AtomicInteger中的value值为3，即内存中value为3，根据Java内存模型，线程A和B各持有一份value的副本，值为3.</li>
-<li>线程A通过getIntVolatile(var1,var2)方法获取value值为3，此时线程切换，线程A挂起。</li>
-<li>线程B通过getIntVolatile(var1,var2)方法获取value值为3，并利用<strong>compareAndSwapInt</strong>方法比较和替换，修改内存值为4，线程切换，线程B挂起。</li>
-<li>线程A恢复，利用<strong>compareAndSwapInt</strong>方法比较，发现手中的值3和内存值4不一致，此时value正在被另一个线程修改，线程A不能修改value值。</li>
-<li>线程的<strong>compareAndSwapInt</strong>实现，循环判断，重新获取value的值，value为volatile修饰变量，其他线程的修改，线程A总是能看到。直到<strong>compareAndSwapInt</strong>修改成功并返回true。 </li>
-</ol>
-<p>&emsp;&emsp;<strong>整个过程中，使用CAS保证了value修改的线程安全性。</strong>  </p>
-<h3 id="compareAndSwapInt方法："><a href="#compareAndSwapInt方法：" class="headerlink" title="compareAndSwapInt方法："></a>compareAndSwapInt方法：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public final native boolean compareAndSwapInt(...)</div></pre></td></tr></table></figure>
-<p>&emsp;&emsp;<strong>compareAndSwapInt是一个本地方法的调用，会根据处理器的类型来决定是否为CMPXCHG指令添加lock前缀。</strong>多处理器，为CMPXCHG指令添加lock前缀；单处理器则省略lock前缀（不需为单处理器提供内存屏障效果）。  </p>
-<h3 id="lock前缀："><a href="#lock前缀：" class="headerlink" title="lock前缀："></a>lock前缀：</h3><p>&emsp;&emsp;lock前缀的指令<strong>在多核处理器下</strong>会引发两件事：</p>
-<ol>
-<li><strong>将当前处理器缓存行的数据写回到系统内存。</strong></li>
-<li><strong>这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。</strong>  </li>
-</ol>
-<h2 id="CAS实现原子操作的三大问题"><a href="#CAS实现原子操作的三大问题" class="headerlink" title="CAS实现原子操作的三大问题"></a>CAS实现原子操作的三大问题</h2><p><strong>（1）ABA问题</strong><br>&emsp;&emsp;CAS在操作值的时候，需要检查值有没有发生变化，如果没有变化则更新。但如果一个值原来是A，变成了B，最后又变成A，那么使用CAS检查变化时会发现他的值没有发生变化，而实际上却变化了。<br><strong>解决方法：在变量前面加上版本号，每次变量更新时把版本号加1，那么A-&gt;B-&gt;C变成1A-&gt;2B-&gt;3A,在Atomic里提供了一个类AtomicStampedReference</strong>来解决ABA问题。<br><strong>（2）循环时间长开销大</strong><br>&emsp;&emsp;自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。<br><strong>（3）只能保证一个共享变量的原子操作</strong><br>&emsp;&emsp;当对一个共享变量执行操作时，可以使用循环CAS的方式保证原子操作，但对多个共享变量操作时，循环CAS就不能保证操作的原子性，这时候可以用锁。<strong>jdk提供AtomicReference保证了引用之间的原子性，就可以把多个变量放在一个对象里进行CAS操作。</strong></p>
+        <p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    public RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        if(pHead==null)</div><div class="line">            return null;</div><div class="line">        //第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A&apos;-&gt;B-&gt;B&apos;-&gt;C-&gt;C&apos;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            RandomListNode node=new RandomListNode(pCur.label);</div><div class="line">            node.next=pCur.next;</div><div class="line">            pCur.next=node;</div><div class="line">            pCur=node.next;</div><div class="line">        &#125;</div><div class="line">        //第二步，复制random</div><div class="line">        pCur=pHead;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            if(pCur.random!=null)</div><div class="line">                pCur.next.random=pCur.random.next;</div><div class="line">            pCur=pCur.next.next;</div><div class="line">        &#125;</div><div class="line">        //第三步，拆分链表</div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.next;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            pCur.next=pCur.next.next;</div><div class="line">            if(cur.next!=null)&#123;</div><div class="line">                cur.next=cur.next.next;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.next;</div><div class="line">            cur=cur.next;</div><div class="line">        &#125;</div><div class="line">    	return pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -435,9 +420,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/java并发/" rel="tag"># java并发</a>
+            <a href="/tags/算法，剑指offer/" rel="tag"># 算法，剑指offer</a>
           
         </div>
       
@@ -450,8 +433,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/11/深入剖析volatile/" rel="next" title="深入剖析volatile">
-                <i class="fa fa-chevron-left"></i> 深入剖析volatile
+              <a href="/2017/09/29/28、字符串的排列/" rel="next" title="28、字符串的排列">
+                <i class="fa fa-chevron-left"></i> 28、字符串的排列
               </a>
             
           </div>
@@ -460,8 +443,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/13/synchronized的实现原理及锁的升级/" rel="prev" title="synchronized的实现原理及锁的升级">
-                synchronized的实现原理及锁的升级 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/09/29/27、二叉搜索树转双向链表/" rel="prev" title="27、二叉搜索树转双向链表">
+                27、二叉搜索树转双向链表 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -672,7 +655,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、原子操作的实现原理"><span class="nav-number">1.</span> <span class="nav-text">一、原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理器如何实现原子操作"><span class="nav-number">1.1.</span> <span class="nav-text">处理器如何实现原子操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java如何实现原子操作"><span class="nav-number">1.2.</span> <span class="nav-text">Java如何实现原子操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、CAS算法剖析"><span class="nav-number">2.</span> <span class="nav-text">二、CAS算法剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AtomicInteger为例："><span class="nav-number">2.1.</span> <span class="nav-text">AtomicInteger为例：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#compareAndSwapInt方法："><span class="nav-number">2.1.1.</span> <span class="nav-text">compareAndSwapInt方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lock前缀："><span class="nav-number">2.1.2.</span> <span class="nav-text">lock前缀：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS实现原子操作的三大问题"><span class="nav-number">2.2.</span> <span class="nav-text">CAS实现原子操作的三大问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、思路"><span class="nav-number">1.</span> <span class="nav-text">一、思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、代码实现"><span class="nav-number">2.</span> <span class="nav-text">二、代码实现</span></a></li></ol></div>
             
 
           </div>
