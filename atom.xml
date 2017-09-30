@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-09-29T10:39:21.439Z</updated>
+  <updated>2017-09-30T02:26:45.191Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java多线程之锁优化策略</title>
+    <link href="http://yoursite.com/2017/09/30/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%94%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/"/>
+    <id>http://yoursite.com/2017/09/30/Java多线程之锁优化策略/</id>
+    <published>2017-09-30T02:26:04.000Z</published>
+    <updated>2017-09-30T02:26:45.191Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p>
+<h2 id="2、减小锁粒度"><a href="#2、减小锁粒度" class="headerlink" title="2、减小锁粒度"></a>2、减小锁粒度</h2><p>如：jdk1.6中，  ConcurrentHashMap中采取对segement加锁而不是整个map加锁，提高并发性。类似数据库中的行锁对表锁的优势。  </p>
+<h2 id="3、锁分离"><a href="#3、锁分离" class="headerlink" title="3、锁分离"></a>3、锁分离</h2><p>根据同步操作的性质，把锁划分为读锁和写锁，读锁之间不互斥，提高了并发性。  </p>
+<h2 id="4、锁粗化"><a href="#4、锁粗化" class="headerlink" title="4、锁粗化"></a>4、锁粗化</h2><p>在一个间隔性需要执行同步语句的线程中，如果在不连续的同步块间频繁加锁解锁是很耗性能的，因此把加锁范围扩大，把这些不连续的同步语句进行一次性加锁解锁。虽然线程持有锁的时间增加了，但是总体还是优化了的。  </p>
+<h2 id="5、锁消除"><a href="#5、锁消除" class="headerlink" title="5、锁消除"></a>5、锁消除</h2><p>锁消除是编译器做的事：根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸当前线程（即不会影响线程外的数据），那么可以认为这段代码是线程安全的，不需要加锁。  </p>
+<h1 id="二、Java虚拟机中采用的锁优化策略："><a href="#二、Java虚拟机中采用的锁优化策略：" class="headerlink" title="二、Java虚拟机中采用的锁优化策略："></a>二、Java虚拟机中采用的锁优化策略：</h1><p>主要包括偏向锁、轻量级锁和自旋锁。其中，<a href="http://xiaonanbobo.com/2017/08/13/synchronized的实现原理及锁的升级/" target="_blank" rel="external">偏向锁、轻量级锁及重量锁及其膨胀过程在之前博客中有了详细描述，</a>在这篇文章，我主要介绍下自旋锁。  </p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>如果当线程申请锁时，发现锁被占用，就让当前线程执行忙循环（自旋），观察持有锁的线程是否会很快释放锁。如果自旋后还没获得锁，才进入同步阻塞状态。  </p>
+<h3 id="自适应自旋"><a href="#自适应自旋" class="headerlink" title="自适应自旋"></a>自适应自旋</h3><p>自旋的线程的自旋时间为在同一个锁上，上一次线程自旋并获得锁的耗时。如果对于这个锁，自旋很少成功，就不自旋了，避免浪费CPU资源。 </p>
+<p>&emsp;<strong>为了尽量避免使用重量级锁，JVM首先会尝试轻量级锁，轻量级锁尝试使用CAS操作来获取锁，如果轻量级锁获取失败，说明存在竞争，但是可能很快就能获得锁，就会尝试自旋锁，将线程做几个空循环，每一次循环都不断尝试获得锁。如果自旋锁也失败，那么只能升级为重量级锁。</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、编码过程中可采取的锁优化的思路：&quot;&gt;&lt;a href=&quot;#一、编码过程中可采取的锁优化的思路：&quot; class=&quot;headerlink&quot; title=&quot;一、编码过程中可采取的锁优化的思路：&quot;&gt;&lt;/a&gt;一、编码过程中可采取的锁优化的思路：&lt;/h1&gt;&lt;h2 id=&quot;1
+    
+    </summary>
+    
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>26、复杂链表的复制</title>
+    <link href="http://yoursite.com/2017/09/29/26%E3%80%81%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/"/>
+    <id>http://yoursite.com/2017/09/29/26、复杂链表的复制/</id>
+    <published>2017-09-29T12:08:00.000Z</published>
+    <updated>2017-09-29T12:08:56.869Z</updated>
+    
+    <content type="html"><![CDATA[<p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    public RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        if(pHead==null)</div><div class="line">            return null;</div><div class="line">        //第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A&apos;-&gt;B-&gt;B&apos;-&gt;C-&gt;C&apos;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            RandomListNode node=new RandomListNode(pCur.label);</div><div class="line">            node.next=pCur.next;</div><div class="line">            pCur.next=node;</div><div class="line">            pCur=node.next;</div><div class="line">        &#125;</div><div class="line">        //第二步，复制random</div><div class="line">        pCur=pHead;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            if(pCur.random!=null)</div><div class="line">                pCur.next.random=pCur.random.next;</div><div class="line">            pCur=pCur.next.next;</div><div class="line">        &#125;</div><div class="line">        //第三步，拆分链表</div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.next;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            pCur.next=pCur.next.next;</div><div class="line">            if(cur.next!=null)&#123;</div><div class="line">                cur.next=cur.next.next;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.next;</div><div class="line">            cur=cur.next;</div><div class="line">        &#125;</div><div class="line">    	return pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  &lt;/p&gt;
+&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title
+    
+    </summary>
+    
+      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
+    
+    
+      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
+    
+  </entry>
   
   <entry>
     <title>27、二叉搜索树转双向链表</title>
@@ -32,32 +91,6 @@
     
       &lt;p&gt;&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  &lt;/p&gt;
 &lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title=&quot;一、思路&quot;&gt;&lt;/a&gt;一
-    
-    </summary>
-    
-      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
-    
-    
-      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>26、复杂链表的复制</title>
-    <link href="http://yoursite.com/2017/09/29/26%E3%80%81%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/"/>
-    <id>http://yoursite.com/2017/09/29/26、复杂链表的复制/</id>
-    <published>2017-09-29T09:46:00.000Z</published>
-    <updated>2017-09-29T11:47:14.092Z</updated>
-    
-    <content type="html"><![CDATA[<p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    public RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        if(pHead==null)</div><div class="line">            return null;</div><div class="line">        //第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A&apos;-&gt;B-&gt;B&apos;-&gt;C-&gt;C&apos;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            RandomListNode node=new RandomListNode(pCur.label);</div><div class="line">            node.next=pCur.next;</div><div class="line">            pCur.next=node;</div><div class="line">            pCur=node.next;</div><div class="line">        &#125;</div><div class="line">        //第二步，复制random</div><div class="line">        pCur=pHead;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            if(pCur.random!=null)</div><div class="line">                pCur.next.random=pCur.random.next;</div><div class="line">            pCur=pCur.next.next;</div><div class="line">        &#125;</div><div class="line">        //第三步，拆分链表</div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.next;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            pCur.next=pCur.next.next;</div><div class="line">            if(cur.next!=null)&#123;</div><div class="line">                cur.next=cur.next.next;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.next;</div><div class="line">            cur=cur.next;</div><div class="line">        &#125;</div><div class="line">    	return pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  &lt;/p&gt;
-&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title
     
     </summary>
     
@@ -314,11 +347,11 @@
   </entry>
   
   <entry>
-    <title>Java中的锁</title>
-    <link href="http://yoursite.com/2017/08/21/Java%E4%B8%AD%E7%9A%84%E9%94%81/"/>
-    <id>http://yoursite.com/2017/08/21/Java中的锁/</id>
+    <title>深入ReetrantLock</title>
+    <link href="http://yoursite.com/2017/08/21/%E6%B7%B1%E5%85%A5ReetrantLock/"/>
+    <id>http://yoursite.com/2017/08/21/深入ReetrantLock/</id>
     <published>2017-08-21T13:18:04.000Z</published>
-    <updated>2017-08-21T13:18:36.593Z</updated>
+    <updated>2017-09-30T02:23:36.917Z</updated>
     
     <content type="html"><![CDATA[<h1 id="锁的相关概念"><a href="#锁的相关概念" class="headerlink" title="锁的相关概念"></a>锁的相关概念</h1><p><strong>1、独占锁</strong><br>在同一时刻只能有一个线程获取到锁，而其他获取锁的线程只能处于同步队列中等待，只有获取锁的线程释放了锁，后继的线程才能获取锁。<br><strong>2、重入锁</strong><br>重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁所阻塞，表示该锁能够支持一个线程对资源的重复加锁。<br><strong>3、公平锁和非公平锁</strong><br>如果一个锁是公平的，那么锁的获取顺序应该符合先进先出的。公平锁保证了锁的获取符合FIFO原则，代价是进行大量的线程切换。非公平锁可能造成线程“饥饿”，但极少的线程切换，保证了更大的吞吐量。<br><strong>4、读写锁</strong><br>同一时刻允许多个读线程访问，但是在写线程访问时，所有的读线程和其他写线程都会被阻塞。在读大于写的情况下，读写锁可以提供比排它锁更好的并发性和吞吐量。  </p>
 <h1 id="一、Lock接口"><a href="#一、Lock接口" class="headerlink" title="一、Lock接口"></a>一、Lock接口</h1><p>在Lock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，在java5之后，并发包中增加了Lock接口（以及相关实现类）用来实现锁功能，它提供了与synchronized类似的功能，但是在使用时需要显式地获取和释放锁。虽然缺少了synchronized隐式获取释放锁的便捷性，但是却拥有锁获取和释放的可操作性、可中断的获取锁、超时获取锁等多种synchronized不具备的同步特性。  </p>
