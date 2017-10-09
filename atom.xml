@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-09-30T02:41:52.938Z</updated>
+  <updated>2017-10-09T08:52:45.084Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java中的异常和处理</title>
+    <link href="http://yoursite.com/2017/10/09/Java%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%92%8C%E5%A4%84%E7%90%86/"/>
+    <id>http://yoursite.com/2017/10/09/Java中的异常和处理/</id>
+    <published>2017-10-09T08:49:00.000Z</published>
+    <updated>2017-10-09T08:52:45.084Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为<strong>异常处理机制</strong>。<br>异常处理机制能让程序在异常发生时，按照代码预先设定的异常处理逻辑，针对性的处理异常，让程序尽最大可能恢复正常并继续执行，且保持代码的清晰。<br>java中的异常可以是函数中的语句执行时引发的，也可以是程序员通过throw关键字手动抛出的，只要程序中产生了异常，就会用一个对应类型的异常对象来封装异常，jre就会试图寻找异常处理程序来处理异常。<br>Throwable类是Java异常类型的顶层父类，一个对象只有是Throwable类的实例，他才是一个异常对象，才能被异常处理机制识别。jdk中内置了一些常用的异常类，同时程序员自己也可以自定义异常。  </p>
+<h1 id="java异常的分类和类结构图"><a href="#java异常的分类和类结构图" class="headerlink" title="java异常的分类和类结构图"></a>java异常的分类和类结构图</h1><p>Throwable类是顶层父类，Throwable类派生出Error类和Exception类。<br><strong>错误</strong>：Error类以及他的子类的实例，代表了JVM本身的错误。错误不能被程序员通过代码处理，Error很少出现。<br><strong>异常</strong>：Exception以及它的子类，代表程序运行时发送的各种不期望发生的事件。<strong>可以被java异常处理机制使用，是异常处理的核心</strong>。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.jpg" alt="image"><br>根据javac对异常的处理要求，将异常类分为2类：<br><strong>非检查异常（unchecked exception）</strong>：Error和RuntimeException以及他们的子类。javac在编译时，不会提示和发现这样的异常，不要求在程序中处理这些异常。对于这样的异常，我们可以编写代码处理（try…catch…finally），也可以不处理。对于这些异常，我们要做的应该是修正代码，而不是去通过异常处理器处理。这样的异常多半是代码编写的问题。如除0错误ArithmeticException，错误的类型强转错误ClassCastException，数组越界错误ArrayIndexOutOfBoundsException，空指针错误NullPointerException等等。<br><strong>检查异常（checked exception）</strong>：除了Error和RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（try…catch…finally）。在方法中，<strong>要么通过try-catch语句捕获异常并处理，要么用throws子句声明交给函数调用者去解决</strong>，否则编译不会通过。这种异常一般由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，但是程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着，如SQLException，IOException，ClassNotFoundException，FileNotFoundException等等。<br>这里的检查与非检查是针对javac而言的。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为&lt;strong&gt;异常处理机制&lt;/str
+    
+    </summary>
+    
+      <category term="java基础" scheme="http://yoursite.com/categories/java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>（转）Java中锁概念总结</title>
@@ -692,44 +718,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;一、原子操作的实现原理&quot;&gt;&lt;a href=&quot;#一、原子操作的实现原理&quot; class=&quot;headerlink&quot; title=&quot;一、原子操作的实现原理&quot;&gt;&lt;/a&gt;一、原子操作的实现原理&lt;/h1&gt;&lt;h2 id=&quot;处理器如何实现原子操作&quot;&gt;&lt;a href=&quot;#处理器如何实
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入剖析volatile</title>
-    <link href="http://yoursite.com/2017/08/11/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90volatile/"/>
-    <id>http://yoursite.com/2017/08/11/深入剖析volatile/</id>
-    <published>2017-08-11T12:16:04.000Z</published>
-    <updated>2017-08-14T12:19:12.620Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、volatile的性质"><a href="#一、volatile的性质" class="headerlink" title="一、volatile的性质"></a>一、volatile的性质</h1><h2 id="1、volatile保证可见性"><a href="#1、volatile保证可见性" class="headerlink" title="1、volatile保证可见性"></a>1、volatile保证可见性</h2><ol>
-<li>volatile关键字保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这个新值对于其他线程来说是立即可见的。</li>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//线程1</div><div class="line">boolean stop =false;</div><div class="line">while(!stop)</div><div class="line">  doSomething();</div><div class="line"></div><div class="line">//线程2</div><div class="line">stop=true;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>&emsp;&emsp;上面的代码，可能导致无法中断线程。当线程2更改了stop变量的值后，还没来得及写入内存中，线程2就转去做其他事情了，线程1由于不知道线程2对stop变量的修改，会一直循环下去。<br>&emsp;&emsp;使用volatile修饰后，发生变化：<br>第一：使用volatile会强制将修改的值写入主内存。<br>第二：使用volatile的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量stop的缓存行无效。<br>第三：由于线程1的工作内存中的缓存变量stop的缓存行无效，所以线程1再次读取变量stop的值时会去主内存读取。  </p>
-<h2 id="2、volatile保证有序性"><a href="#2、volatile保证有序性" class="headerlink" title="2、volatile保证有序性"></a>2、volatile保证有序性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//x、y不是volatile变量</div><div class="line">//flag为volatile变量</div><div class="line">x=2;            //语句1</div><div class="line">y=0;            //语句2</div><div class="line">flag=true;      //语句3</div><div class="line">x=4;            //语句4</div><div class="line">y=-1            //语句5</div></pre></td></tr></table></figure>
-<p>①由于flag为volatile变量，在进行指令重排序时，不会将语句3放到语句1、2前面，也不会将语句3放到语句4、5的后面，但是语句1、2的顺序，语句4、5的执行顺序是不做任何保证的。<br>②并且volatile保证：执行到语句3时，语句1、2必定是执行完毕类的，而且语句1、2的执行结果对语句3、4、5是可见的。  </p>
-<h2 id="3、volatile不能保证原子性"><a href="#3、volatile不能保证原子性" class="headerlink" title="3、volatile不能保证原子性"></a>3、volatile不能保证原子性</h2><p>&emsp;&emsp;原子性：即一个操作或多个操作要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。<br>&emsp;&emsp;可以通过synchronized或Lock进行加锁，来保证操作的原子性。也可以通过使用java.util.concurrent.atomic包下提供的原子操作类（对基本数据类型的一些操作进行了封装）来实现。<br>&emsp;&emsp;atomic是利用CAS（Compare And Swap）来实现原子性操作的，CAS实际上利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性的操作。  </p>
-<h2 id="4、volatile的应用场景"><a href="#4、volatile的应用场景" class="headerlink" title="4、volatile的应用场景"></a>4、volatile的应用场景</h2><p>&emsp;&emsp;相较于synchronized，volatile是较为轻量级的同步策略，使用和执行成本更低，因为它不会引起线程上下文的切换和调度。但volatile无法代替synchronized，因为volatile无法保证操作的原子性。<br><strong>使用volatile的两个条件：<br>1、对变量的写操作不依赖于当前值<br>2、 该变量没有包含在具有其他变量的不变式中</strong> </p>
-<h1 id="二、volatile的实现原理"><a href="#二、volatile的实现原理" class="headerlink" title="二、volatile的实现原理"></a>二、volatile的实现原理</h1><h2 id="1、可见性"><a href="#1、可见性" class="headerlink" title="1、可见性"></a>1、可见性</h2><p>&emsp;&emsp;处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据读到内部缓存后再进行操作，但操作完后不知道何时才会写到内存中。<br>&emsp;&emsp;对声明了volatile变量进行写操作时，<strong>JVM会向处理器发送一条Lock前缀的指令，将这个变量所在的缓存行的数据写回到系统内存。</strong>这一步确保了如果有其他线程对声明了volatile的变量进行修改时，则立即更新主内存中的数据。<br>&emsp;&emsp;但此时其他处理器的缓存的数据还是旧数据，<strong>所以在多处理器的环境下，为了保证各个处理器的缓存一致，每个处理器会通过嗅探在总线上传播的数据来检查自己的缓存是否过期。当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置为无效状态，当处理器要对这个数据进行修改时，会强制重新从系统内存把数据读到处理器缓存里。</strong>这一步确保了其他线程获得的声明了volatile的变量都是从主内存中获取的最新的。  </p>
-<h2 id="2、有序性"><a href="#2、有序性" class="headerlink" title="2、有序性"></a>2、有序性</h2><p>&emsp;&emsp;Lock前缀指令实际上相当于一个内存屏障（也称内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障之后的位置，即在执行到内存屏障这句指令时，在它之前的操作已经全部完成。</p>
-<h2 id="3、Lock前缀指令"><a href="#3、Lock前缀指令" class="headerlink" title="3、Lock前缀指令"></a>3、Lock前缀指令</h2><p>在多处理器下会引发两件事：<br>①将当前处理器缓存行的数据写回到系统内存。<br>②这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。  </p>
-<h1 id="三、volatile和synchronized的区别"><a href="#三、volatile和synchronized的区别" class="headerlink" title="三、volatile和synchronized的区别"></a>三、volatile和synchronized的区别</h1><p><strong>1、volatile的本质实在告诉jvm当前变量在寄存器（工作内存）中的值是不确定的，需要从主存中去获取。synchronized则是锁定当前线程才可以访问该变量，其他线程被阻塞住；<br>2、volatile只能使用在变量，synchronized可以使用在变量和方法上；<br>3、volatile只能实现变量的修改可见性，synchronized可以保证变量修改的可见性和原子性；<br>4、volatile不会造成线程的阻塞，synchronized会造成线程的阻塞。</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、volatile的性质&quot;&gt;&lt;a href=&quot;#一、volatile的性质&quot; class=&quot;headerlink&quot; title=&quot;一、volatile的性质&quot;&gt;&lt;/a&gt;一、volatile的性质&lt;/h1&gt;&lt;h2 id=&quot;1、volatile保证可见性&quot;&gt;&lt;a h
     
     </summary>
     
