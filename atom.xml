@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-09T08:52:45.084Z</updated>
+  <updated>2017-10-10T13:06:59.736Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入java虚拟机之垃圾回收算法</title>
+    <link href="http://yoursite.com/2017/10/10/JVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"/>
+    <id>http://yoursite.com/2017/10/10/JVM之垃圾回收算法/</id>
+    <published>2017-10-10T13:06:00.000Z</published>
+    <updated>2017-10-10T13:06:59.736Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、判断对象是否已死"><a href="#一、判断对象是否已死" class="headerlink" title="一、判断对象是否已死"></a>一、判断对象是否已死</h1><h2 id="1、引用计数算法"><a href="#1、引用计数算法" class="headerlink" title="1、引用计数算法"></a>1、引用计数算法</h2><p>给对象添加一个引用计数器，每当有一个地方引用它时，计数器就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。<br>缺点：难以解决循环引用的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ReferenceCountingGC objA = new ReferenceCountingGC();</div><div class="line">ReferenceCountingGC objB = new ReferenceCountingGC();</div><div class="line">objA.instance=objB;</div><div class="line">objB.instance=objA;</div><div class="line"></div><div class="line">objA=null;</div><div class="line">objB=null;</div></pre></td></tr></table></figure></p>
+<h2 id="2、可达性分析算法"><a href="#2、可达性分析算法" class="headerlink" title="2、可达性分析算法"></a>2、可达性分析算法</h2><p>通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到GC Roots没有任何引用链相连时，说明该对象是不可用的。<br><strong>可作为GC Roots的对象为：</strong><br>①虚拟机栈中引用的对象<br>②方法区中类静态属性引用的对象<br>③方法区中常量引用的对象<br>④本地方法栈中Native方法引用的对象  </p>
+<h2 id="3、引用"><a href="#3、引用" class="headerlink" title="3、引用"></a>3、引用</h2><p><strong>强引用（Strong Reference）</strong>：指在程序代码中普遍存在的，类似A a = new A()这样的引用，只要强引用还存在，垃圾回收器永远不会回收掉被引用的对象。<br><strong>软引用（Soft Reference）</strong>：用来描述一些还有用但并非必需的对象。对于软引用关联的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<br><strong>弱引用（Weak Reference）</strong>：用来描述非必需对象的，但是它的强度比软引用更弱一些，被软引用关联的对象只能生存到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被软引用关联的对象。<br><strong>虚引用（Phantom Reference）</strong>：称为幽灵引用，是最弱的一种引用关系。一个对象是否有虚引用的存在，不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。对一个对象设置虚引用关联的唯一目的是用来跟踪对象被垃圾回收的状态。  </p>
+<h2 id="4、finalize自救"><a href="#4、finalize自救" class="headerlink" title="4、finalize自救"></a>4、finalize自救</h2><p>即使在可达性分析算法中不可达的对象，也并非是“非死不可”的，要真正宣告一个对象死亡，需要经历两次标记过程：<br>1、如果对象在进行可达性分析后发现没有与GC Roots相连接的引用链，那它将会被第一次标记并且进行一次筛选，筛选条件是此对象是否有必要执行finalize方法。当对象没有覆盖finalize方法，或者finalize方法已经被虚拟机调用过，虚拟机将这两种情况视为“没有必要执行”，这时对象宣告死亡。<br>2、如果对象被判定有必要执行finalize，那么该对象会放置在一个F-Queue的队列中，并在稍后由一个虚拟机自动建立的、低优先级的Finalizer线程去执行。finalize方法是对象逃脱死亡命运的最后一次机会，稍后GC会对F-Queue中的对象进行第二次小规模的标记，如果对象在finalize()中成功拯救自己——只要重新与引用链的任何一个对象建立连接即可，譬如把自己（this）赋值给某个类变量或者对象的成员变量，那么第二次标记时它将被移除“即将回收”的集合；否则，它就会被真的回收了。<br>注意：任何一个对象的finalize方法都只会被系统自动调用一次。  </p>
+<h1 id="二、垃圾回收算法"><a href="#二、垃圾回收算法" class="headerlink" title="二、垃圾回收算法"></a>二、垃圾回收算法</h1><h2 id="1、标记-清除算法"><a href="#1、标记-清除算法" class="headerlink" title="1、标记-清除算法"></a>1、标记-清除算法</h2><p>分为“标记”和“清除”两个阶段：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。<br>有两点不足之处：<br>①一个是效率问题，标记和清除两个过程的效率都不高；<br>②另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。  </p>
+<h2 id="2、复制算法"><a href="#2、复制算法" class="headerlink" title="2、复制算法"></a>2、复制算法</h2><h3 id="①普通的复制算法"><a href="#①普通的复制算法" class="headerlink" title="①普通的复制算法"></a>①普通的复制算法</h3><p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这块内存用完了，就将还存活着的对象复制到另一块上面，然后再把已使用过的内存一次清理掉。<br>这样每次都是对整个半区进行内存回收，不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。<br>代价：内存使用率只有原来的一半。  </p>
+<h3 id="②改进的复制算法"><a href="#②改进的复制算法" class="headerlink" title="②改进的复制算法"></a>②改进的复制算法</h3><p>不是按照1:1的比例来划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间。在回收时，会把Eden和其中一个Survivor中还存活的对象一次性放到另一个空的Survivor中，然后清除之前的Eden和第一个Survivor。为了区分，一般称第一个为From Survivor，第二个为To Survivor。他们的比例为8:1:1，只会浪费10%的空间。<br>内存担保：有可能存活的对象大于10%，一个Survivor放不下，这时需要有其他内存来作担保，这里会以老年代作为担保。如果放不下，那么通过分配担保机制直接进入老年代。  </p>
+<h2 id="3、标记-整理算法"><a href="#3、标记-整理算法" class="headerlink" title="3、标记-整理算法"></a>3、标记-整理算法</h2><p>老年代没有其他内存给它做担保，所以不能使用复制算法。先标记需要回收的对象，然后把活着的对象向一端进行移动，使他们在物理上连续，然后把边界右侧的内存直接清理掉。<br>没有内存碎片，但是效率会稍微低一点，因为要移动对象。  </p>
+<h2 id="4、分代收集算法"><a href="#4、分代收集算法" class="headerlink" title="4、分代收集算法"></a>4、分代收集算法</h2><p>根据对象存活周期的不同将内存划分为几块，一般把Java堆分为<strong>新生代</strong>和<strong>老年代</strong>，根据年代的特点采用最适当的收集算法。<br>在<strong>新生代</strong>中，每次垃圾收集时都有大批对象死去，只有少量存活，选用“复制算法”，只需要付出少量存活对象的复制成本就可以完成收集。<br>而在<strong>老年代</strong>中，对象存活率高、没有额外空间对它进行分配担保，就使用“标记-清除”或者“标记-整理”算法来进行回收。  </p>
+<h1 id="三、新生代、老年代和永久代"><a href="#三、新生代、老年代和永久代" class="headerlink" title="三、新生代、老年代和永久代"></a>三、新生代、老年代和永久代</h1><p>java虚拟机垃圾收集器关注的内存结构如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png" alt="image"><br>堆大小=新生代+老年代，新生代与老年代的比例为1：2，新生代细分为一块较大的Eden空间和两块较小的Survivor空间，分别被命名为from和to。  </p>
+<h2 id="1、新生代"><a href="#1、新生代" class="headerlink" title="1、新生代"></a>1、新生代</h2><p>新创建的对象一般都在新生代中分配内存空间，新生代采用“复制算法”进行垃圾回收，可见上面改进的复制算法。<br>java虚拟机对新生代的垃圾回收称为<strong>Minor GC</strong>，次数比较频繁，每次的回收时间较短。使用虚拟机的-Xmn参数可以指定新生代内存大小。  </p>
+<h2 id="2、老年代"><a href="#2、老年代" class="headerlink" title="2、老年代"></a>2、老年代</h2><p>老年代中的对象一般都是长生命周期对象，对象的存活率比较高。当新生代垃圾收集器回收几次之后仍然存活的对象会被移动到老年代内存中（默认是15岁），当大对象无法在新生代找到足够的连续内存时也会直接在老年代中创建。<br>老年代中使用“标记-清除”或者“标记-整理”算法进行垃圾回收。java虚拟机对老年代的回收称为<strong>MajorGC/Full GC</strong>，次数相对比较少，每次回收的时间也比较长。<br>在新生代中没有足够空间为对象创建分配内存，老年代中内存回收也无法回收到足够的内存空间，并且新生代和老年代都无法扩展时，堆就会产生OutOfMemoryError异常。虚拟机-Xms参数指定最小内存大小，-Xmx参数指定最大内存大小，与新生代大小参数-Xmn之差可计算出老年代最小和最大容量。  </p>
+<h2 id="3、永久代"><a href="#3、永久代" class="headerlink" title="3、永久代"></a>3、永久代</h2><p>永久代指的是虚拟机内存中的方法区，被各个线程共享的内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。永久代垃圾回收比较少，效率也比较低，但也必须进行垃圾回收，否则永久代内存不够用时仍然会抛出OutOfMemoryError异常。永久代也使用“标记-清除”或者“标记-整理”算法进行垃圾回收。虚拟机参数-XX：PermSize和-XX：MaxPermSize可以设置永久代的初始大小和最大容量。  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、判断对象是否已死&quot;&gt;&lt;a href=&quot;#一、判断对象是否已死&quot; class=&quot;headerlink&quot; title=&quot;一、判断对象是否已死&quot;&gt;&lt;/a&gt;一、判断对象是否已死&lt;/h1&gt;&lt;h2 id=&quot;1、引用计数算法&quot;&gt;&lt;a href=&quot;#1、引用计数算法&quot; cla
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://yoursite.com/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java虚拟机" scheme="http://yoursite.com/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+  </entry>
   
   <entry>
     <title>Java中的异常和处理</title>
@@ -673,52 +710,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;一、synchronized的实现原理&quot;&gt;&lt;a href=&quot;#一、synchronized的实现原理&quot; class=&quot;headerlink&quot; title=&quot;一、synchronized的实现原理&quot;&gt;&lt;/a&gt;一、synchronized的实现原理&lt;/h1&gt;&lt;p&gt;Ja
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>原子操作及CAS算法</title>
-    <link href="http://yoursite.com/2017/08/12/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E5%8F%8ACAS%E7%AE%97%E6%B3%95/"/>
-    <id>http://yoursite.com/2017/08/12/原子操作及CAS算法/</id>
-    <published>2017-08-12T13:48:04.000Z</published>
-    <updated>2017-08-13T08:35:11.965Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、原子操作的实现原理"><a href="#一、原子操作的实现原理" class="headerlink" title="一、原子操作的实现原理"></a>一、原子操作的实现原理</h1><h2 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h2><p><strong>1. 使用总线锁保证原子性</strong><br>&emsp;&emsp;<strong>总线锁</strong>就是使用处理器提供的一个LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，这样，该处理器就可以独占共享内存。<br><strong>2. 使用缓存锁保证原子性</strong><br>&emsp;&emsp;在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，使得在锁定期间，其他的处理器不能操作其他内存地址的数据，所以总线锁定开销较大，在某些场合用缓存锁代替总线锁。<br>&emsp;&emsp;<strong>缓存锁定</strong>是指内存区域如果被缓存在处理器的缓存行中，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上声言LOCK#信号，而是修改内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，<strong>因为缓存一致性机制会阻止同时修改由两个以上处理器缓存的内存区域数据，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。</strong>  </p>
-<h2 id="Java如何实现原子操作"><a href="#Java如何实现原子操作" class="headerlink" title="Java如何实现原子操作"></a>Java如何实现原子操作</h2><p>&emsp;&emsp;Java中可以通过<strong>循环CAS</strong>和<strong>锁</strong>的方式来实现原子操作。<br><strong>1. 使用循环CAS实现原子操</strong><br>&emsp;&emsp;JVM中的CAS操作是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作，所以能保证原子操作的实现。<br><strong>2. 使用锁机制实现原子操作</strong><br>&emsp;&emsp;锁机制保证了只有获得锁的线程才能够操作锁定的内存区域。<strong>除了偏向锁，JVM实现锁的方式都用了循环CAS，即当一个线程想进入同步块的时候使用循环CAS的方式来获取锁，当它退出同步块的时候使用循环CAS释放锁。</strong>  </p>
-<h1 id="二、CAS算法剖析"><a href="#二、CAS算法剖析" class="headerlink" title="二、CAS算法剖析"></a>二、CAS算法剖析</h1><p>&emsp;&emsp;<strong>CAS(Compare And Swap)，即比较并替换。三个操作数：内存值V，预估值A，更新值B，当且仅当V==A时，V=B。CAS的比较和替换是一组原子操作，不会被外部打断，属于硬件级别的操作，效率比加锁高</strong> </p>
-<h2 id="AtomicInteger为例："><a href="#AtomicInteger为例：" class="headerlink" title="AtomicInteger为例："></a><strong>AtomicInteger为例：</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class AtomicInteger extends Number implements java.io.Serializable&#123;</div><div class="line">    private static final Unsafe unsafe = Unsafe.getUnsafe();</div><div class="line">    private static final long valueOffset;</div><div class="line">    static&#123;</div><div class="line">        valueOffset = unsafe.objectFieldOffset(AtomicInteger.class.getDeclaredField(&quot;value&quot;))</div><div class="line">    &#125;</div><div class="line">    private volatile int value;</div><div class="line">    public final int get()&#123;</div><div class="line">        return value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>①<strong>Unsafe</strong>是CAS的核心类，它提供了<strong>硬件级别的原子操作</strong>。<br>②<strong>valueOffset</strong>表示变量值在内存中的偏移地址，因为Unsafe就是根据内存偏移地址来获取数据的原值的。<br>③<strong>value</strong>是用<strong>volatile</strong>修饰的，保证了value的可见性。  </p>
-<p>AtomicInteger在并发下的累加操作过程：<br>&emsp;&emsp;在jdk1.8中，比较和替换操作放在Unsafe类中实现。假设线程A和B同时执行getAndAdd操作：  </p>
-<ol>
-<li>AtomicInteger中的value值为3，即内存中value为3，根据Java内存模型，线程A和B各持有一份value的副本，值为3.</li>
-<li>线程A通过getIntVolatile(var1,var2)方法获取value值为3，此时线程切换，线程A挂起。</li>
-<li>线程B通过getIntVolatile(var1,var2)方法获取value值为3，并利用<strong>compareAndSwapInt</strong>方法比较和替换，修改内存值为4，线程切换，线程B挂起。</li>
-<li>线程A恢复，利用<strong>compareAndSwapInt</strong>方法比较，发现手中的值3和内存值4不一致，此时value正在被另一个线程修改，线程A不能修改value值。</li>
-<li>线程的<strong>compareAndSwapInt</strong>实现，循环判断，重新获取value的值，value为volatile修饰变量，其他线程的修改，线程A总是能看到。直到<strong>compareAndSwapInt</strong>修改成功并返回true。 </li>
-</ol>
-<p>&emsp;&emsp;<strong>整个过程中，使用CAS保证了value修改的线程安全性。</strong>  </p>
-<h3 id="compareAndSwapInt方法："><a href="#compareAndSwapInt方法：" class="headerlink" title="compareAndSwapInt方法："></a>compareAndSwapInt方法：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public final native boolean compareAndSwapInt(...)</div></pre></td></tr></table></figure>
-<p>&emsp;&emsp;<strong>compareAndSwapInt是一个本地方法的调用，会根据处理器的类型来决定是否为CMPXCHG指令添加lock前缀。</strong>多处理器，为CMPXCHG指令添加lock前缀；单处理器则省略lock前缀（不需为单处理器提供内存屏障效果）。  </p>
-<h3 id="lock前缀："><a href="#lock前缀：" class="headerlink" title="lock前缀："></a>lock前缀：</h3><p>&emsp;&emsp;lock前缀的指令<strong>在多核处理器下</strong>会引发两件事：</p>
-<ol>
-<li><strong>将当前处理器缓存行的数据写回到系统内存。</strong></li>
-<li><strong>这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。</strong>  </li>
-</ol>
-<h2 id="CAS实现原子操作的三大问题"><a href="#CAS实现原子操作的三大问题" class="headerlink" title="CAS实现原子操作的三大问题"></a>CAS实现原子操作的三大问题</h2><p><strong>（1）ABA问题</strong><br>&emsp;&emsp;CAS在操作值的时候，需要检查值有没有发生变化，如果没有变化则更新。但如果一个值原来是A，变成了B，最后又变成A，那么使用CAS检查变化时会发现他的值没有发生变化，而实际上却变化了。<br><strong>解决方法：在变量前面加上版本号，每次变量更新时把版本号加1，那么A-&gt;B-&gt;C变成1A-&gt;2B-&gt;3A,在Atomic里提供了一个类AtomicStampedReference</strong>来解决ABA问题。<br><strong>（2）循环时间长开销大</strong><br>&emsp;&emsp;自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销。<br><strong>（3）只能保证一个共享变量的原子操作</strong><br>&emsp;&emsp;当对一个共享变量执行操作时，可以使用循环CAS的方式保证原子操作，但对多个共享变量操作时，循环CAS就不能保证操作的原子性，这时候可以用锁。<strong>jdk提供AtomicReference保证了引用之间的原子性，就可以把多个变量放在一个对象里进行CAS操作。</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、原子操作的实现原理&quot;&gt;&lt;a href=&quot;#一、原子操作的实现原理&quot; class=&quot;headerlink&quot; title=&quot;一、原子操作的实现原理&quot;&gt;&lt;/a&gt;一、原子操作的实现原理&lt;/h1&gt;&lt;h2 id=&quot;处理器如何实现原子操作&quot;&gt;&lt;a href=&quot;#处理器如何实
     
     </summary>
     
