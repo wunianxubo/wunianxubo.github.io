@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法，剑指offer," />
+  <meta name="keywords" content="java,java虚拟机," />
 
 
 
@@ -95,19 +95,20 @@
 
 
 
-<meta name="description" content="&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。   一、思路&amp;emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点">
-<meta name="keywords" content="算法，剑指offer">
+<meta name="description" content="一、对象的创建对象创建有以下几个步骤：1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。4.执行方法，把对象按照程序员的意愿进行">
+<meta name="keywords" content="java,java虚拟机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="27、二叉搜索树转双向链表">
-<meta property="og:url" content="http://yoursite.com/2017/09/29/27、二叉搜索树转双向链表/index.html">
+<meta property="og:title" content="Java对象的创建过程">
+<meta property="og:url" content="http://yoursite.com/2017/10/11/Java对象的创建过程/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。   一、思路&amp;emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点">
-<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg">
-<meta property="og:updated_time" content="2017-09-29T10:39:21.439Z">
+<meta property="og:description" content="一、对象的创建对象创建有以下几个步骤：1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。4.执行方法，把对象按照程序员的意愿进行">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D.jpg">
+<meta property="og:updated_time" content="2017-10-11T09:35:48.401Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="27、二叉搜索树转双向链表">
-<meta name="twitter:description" content="&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。   一、思路&amp;emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点">
-<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg">
+<meta name="twitter:title" content="Java对象的创建过程">
+<meta name="twitter:description" content="一、对象的创建对象创建有以下几个步骤：1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。4.执行方法，把对象按照程序员的意愿进行">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png">
 
 
 
@@ -135,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/29/27、二叉搜索树转双向链表/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/11/Java对象的创建过程/"/>
 
 
 
 
 
-  <title>27、二叉搜索树转双向链表 | Wunian's Blog</title>
+  <title>Java对象的创建过程 | Wunian's Blog</title>
   
 
 
@@ -300,7 +301,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/27、二叉搜索树转双向链表/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/Java对象的创建过程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -317,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">27、二叉搜索树转双向链表</h1>
+          <h1 class="post-title" itemprop="name headline">Java对象的创建过程</h1>
         
 
         <div class="post-meta">
@@ -329,8 +330,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-29T18:35:00+08:00">
-                2017-09-29
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-11T17:35:00+08:00">
+                2017-10-11
               </time>
             
 
@@ -352,8 +353,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/剑指offer/" itemprop="url" rel="index">
-                    <span itemprop="name">剑指offer</span>
+                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
                 </span>
 
@@ -386,10 +387,15 @@
       
 
       
-        <p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">public class TreeNode &#123;</div><div class="line">    int val = 0;</div><div class="line">    TreeNode left = null;</div><div class="line">    TreeNode right = null;</div><div class="line"></div><div class="line">    public TreeNode(int val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    TreeNode leftHead=null;</div><div class="line">    TreeNode rightHead=null;</div><div class="line">    public TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        if(pRootOfTree==null)</div><div class="line">            return null;</div><div class="line">        Convert(pRootOfTree.left);</div><div class="line">        if(leftHead==null)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;else&#123;</div><div class="line">            rightHead.right=pRootOfTree;</div><div class="line">            pRootOfTree.left=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.right);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="一、对象的创建"><a href="#一、对象的创建" class="headerlink" title="一、对象的创建"></a>一、对象的创建</h1><h2 id="对象创建有以下几个步骤："><a href="#对象创建有以下几个步骤：" class="headerlink" title="对象创建有以下几个步骤："></a>对象创建有以下几个步骤：</h2><p>1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。<br>2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。<br>3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。<br>4.执行<init>方法，把对象按照程序员的意愿进行初始化。<br>5.将对象在堆上分配的内存地址赋给实例变量。  </init></p>
+<h2 id="初始化顺序："><a href="#初始化顺序：" class="headerlink" title="初始化顺序："></a>初始化顺序：</h2><p>1、先父类，后子类<br>2、先属性，再构造代码块，最后构造函数<br>3、先静态，后非静态<br>4、同一类型，按代码顺序先后执行  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png" alt="image">  </p>
+<h1 id="二、对象的内存布局"><a href="#二、对象的内存布局" class="headerlink" title="二、对象的内存布局"></a>二、对象的内存布局</h1><p>对象在内存中存储的布局可以分为三块区域：<strong>对象头、实例数据和对齐填充</strong>。  </p>
+<h2 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h2><p>包括两部分，第一部分用于存储对象自身的运行时数据，如哈希码、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID等。另一部分是类型指针，即对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。  </p>
+<h2 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h2><p>实例数据部分是对象真正存储的有效信息，也是在程序代码中所定义的各种类型的字段内容。无论是从父类继承下来的，还是子类中定义的，都需要记录下来（包括private的）。  </p>
+<h2 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h2><p>非必要存在，仅仅起着占位符的作用。  </p>
+<h1 id="三、对象的访问定位"><a href="#三、对象的访问定位" class="headerlink" title="三、对象的访问定位"></a>三、对象的访问定位</h1><p>建立对象是为了使用对象，java程序通过栈上的reference数据来操作堆上的具体对象。主流的访问方式主要有<strong>使用句柄</strong>和<strong>直接指针</strong>两种。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D.jpg" alt="image"></p>
 
       
     </div>
@@ -419,7 +425,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法，剑指offer/" rel="tag"># 算法，剑指offer</a>
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/java虚拟机/" rel="tag"># java虚拟机</a>
           
         </div>
       
@@ -432,8 +440,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/29/28、字符串的排列/" rel="next" title="28、字符串的排列">
-                <i class="fa fa-chevron-left"></i> 28、字符串的排列
+              <a href="/2017/10/11/JVM之垃圾收集器/" rel="next" title="深入java虚拟机之垃圾收集器">
+                <i class="fa fa-chevron-left"></i> 深入java虚拟机之垃圾收集器
               </a>
             
           </div>
@@ -441,10 +449,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/29/26、复杂链表的复制/" rel="prev" title="26、复杂链表的复制">
-                26、复杂链表的复制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -654,7 +658,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、思路"><span class="nav-number">1.</span> <span class="nav-text">一、思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、代码实现"><span class="nav-number">2.</span> <span class="nav-text">二、代码实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、对象的创建"><span class="nav-number">1.</span> <span class="nav-text">一、对象的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象创建有以下几个步骤："><span class="nav-number">1.1.</span> <span class="nav-text">对象创建有以下几个步骤：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化顺序："><span class="nav-number">1.2.</span> <span class="nav-text">初始化顺序：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、对象的内存布局"><span class="nav-number">2.</span> <span class="nav-text">二、对象的内存布局</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象头"><span class="nav-number">2.1.</span> <span class="nav-text">对象头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例数据"><span class="nav-number">2.2.</span> <span class="nav-text">实例数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对齐填充"><span class="nav-number">2.3.</span> <span class="nav-text">对齐填充</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、对象的访问定位"><span class="nav-number">3.</span> <span class="nav-text">三、对象的访问定位</span></a></li></ol></div>
             
 
           </div>
