@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,java并发," />
+  <meta name="keywords" content="java,java基础," />
 
 
 
@@ -95,20 +95,17 @@
 
 
 
-<meta name="description" content="线程池的好处1、降低资源消耗通过重复利用已创建的线程降低线程创建和销毁造成的消耗。2、提高响应速度当任务到达时，任务可以不需要等到线程创建就能立即执行。3、提高线程的可管理性线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。   一、线程池的实现原理ThreadPoolExecutor执行execute()方法步骤：1、如果当前运行">
-<meta name="keywords" content="java,java并发">
+<meta name="description" content="一、对于字符串字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。1234String s1=&amp;quot;china&amp;quot;;String s2=&amp;quot;china&amp;quot;;String ss1=new String(">
+<meta name="keywords" content="java,java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java中的线程池">
-<meta property="og:url" content="http://yoursite.com/2017/08/30/Java中的线程池/index.html">
+<meta property="og:title" content="字符串、基本数据类型等在堆、栈、常量池中的存储">
+<meta property="og:url" content="http://yoursite.com/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="线程池的好处1、降低资源消耗通过重复利用已创建的线程降低线程创建和销毁造成的消耗。2、提高响应速度当任务到达时，任务可以不需要等到线程创建就能立即执行。3、提高线程的可管理性线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。   一、线程池的实现原理ThreadPoolExecutor执行execute()方法步骤：1、如果当前运行">
-<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%89%AF%E6%9C%AC1.jpg">
-<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/1_%E5%89%AF%E6%9C%AC.jpg">
-<meta property="og:updated_time" content="2017-10-10T14:06:32.167Z">
+<meta property="og:description" content="一、对于字符串字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。1234String s1=&amp;quot;china&amp;quot;;String s2=&amp;quot;china&amp;quot;;String ss1=new String(">
+<meta property="og:updated_time" content="2017-10-11T12:56:13.524Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java中的线程池">
-<meta name="twitter:description" content="线程池的好处1、降低资源消耗通过重复利用已创建的线程降低线程创建和销毁造成的消耗。2、提高响应速度当任务到达时，任务可以不需要等到线程创建就能立即执行。3、提高线程的可管理性线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。   一、线程池的实现原理ThreadPoolExecutor执行execute()方法步骤：1、如果当前运行">
-<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%89%AF%E6%9C%AC1.jpg">
+<meta name="twitter:title" content="字符串、基本数据类型等在堆、栈、常量池中的存储">
+<meta name="twitter:description" content="一、对于字符串字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。1234String s1=&amp;quot;china&amp;quot;;String s2=&amp;quot;china&amp;quot;;String ss1=new String(">
 
 
 
@@ -136,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/30/Java中的线程池/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/"/>
 
 
 
 
 
-  <title>Java中的线程池 | Wunian's Blog</title>
+  <title>字符串、基本数据类型等在堆、栈、常量池中的存储 | Wunian's Blog</title>
   
 
 
@@ -301,7 +298,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/Java中的线程池/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -318,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java中的线程池</h1>
+          <h1 class="post-title" itemprop="name headline">字符串、基本数据类型等在堆、栈、常量池中的存储</h1>
         
 
         <div class="post-meta">
@@ -330,8 +327,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-30T15:57:00+08:00">
-                2017-08-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-11T20:56:00+08:00">
+                2017-10-11
               </time>
             
 
@@ -353,8 +350,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">java基础</span>
                   </a>
                 </span>
 
@@ -387,12 +384,12 @@
       
 
       
-        <h1 id="线程池的好处"><a href="#线程池的好处" class="headerlink" title="线程池的好处"></a>线程池的好处</h1><p><strong>1、降低资源消耗</strong><br>通过重复利用已创建的线程降低线程创建和销毁造成的消耗。<br><strong>2、提高响应速度</strong><br>当任务到达时，任务可以不需要等到线程创建就能立即执行。<br><strong>3、提高线程的可管理性</strong><br>线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。  </p>
-<h1 id="一、线程池的实现原理"><a href="#一、线程池的实现原理" class="headerlink" title="一、线程池的实现原理"></a>一、线程池的实现原理</h1><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%89%AF%E6%9C%AC1.jpg" alt="image"><br><strong>ThreadPoolExecutor执行execute()方法步骤：</strong><br>1、如果当前运行的线程少于corePoolSize，那么创建新的线程来执行任务<br>2、如果运行的线程等于或者多于corePoolSize，那么将任务加入BlockingQueue<br>3、如果BlockingQueue中任务已满，并且当前运行的线程数少于maximumPoolSize，那么创建新的线程来处理任务<br>4、如果当前运行的线程数多于maximumPoolSize，任务将被拒绝，并调用RejectedExecutionHandler.rejectdExecution()方法（饱和策略）<br><img src="http://osrmzp0jr.bkt.clouddn.com/1_%E5%89%AF%E6%9C%AC.jpg" alt="image"><br><strong>线程池中的线程执行任务分两种情况：</strong><br>1、在execute()方法中创建一个线程时，会让这个线程执行当前任务<br>2、这个线程执行完图中1的任务后，会反复从BlockingQueue中获取任务来执行  </p>
-<h1 id="二、线程池的使用"><a href="#二、线程池的使用" class="headerlink" title="二、线程池的使用"></a>二、线程池的使用</h1><h2 id="1、线程池的创建"><a href="#1、线程池的创建" class="headerlink" title="1、线程池的创建"></a>1、线程池的创建</h2><p>new ThreadPoolExecutor(corePoolSize, runnableTaskQueue, maximumPoolSize, handler, keepAliveTime);<br><strong>①corePoolSize（线程池的核心线程数）</strong>：当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使其他空闲的基本线程能够执行新任务也会创建新线程，等到需要执行的任务数大于线程池的核心线程数时就不再创建。具体可以参考上图<br><strong>②runnableTaskQueue（任务队列）</strong>：用于保存等待执行的任务的阻塞队列。有以下几个阻塞队列：<br>&emsp;1、ArrayBlockingQueue：是一个基于数组结构的<strong>有界阻塞队列</strong>，按先进先出原则对元素进行排序。<br>&emsp;2、LinkedBlockingQueue：一个基于链表结构的<strong>无界阻塞队列</strong>，吞吐量高于有界队列，newFixedThreadPool采用这个队列。<br>&emsp;3、SynchronousQueue：不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，newCachedThreadPool使用这个队列。<br>&emsp;4、PriporityBlockingQueue：一个具有优先级的<strong>无界阻塞队列</strong>。<br><strong>③maximumPoolSize（线程池最大数量）</strong>：线程池允许创建线程的最大数量。如果队列满了，且创建的线程数小于最大线程数，那么线程池会创建新的线程执行任务。<br><strong>④handler（饱和策略）</strong>：当队列和线程池都满了，说明线程池处于饱和状态，采取饱和策略处理提交的任务。有四种策略：<br>&emsp;1、AbortPolicy：终止策略，直接抛出异常（默认采用）<br>&emsp;2、CallerRunsPolicy：调用者运行策略，将某些任务回退给调用者，来降低新任务的流量<br>&emsp;3、DiscardOldestPolicy：抛弃策略，丢弃队列里最近的一个任务，并执行当前任务<br>&emsp;4、DiscardPolicy：抛弃最旧的策略，不处理，丢弃掉<br><strong>⑤keepAliveTime（线程活动保持的时间）</strong>：线程池的工作线程空闲后，保持存活的时间。  </p>
-<h2 id="2、线程池的关闭"><a href="#2、线程池的关闭" class="headerlink" title="2、线程池的关闭"></a>2、线程池的关闭</h2><p>可以通过shutdown或者shutdownNow方法来关闭线程池。原理是遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程。但也存在一些区别：<br>shutdownNow：首先将线程池的状态设置为STOP，然后尝试<strong>停止所有正在执行或暂停任务的线程，并返回等待执行任务的列表</strong>。<br>shutdown：将线程池的状态设置为SHUTDOWN状态，然后<strong>中断所有没有正在执行任务的线程</strong>。  </p>
-<h2 id="3、合理配置线程池"><a href="#3、合理配置线程池" class="headerlink" title="3、合理配置线程池"></a>3、合理配置线程池</h2><p>从下面几个角度分析：<br>1、任务的性质：CPU密集型任务、IO密集型任务和混合型任务。<br>2、任务的优先级：高、中、低<br>3、任务的执行时间：长、中、短<br>4、任务的依赖性：是否依赖其他系统资源，比如数据库连接<br>如果<strong>任务是CPU密集型的，应配置尽可能少的线程</strong>，如等于可用的处理器核数，这样就可以充分利用处理器，让它以最大火力不停进行计算。创建更多的线程反而是不利的，因为多个线程频繁进行上下文切换对性能消耗太大。<br>如果<strong>任务是IO密集型的，应尽可能配置多的线程</strong>，如处理器核数的几倍。因为在执行IO操作时，线程将被阻塞，此时处理器可以立即进行上下文切换以便其他线程开始任务。如果线程数不够，那么有待执行的任务也无法调度处理了。<br>可以使用公式计算出程序所需线程数：<strong>线程数=CPU可用核心数/(1-阻塞系数)</strong>，其中阻塞系数在0到1范围内。CPU密集型的阻塞系数为0，IO密集型的阻塞系数接近1。  </p>
-<h1 id="三、线程池的本质"><a href="#三、线程池的本质" class="headerlink" title="三、线程池的本质"></a>三、线程池的本质</h1><p><strong>线程池的本质是使用了一个线程安全的工作队列连接工作者线程和客户端线程，客户端线程将任务放入工作队列后便返回，而工作者线程则不断地从工作队列上取出工作并执行，典型的生产者-消费者模型。</strong></p>
+        <h1 id="一、对于字符串"><a href="#一、对于字符串" class="headerlink" title="一、对于字符串"></a>一、对于字符串</h1><p>字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String s1=&quot;china&quot;;</div><div class="line">String s2=&quot;china&quot;;</div><div class="line">String ss1=new String(&quot;china&quot;);</div><div class="line">String ss2=new String(&quot;china&quot;);</div></pre></td></tr></table></figure></p>
+<p>通过new产生一个字符串“china”时，会先去常量池中查找是否已经有了“china”，如果没有，就在常量池中创建一个此字符串对象，然后在堆中再创建一个常量池中此“china”对象的拷贝对象。  </p>
+<h1 id="二、对于基础类型的变量和常量"><a href="#二、对于基础类型的变量和常量" class="headerlink" title="二、对于基础类型的变量和常量"></a>二、对于基础类型的变量和常量</h1><p>局部变量（包括形式参数）：数据存在于栈内存中，栈内存中的局部变量随着方法的消失而消失。<br>成员变量：存储在堆中的对象里面，由垃圾收集器负责回收。<br>常量、静态变量：存储在方法区中（常量池）。  </p>
+<h1 id="三、Java中的两种数据类型"><a href="#三、Java中的两种数据类型" class="headerlink" title="三、Java中的两种数据类型"></a>三、Java中的两种数据类型</h1><h2 id="1、八种基本类型"><a href="#1、八种基本类型" class="headerlink" title="1、八种基本类型"></a>1、八种基本类型</h2><p>byte,short,int,long,char,double,float,boolean。如函数中的int a=3，a是一个指向3这个字面值的引用。存在于栈中，数据可以共享。同时定义int a=3和int b=3，a和b会同时指向3。<br>字面值的引用和类对象引用不同。两类对象引用同时指向一个对象，若一个对象引用变量修改了这个对象的内部状态，那么对另一个对象引用也即刻反映出变化，但字面值引用不会。  </p>
+<h2 id="2、包装类数据"><a href="#2、包装类数据" class="headerlink" title="2、包装类数据"></a>2、包装类数据</h2><p>Integer,Double等。这些数据全部存在于堆中，Java中用new语句显式的告诉编译器运行时根据需要动态创建，灵活但更占用时间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args)&#123;</div><div class="line">    int a1=1;</div><div class="line">    int b1=1;</div><div class="line">    int c1=2;</div><div class="line">    int d1=a1+b1;</div><div class="line">    </div><div class="line">    Integer a=1;</div><div class="line">    Integer b=2;</div><div class="line">    Integer c=3;</div><div class="line">    Integer d=3</div><div class="line">    </div><div class="line">    Integer e=321;</div><div class="line">    Integer f=321;</div><div class="line">    </div><div class="line">    System.out.println(a1==b1);//true</div><div class="line">    System.out.println(c1==d1);//true</div><div class="line">    System.out.println(c==(a+b));//true</div><div class="line">    System.out.println(c==d);//true</div><div class="line">    System.out.println(c==d);//false</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在自动装箱时（int-&gt;Integer时），当int值在-128~127时，返回的不是一个新New出来的Integer对象，而是一个已经缓存在堆中的Integer对象；若不在范围，则返回一个新new出来的Integer对象。<br>System.out.println(c1==d1);//true：先创建一个c1的引用，查找有没有字面值为2的地址，没找到，就开辟一个存放2这个字面值的地址，将c1指向2的地址。d1为两个字面值相加也为2，由于在栈中已经有2这个字面量的地址，因此将d1直接指向2的地址，所以c1和d1的指向相同。  </p>
 
       
     </div>
@@ -424,7 +421,7 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/java并发/" rel="tag"># java并发</a>
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
           
         </div>
       
@@ -437,8 +434,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/25/cglib动态代理/" rel="next" title="cglib动态代理">
-                <i class="fa fa-chevron-left"></i> cglib动态代理
+              <a href="/2017/10/11/Java对象的创建过程/" rel="next" title="Java对象的创建过程">
+                <i class="fa fa-chevron-left"></i> Java对象的创建过程
               </a>
             
           </div>
@@ -446,10 +443,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/31/深入java虚拟机之类加载机制/" rel="prev" title="深入java虚拟机之类加载机制">
-                深入java虚拟机之类加载机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -659,7 +652,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池的好处"><span class="nav-number">1.</span> <span class="nav-text">线程池的好处</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、线程池的实现原理"><span class="nav-number">2.</span> <span class="nav-text">一、线程池的实现原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、线程池的使用"><span class="nav-number">3.</span> <span class="nav-text">二、线程池的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、线程池的创建"><span class="nav-number">3.1.</span> <span class="nav-text">1、线程池的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、线程池的关闭"><span class="nav-number">3.2.</span> <span class="nav-text">2、线程池的关闭</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、合理配置线程池"><span class="nav-number">3.3.</span> <span class="nav-text">3、合理配置线程池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、线程池的本质"><span class="nav-number">4.</span> <span class="nav-text">三、线程池的本质</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、对于字符串"><span class="nav-number">1.</span> <span class="nav-text">一、对于字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、对于基础类型的变量和常量"><span class="nav-number">2.</span> <span class="nav-text">二、对于基础类型的变量和常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Java中的两种数据类型"><span class="nav-number">3.</span> <span class="nav-text">三、Java中的两种数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、八种基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">1、八种基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、包装类数据"><span class="nav-number">3.2.</span> <span class="nav-text">2、包装类数据</span></a></li></ol></li></ol></div>
             
 
           </div>
