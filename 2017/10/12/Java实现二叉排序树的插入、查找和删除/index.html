@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java，java基础," />
+  <meta name="keywords" content="算法,数据结构," />
 
 
 
@@ -95,17 +95,17 @@
 
 
 
-<meta name="description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
-<meta name="keywords" content="java，java基础">
+<meta name="description" content="二叉排序树又叫二叉查找树。1.可以使一颗空树2.若左子树不为空，则左子树上所有节点的值均小于根节点的值3.若右子树不为空，则右子树上所有节点的值均大于根节点的值4.左右子树也分别为二叉排序树   性能分析查找性能：含有n个节点的二叉排序树的平均查找长度和树的形态有关。（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)（最好情况）二叉排序的形态和折半查找的判定树相">
+<meta name="keywords" content="算法,数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cglib动态代理">
-<meta property="og:url" content="http://yoursite.com/2017/08/25/cglib动态代理/index.html">
+<meta property="og:title" content="Java实现二叉排序树的插入、查找和删除">
+<meta property="og:url" content="http://yoursite.com/2017/10/12/Java实现二叉排序树的插入、查找和删除/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
-<meta property="og:updated_time" content="2017-08-25T09:22:49.333Z">
+<meta property="og:description" content="二叉排序树又叫二叉查找树。1.可以使一颗空树2.若左子树不为空，则左子树上所有节点的值均小于根节点的值3.若右子树不为空，则右子树上所有节点的值均大于根节点的值4.左右子树也分别为二叉排序树   性能分析查找性能：含有n个节点的二叉排序树的平均查找长度和树的形态有关。（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)（最好情况）二叉排序的形态和折半查找的判定树相">
+<meta property="og:updated_time" content="2017-10-12T07:40:12.648Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="cglib动态代理">
-<meta name="twitter:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
+<meta name="twitter:title" content="Java实现二叉排序树的插入、查找和删除">
+<meta name="twitter:description" content="二叉排序树又叫二叉查找树。1.可以使一颗空树2.若左子树不为空，则左子树上所有节点的值均小于根节点的值3.若右子树不为空，则右子树上所有节点的值均大于根节点的值4.左右子树也分别为二叉排序树   性能分析查找性能：含有n个节点的二叉排序树的平均查找长度和树的形态有关。（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)（最好情况）二叉排序的形态和折半查找的判定树相">
 
 
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/25/cglib动态代理/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/12/Java实现二叉排序树的插入、查找和删除/"/>
 
 
 
 
 
-  <title>cglib动态代理 | Wunian's Blog</title>
+  <title>Java实现二叉排序树的插入、查找和删除 | Wunian's Blog</title>
   
 
 
@@ -298,7 +298,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/cglib动态代理/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/Java实现二叉排序树的插入、查找和删除/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -315,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">cglib动态代理</h1>
+          <h1 class="post-title" itemprop="name headline">Java实现二叉排序树的插入、查找和删除</h1>
         
 
         <div class="post-meta">
@@ -327,8 +327,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T17:22:04+08:00">
-                2017-08-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-12T15:39:00+08:00">
+                2017-10-12
               </time>
             
 
@@ -350,8 +350,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/数据结构与算法/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构与算法</span>
                   </a>
                 </span>
 
@@ -384,16 +384,10 @@
       
 
       
-        <h1 id="一、cglib实现动态代理步骤"><a href="#一、cglib实现动态代理步骤" class="headerlink" title="一、cglib实现动态代理步骤"></a>一、cglib实现动态代理步骤</h1><p>使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。  </p>
-<h2 id="1、定义业务逻辑"><a href="#1、定义业务逻辑" class="headerlink" title="1、定义业务逻辑"></a>1、定义业务逻辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class UserService&#123;</div><div class="line">    public void add()&#123;</div><div class="line">        System.ou.println(&quot;This is add service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2、实现MethodInterceptor接口，定义方法的拦截器"><a href="#2、实现MethodInterceptor接口，定义方法的拦截器" class="headerlink" title="2、实现MethodInterceptor接口，定义方法的拦截器"></a>2、实现MethodInterceptor接口，定义方法的拦截器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class MyMethodInterceptor implements MethodInterceptor&#123;</div><div class="line">    public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">        System.ou.println(&quot;Before:&quot; + method);</div><div class="line">        Object object = proxy.invokeSuper(obj, arg);</div><div class="line">        System.ou.println(&quot;After:&quot; + method);</div><div class="line">        return object;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3、使用Enhancer类生成代理类"><a href="#3、使用Enhancer类生成代理类" class="headerlink" title="3、使用Enhancer类生成代理类"></a>3、使用Enhancer类生成代理类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Enhancer enhancer = new Enhancer();</div><div class="line">enhancer.setSuperClass(UserService.class);</div><div class="line">enhancer.setCallback(new MyMethodInterceptor());</div><div class="line">UserService userService = (UserService)enhancer.create();</div></pre></td></tr></table></figure>
-<h2 id="4、userService-add-的执行结果"><a href="#4、userService-add-的执行结果" class="headerlink" title="4、userService.add()的执行结果"></a>4、userService.add()的执行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before: add</div><div class="line">This is add service</div><div class="line">After: add</div></pre></td></tr></table></figure>
-<h1 id="二、cglib字节码生成"><a href="#二、cglib字节码生成" class="headerlink" title="二、cglib字节码生成"></a>二、cglib字节码生成</h1><p><strong>Enhancer</strong>是cglib字节码增强器，可以方便的对类进行扩展，<strong>内部调用GeneratorStrategy.generate方法生成代理类的字节码</strong><br>内部实现：<br><strong>1、代理类UserService$$EnhancerByCGLIB$$394dddeb继承了委托类UserService，且委托类的final方法不能被代理；<br>2、代理类为每个委托方法都生成两个方法，以add方法为例，一个是重写的add方法，一个是CGLIB$add$0方法，该方法直接调用委托类的add方法；<br>3、当执行代理对象的add方法时，会先判断是否存在实现了MethodInterceptor接口的对象cglib$CALLBACK_0（也就是这里的MyMethodInterceptor），如果存在，那么调用MethodInterceptor对象的intercept方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">    System.ou.println(&quot;Before:&quot; + method);</div><div class="line">    Object object = proxy.invokeSuper(obj, arg);//最终调用的委托类中的method方法</div><div class="line">    System.ou.println(&quot;After:&quot; + method);</div><div class="line">    return object;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>参数分别是：①代理对象；②委托类方法；③方法参数；④代理方法的MethodProxy对象<br><strong>4、每个被代理的方法都对应一个MethodProxy对象，methodProxy.invokeSuper最终调用的是委托类的add方法</strong>，实现如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public Object invokeSuper(Object obj, Object[] args)throws Throwable&#123;</div><div class="line">    try&#123;</div><div class="line">        init();</div><div class="line">        FastClassInfo fci = fastClassInfo;</div><div class="line">        //fci.f2:代理类对象</div><div class="line">        //fci.i2:方法CGLIB$add$0在对象中的索引位置</div><div class="line">        return fci.f2.invoke(fci.i2, obj, args);//调用代理类对象的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在MethodProxy实现中，通过FastClassInfo维护了委托类和代理类的FastClass：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private static class FastClassInfo&#123;</div><div class="line">    FastClass f1;//指向委托类对象</div><div class="line">    FastClass f2;//指向代理类对象</div><div class="line">    int i1;//方法add在对象中的索引位置</div><div class="line">    int i2;//方法CGLIB$add$0在对象中的索引位置</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>FastClass提出概念下标index，通过索引来保存方法的引用信息，将原先的反射调用，转化为方法的直接调用，从而实现fast。当调用methodProxy.invokeSuper方法时，实际上是调用代理类的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法，避免了使用反射机制来调用委托类的方法。</strong>  </p>
-<h1 id="三、jdk和cglib动态代理的区别"><a href="#三、jdk和cglib动态代理的区别" class="headerlink" title="三、jdk和cglib动态代理的区别"></a>三、jdk和cglib动态代理的区别</h1><p>1、jdk动态代理生成的代理类和委托类必须实现相同的接口；cglib动态代理则不需要。<br>2、cglib动态代理中，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法；<br>3、jdk采用反射机制来调用委托类的方法，cglib采用类似索引的方式直接调用委托类的方法。</p>
+        <h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p><strong>查找性能</strong>：含有n个节点的二叉排序树的平均查找长度和树的形态有关。<br>（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)<br>（最好情况）二叉排序的形态和折半查找的判定树相同，平均查找长度和log2(n)成正比  </p>
+<p><strong>插入、删除性能</strong>：插入、删除操作的时间复杂度都是O(logn)级的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">//二叉树节点定义</div><div class="line">public class Node&#123;</div><div class="line">    private int value;</div><div class="line">    private Node left;</div><div class="line">    private Node right;</div><div class="line">    </div><div class="line">    public Node(Node left, Node right, int value)&#123;</div><div class="line">        this.left = left;</div><div class="line">        this.right=right;</div><div class="line">        this.value = value;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    set,get...</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class BinarySortTree&#123;</div><div class="line">    </div><div class="line">    private Node root=null;</div><div class="line">    </div><div class="line">    //查找二叉排序树中是否有key值</div><div class="line">    public boolean searchBST(int key)&#123;</div><div class="line">        Node current = root;</div><div class="line">        while(current != null)&#123;</div><div class="line">            if(key == current.getValue())</div><div class="line">                return true;</div><div class="line">            else(key &lt; current.getValue())</div><div class="line">                current=current.getLeft();</div><div class="line">            else</div><div class="line">                current=current.getRight();</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //向二叉排序树中插入节点</div><div class="line">    public void insertBST(int key)&#123;</div><div class="line">        Node p = root;</div><div class="line">        //记录查找节点的父节点</div><div class="line">        Node prev = null;</div><div class="line">        //一直查找下去，一直到满足条件的叶子节点</div><div class="line">        while(p != null)&#123;</div><div class="line">            prev=p;</div><div class="line">            if(key &lt; p.getValue())</div><div class="line">                p = p.getLeft();</div><div class="line">            else if(key &gt; p.getValue())</div><div class="line">                p = p.getRight();</div><div class="line">            else</div><div class="line">                return;//找到了相同节点就返回</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        //prev为要安放节点的父结点，根据key的大小，判断放入prev的左右节点</div><div class="line">        if(root == null)</div><div class="line">            root = new Node(key);</div><div class="line">        else if(key &lt; prev.getValue())</div><div class="line">            prev.setLeft(new Node(key));</div><div class="line">        else</div><div class="line">            prev.setRight(new Node(key));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //删除二叉排序树中的节点</div><div class="line">    分为三种情况：</div><div class="line">    (1)要删除的节点p是叶子节点，删除置空即可</div><div class="line">    (2)p只有左子树或右子树，直接让左子树/右子树代替p</div><div class="line">    (3)p既有左子树又有右子树，用p左子树中最大的那个值（最右端s）代替p，删除s，重接其左子树</div><div class="line">    public boolean delete(Node node)&#123;</div><div class="line">        Node temp = null;</div><div class="line">        //右子树为空，重接它的左子树；如果是叶子节点，在这也被置为空</div><div class="line">        if(node.getRight()==null)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getLeft();</div><div class="line">        &#125;</div><div class="line">        //左子树为空，重接它的右子树</div><div class="line">        else if(node.getLeft()==null)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getRight();</div><div class="line">        &#125;</div><div class="line">        //左右子树都不为空</div><div class="line">        else&#123;</div><div class="line">            temp = node;</div><div class="line">            Node s = node;</div><div class="line">            //转向左子树，然后向右走到尽头</div><div class="line">            s=s.getLeft();//temp是s的父结点</div><div class="line">            while(s.getRight() != null)&#123;</div><div class="line">                temp = s;</div><div class="line">                s = s.getRight();</div><div class="line">            &#125;</div><div class="line">            node.setValue(s.getValue());//将node的值设为左子树最右侧s的值</div><div class="line">            if(temp != node)&#123;</div><div class="line">                temp.setRight(s.getLeft());//见书p326</div><div class="line">            &#125;</div><div class="line">            else&#123;</div><div class="line">                temp.setLeft(s.getLeft());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -423,7 +417,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java，java基础/" rel="tag"># java，java基础</a>
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
         </div>
       
@@ -436,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/25/JDK动态代理/" rel="next" title="JDK动态代理">
-                <i class="fa fa-chevron-left"></i> JDK动态代理
+              <a href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/" rel="next" title="静态代码块、构造代码块、构造函数及类初始化顺序">
+                <i class="fa fa-chevron-left"></i> 静态代码块、构造代码块、构造函数及类初始化顺序
               </a>
             
           </div>
@@ -445,10 +441,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/30/Java中的线程池/" rel="prev" title="Java中的线程池">
-                Java中的线程池 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -658,7 +650,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、cglib实现动态代理步骤"><span class="nav-number">1.</span> <span class="nav-text">一、cglib实现动态代理步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、定义业务逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">1、定义业务逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、实现MethodInterceptor接口，定义方法的拦截器"><span class="nav-number">1.2.</span> <span class="nav-text">2、实现MethodInterceptor接口，定义方法的拦截器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、使用Enhancer类生成代理类"><span class="nav-number">1.3.</span> <span class="nav-text">3、使用Enhancer类生成代理类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、userService-add-的执行结果"><span class="nav-number">1.4.</span> <span class="nav-text">4、userService.add()的执行结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、cglib字节码生成"><span class="nav-number">2.</span> <span class="nav-text">二、cglib字节码生成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、jdk和cglib动态代理的区别"><span class="nav-number">3.</span> <span class="nav-text">三、jdk和cglib动态代理的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉排序树"><span class="nav-number">1.</span> <span class="nav-text">二叉排序树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能分析"><span class="nav-number">1.1.</span> <span class="nav-text">性能分析</span></a></li></ol></li></ol></div>
             
 
           </div>

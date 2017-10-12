@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-11T12:56:13.524Z</updated>
+  <updated>2017-10-12T07:40:12.648Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java实现二叉排序树的插入、查找和删除</title>
+    <link href="http://yoursite.com/2017/10/12/Java%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%8E%92%E5%BA%8F%E6%A0%91%E7%9A%84%E6%8F%92%E5%85%A5%E3%80%81%E6%9F%A5%E6%89%BE%E5%92%8C%E5%88%A0%E9%99%A4/"/>
+    <id>http://yoursite.com/2017/10/12/Java实现二叉排序树的插入、查找和删除/</id>
+    <published>2017-10-12T07:39:00.000Z</published>
+    <updated>2017-10-12T07:40:12.648Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p><strong>查找性能</strong>：含有n个节点的二叉排序树的平均查找长度和树的形态有关。<br>（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)<br>（最好情况）二叉排序的形态和折半查找的判定树相同，平均查找长度和log2(n)成正比  </p>
+<p><strong>插入、删除性能</strong>：插入、删除操作的时间复杂度都是O(logn)级的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">//二叉树节点定义</div><div class="line">public class Node&#123;</div><div class="line">    private int value;</div><div class="line">    private Node left;</div><div class="line">    private Node right;</div><div class="line">    </div><div class="line">    public Node(Node left, Node right, int value)&#123;</div><div class="line">        this.left = left;</div><div class="line">        this.right=right;</div><div class="line">        this.value = value;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    set,get...</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class BinarySortTree&#123;</div><div class="line">    </div><div class="line">    private Node root=null;</div><div class="line">    </div><div class="line">    //查找二叉排序树中是否有key值</div><div class="line">    public boolean searchBST(int key)&#123;</div><div class="line">        Node current = root;</div><div class="line">        while(current != null)&#123;</div><div class="line">            if(key == current.getValue())</div><div class="line">                return true;</div><div class="line">            else(key &lt; current.getValue())</div><div class="line">                current=current.getLeft();</div><div class="line">            else</div><div class="line">                current=current.getRight();</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //向二叉排序树中插入节点</div><div class="line">    public void insertBST(int key)&#123;</div><div class="line">        Node p = root;</div><div class="line">        //记录查找节点的父节点</div><div class="line">        Node prev = null;</div><div class="line">        //一直查找下去，一直到满足条件的叶子节点</div><div class="line">        while(p != null)&#123;</div><div class="line">            prev=p;</div><div class="line">            if(key &lt; p.getValue())</div><div class="line">                p = p.getLeft();</div><div class="line">            else if(key &gt; p.getValue())</div><div class="line">                p = p.getRight();</div><div class="line">            else</div><div class="line">                return;//找到了相同节点就返回</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        //prev为要安放节点的父结点，根据key的大小，判断放入prev的左右节点</div><div class="line">        if(root == null)</div><div class="line">            root = new Node(key);</div><div class="line">        else if(key &lt; prev.getValue())</div><div class="line">            prev.setLeft(new Node(key));</div><div class="line">        else</div><div class="line">            prev.setRight(new Node(key));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //删除二叉排序树中的节点</div><div class="line">    分为三种情况：</div><div class="line">    (1)要删除的节点p是叶子节点，删除置空即可</div><div class="line">    (2)p只有左子树或右子树，直接让左子树/右子树代替p</div><div class="line">    (3)p既有左子树又有右子树，用p左子树中最大的那个值（最右端s）代替p，删除s，重接其左子树</div><div class="line">    public boolean delete(Node node)&#123;</div><div class="line">        Node temp = null;</div><div class="line">        //右子树为空，重接它的左子树；如果是叶子节点，在这也被置为空</div><div class="line">        if(node.getRight()==null)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getLeft();</div><div class="line">        &#125;</div><div class="line">        //左子树为空，重接它的右子树</div><div class="line">        else if(node.getLeft()==null)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getRight();</div><div class="line">        &#125;</div><div class="line">        //左右子树都不为空</div><div class="line">        else&#123;</div><div class="line">            temp = node;</div><div class="line">            Node s = node;</div><div class="line">            //转向左子树，然后向右走到尽头</div><div class="line">            s=s.getLeft();//temp是s的父结点</div><div class="line">            while(s.getRight() != null)&#123;</div><div class="line">                temp = s;</div><div class="line">                s = s.getRight();</div><div class="line">            &#125;</div><div class="line">            node.setValue(s.getValue());//将node的值设为左子树最右侧s的值</div><div class="line">            if(temp != node)&#123;</div><div class="line">                temp.setRight(s.getLeft());//见书p326</div><div class="line">            &#125;</div><div class="line">            else&#123;</div><div class="line">                temp.setLeft(s.getLeft());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;二叉排序树&quot;&gt;&lt;a href=&quot;#二叉排序树&quot; class=&quot;headerlink&quot; title=&quot;二叉排序树&quot;&gt;&lt;/a&gt;二叉排序树&lt;/h2&gt;&lt;p&gt;又叫二叉查找树。&lt;br&gt;1.可以使一颗空树&lt;br&gt;2.若左子树不为空，则左子树上所有节点的值均小于根节点的值&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://yoursite.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="数据结构" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>静态代码块、构造代码块、构造函数及类初始化顺序</title>
+    <link href="http://yoursite.com/2017/10/12/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97%E3%80%81%E6%9E%84%E9%80%A0%E4%BB%A3%E7%A0%81%E5%9D%97%E3%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%8F%8A%E7%B1%BB%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/"/>
+    <id>http://yoursite.com/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/</id>
+    <published>2017-10-12T07:35:00.000Z</published>
+    <updated>2017-10-12T07:35:55.052Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>静态代码块：用static声明，jvm加载类时执行，仅执行一次。<br>构造代码块：类中直接用{}定义，每一次创建对象时执行。<br>执行顺序优先级：<strong>静态块-&gt;main()-&gt;构造块-&gt;构造函数</strong>。  </p>
+<h2 id="二、详解"><a href="#二、详解" class="headerlink" title="二、详解"></a>二、详解</h2><h3 id="1、构造函数"><a href="#1、构造函数" class="headerlink" title="1、构造函数"></a>1、构造函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public Hello()&#123;//构造函数</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。<br>2.构造函数的作用是用于给对象初始化。<br>3.一个对象建立，构造函数只运行一次。  </p>
+<h3 id="2、构造代码块"><a href="#2、构造代码块" class="headerlink" title="2、构造代码块"></a>2、构造代码块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;//构造代码块</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.构造代码块的作用是给对象进行初始化。<br>2.对象一建立就运行构造代码块了，而且优先于构造函数。有对象建立，才会运行构造代码块，类是不能调用构造代码块的。<br>3.构造代码块和构造函数的区别：<strong>构造代码块是给所有对象进行统一初始化，而构造函数是给对应的对象初始化。</strong>因为构造函数可以有多个，运行哪个构造函数就会建立什么样的对象，但无论建立哪个对象，都会执行相同的构造代码块。也就是说，构造代码块中定义的是不同对象共性的初始化内容。  </p>
+<h3 id="3、静态代码块"><a href="#3、静态代码块" class="headerlink" title="3、静态代码块"></a>3、静态代码块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static&#123;//静态代码块</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.<strong>它随着类的加载而执行，只执行一次，并且优先于主函数</strong>。具体说，静态代码块是由类调用的，类调用时，先执行静态代码块，然后再执行主函数。<br>2.静态代码块其实是给类初始化的，而构造代码块是给对象初始化的。<br>3.静态代码块中的变量是局部变量，与普通函数中的局部变量没有区别。<br>4.一个类中可以有多个静态代码块。  </p>
+<h2 id="三、类初始化顺序"><a href="#三、类初始化顺序" class="headerlink" title="三、类初始化顺序"></a>三、类初始化顺序</h2><p>&emsp;其中，<strong>静态变量、静态初始化块，变量、初始化块（构造代码块）的初始化顺序取决于它们在类中出现的先后顺序。</strong><br>首先，访问SubClass.main()，这是一个static方法，于是装载器会寻找已经编译的SubClass.class文件。在装载过程中，如果注意到有基类（extends），会装载基类。不管创不创建基类对象，这个过程都会发生。之后是正常的初始化顺序：  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">class Parent&#123;</div><div class="line">    public static String p_StaticField=&quot;父类--静态变量&quot;;</div><div class="line">    </div><div class="line">    public String p_Field=&quot;父类--变量&quot;;</div><div class="line">    protected int i=9;</div><div class="line">    protected int j=0;</div><div class="line">    </div><div class="line">    static&#123;</div><div class="line">        System.out.println(p_StaticField);</div><div class="line">        System.out.println(&quot;父类--静态初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.out.println(p_Field);</div><div class="line">        System.out.println(&quot;父类--初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public Parent()&#123;</div><div class="line">        System.out.println(&quot;父类--构造器&quot;);</div><div class="line">        System.out.println(&quot;i=&quot; + i+ &quot;,j=&quot; + j);</div><div class="line">        j=20;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SubClass extends Parent&#123;</div><div class="line">    public static String s_StaticField=&quot;子类--静态变量&quot;;</div><div class="line">    </div><div class="line">    public String s_Field=&quot;子类--变量&quot;;</div><div class="line">    </div><div class="line">    static&#123;</div><div class="line">        System.out.println(s_StaticField);</div><div class="line">        System.out.println(&quot;子类--静态初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.out.println(s_Field);</div><div class="line">        System.out.println(&quot;子类--初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public SubClass()&#123;</div><div class="line">        System.out.println(&quot;子类--构造器&quot;);</div><div class="line">        System.out.println(&quot;i=&quot; + i+ &quot;,j=&quot; + j);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        System.out.println(&quot;子类main方法&quot;);</div><div class="line">        new SubClass();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">运行结果：  </div><div class="line">父类--静态变量  </div><div class="line">父类--静态初始化块  </div><div class="line">子类--静态变量  </div><div class="line">子类--静态初始化块  </div><div class="line">子类main方法  </div><div class="line">父类--变量  </div><div class="line">父类--初始化块  </div><div class="line">父类--构造器  </div><div class="line">i=9, j=0  </div><div class="line">子类--变量  </div><div class="line">子类--初始化块  </div><div class="line">子类--构造器  </div><div class="line">i=9,j=20</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;一、简介&quot;&gt;&lt;a href=&quot;#一、简介&quot; class=&quot;headerlink&quot; title=&quot;一、简介&quot;&gt;&lt;/a&gt;一、简介&lt;/h2&gt;&lt;p&gt;静态代码块：用static声明，jvm加载类时执行，仅执行一次。&lt;br&gt;构造代码块：类中直接用{}定义，每一次创建对象时执行
+    
+    </summary>
+    
+      <category term="java基础" scheme="http://yoursite.com/categories/java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
   
   <entry>
     <title>字符串、基本数据类型等在堆、栈、常量池中的存储</title>
@@ -614,65 +675,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;什么是Semaphore&quot;&gt;&lt;a href=&quot;#什么是Semaphore&quot; class=&quot;headerlink&quot; title=&quot;什么是Semaphore&quot;&gt;&lt;/a&gt;什么是Semaphore&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Semaphore(信号量)是用来控制同时访
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CyclicBarrier</title>
-    <link href="http://yoursite.com/2017/08/16/CyclicBarrier/"/>
-    <id>http://yoursite.com/2017/08/16/CyclicBarrier/</id>
-    <published>2017-08-16T13:34:00.000Z</published>
-    <updated>2017-08-16T13:53:25.233Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="什么是CyclicBarrier"><a href="#什么是CyclicBarrier" class="headerlink" title="什么是CyclicBarrier"></a>什么是CyclicBarrier</h2><p>CyclicBarrier也叫同步屏障，在jdk1.5中引入，<strong>可以让一组线程到达一个屏障时被阻塞，直到最后一个线程到达屏障时，所有被阻塞的线程才能继续执行。</strong><br>CyclicBarrier就好比是一扇门，默认情况是关闭的，堵住所有线程执行的路径，只有所有线程都到达时，门才会打开。  </p>
-<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><p>1、<strong>默认的构造方法是CyclicBarrier(int parties)，参数parties表示屏障拦截的线程数量，每个线程会调用await方法来告诉CyclicBarrier它已经到达了屏障，然后当前线程就被阻塞。</strong><br>2、<strong>更高级的构造函数是CyclicBarrier(int parties, Runnable barrierAction)用于在所有线程到达屏障时，优先执行barrierAction。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/CyclicBarrier.png" alt="image">  </p>
-<h2 id="CyclicBarrier的实现原理"><a href="#CyclicBarrier的实现原理" class="headerlink" title="CyclicBarrier的实现原理"></a>CyclicBarrier的实现原理</h2><p>CyclicBarrier的实现主要基于ReentrantLock。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class CyclicBarrier&#123;</div><div class="line">    private static class Generation&#123;</div><div class="line">        boolean broken = false;</div><div class="line">    &#125;</div><div class="line">    private final ReentrantLock lock = new ReentrantLock();</div><div class="line">    private final Condition trip = lock.newCondition();</div><div class="line">    private final int parties;</div><div class="line">    private final Runnable barrierCommand;</div><div class="line">    private Generation generation = new Generation();</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>其中，<strong>Generation用来控制屏障的循环使用，如果generation.broken为true的话，说明这个屏障已经损坏了，当某个线程await的时候，直接抛出异常。</strong>  </p>
-<h3 id="await实现原理"><a href="#await实现原理" class="headerlink" title="await实现原理"></a>await实现原理</h3><p><strong>1、每当线程执行await方法时，内部变量count就减1，如果count!=0，说明有线程还没有到达屏障处，那么在锁的条件变量trip上等待。</strong><br><strong>2、当count==0时，说明所有的线程都到达屏障处，执行条件变量trip的signAll方法来唤醒等待的线程。</strong><br>其中nextGeneration可以实现屏障的循环使用：可以实现重新生成Generation对象和恢复count值。  </p>
-<h2 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h2><p><strong>1、CountDownLatch的计数器只可以使用一次；而CyclicBarrier的计数器可以使用reset()方法重置，能够重复利用。</strong><br><strong>2、CountDownLatch是减计数器方式，构造方法中参数是要等待的线程的个数，每完成一个任务，调用countDown减1，当计数器为0时，说明所有线程的任务已经执行完，阻塞等待的线程被唤醒继续执行；CyclicBarrier中，构造方法中参数是屏障拦截的线程数量，当所有线程到达时，线程数等于parties变量指定的数，栅栏打开，所有线程通过。</strong><br><strong>3、CountDownLatch中，调用countDown方法实现计数器减1，调用await()方法只进行阻塞，对计数没有影响；CyclicBarrier中，调用await()方法计数器加1，加1后的值没有到达屏障拦截的数量，那么线程被阻塞。</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;什么是CyclicBarrier&quot;&gt;&lt;a href=&quot;#什么是CyclicBarrier&quot; class=&quot;headerlink&quot; title=&quot;什么是CyclicBarrier&quot;&gt;&lt;/a&gt;什么是CyclicBarrier&lt;/h2&gt;&lt;p&gt;CyclicBarrier也
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CountDownLatch</title>
-    <link href="http://yoursite.com/2017/08/15/CountDownLatch/"/>
-    <id>http://yoursite.com/2017/08/15/CountDownLatch/</id>
-    <published>2017-08-15T12:33:00.000Z</published>
-    <updated>2017-08-15T13:50:43.118Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="什么是CountDownLatch"><a href="#什么是CountDownLatch" class="headerlink" title="什么是CountDownLatch"></a>什么是CountDownLatch</h2><p><strong>CountDownLatch也叫闭锁，在jdk1.5中引入，允许一个或多个线程等待其他线程完成操作后再执行。<br>CountDownLatch内部会维护一个初始值等于线程数量的计数器，主线程执行await方法，如果计数器大于0，那么主线程就阻塞等待。每当一个线程完成任务，计数器值就减一。当计数器为0时，表示所有的线程都已经完成任务，阻塞等待的主线程被唤醒，继续执行。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/countdownlatch1.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">public class TestCountDownLatch&#123;</div><div class="line">	public static void main(String[] args)&#123;</div><div class="line">	final CountDownLatch latch = new CountDownLatch(5);</div><div class="line">	LatchDemo ld = new LatchDemo(latch);</div><div class="line"></div><div class="line">	long start = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	for(int i = 0; i&lt;5; i++)&#123;</div><div class="line">		new Thread(ld).start();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	try&#123;</div><div class="line">		latch.await();//await方法挂起主线程</div><div class="line">	&#125;catch(InterruptedException e)&#123;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	long end = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	System.out.println(&quot;耗费时间：&quot;+(end-start));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class LatchDemo implements Runnable&#123;</div><div class="line">	private CountDownLatch latch;</div><div class="line">	public LatchDemo(CountDownLatch latch)&#123;</div><div class="line">		this.latch=latch;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void run()&#123;</div><div class="line">		synchronized(this)&#123;</div><div class="line">			try&#123;</div><div class="line">				for(int i=0; i&lt;50000; i++)&#123;</div><div class="line">					if(i%2==0)&#123;</div><div class="line">						System.out.println(i);</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;finally&#123;</div><div class="line">				latch.countDown();//计数器减一</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="CountDownLatch的实现原理"><a href="#CountDownLatch的实现原理" class="headerlink" title="CountDownLatch的实现原理"></a>CountDownLatch的实现原理</h2><p>CountDownLatch的实现主要是基于Java同步器AQS。其内部维护了一个AQS子类，并重写了相关的方法。  </p>
-<h3 id="await实现"><a href="#await实现" class="headerlink" title="await实现"></a>await实现</h3><p>主线程执行await方法，tryAcquireShared方法中，如果state（state为未完成线程任务的线程个数）不等于0，返回-1，将主线程加入到等待队列中，主线程通过LockSupport.park(this)被挂起。<br>await():使当前线程在计数器至零之前一直等待，除非线程被中断。  </p>
-<h3 id="countDown实现"><a href="#countDown实现" class="headerlink" title="countDown实现"></a>countDown实现</h3><p>countDown方法实现state的减1操作，即通过unsafe.compareAndSwapInt方法设置state值。<br>如果state的值为0，那么通过LockSupport.unpark唤醒await方法中挂起的主线程。  </p>
-<h2 id="join方法"><a href="#join方法" class="headerlink" title="join方法"></a>join方法</h2><p><strong>join用于让当前的执行线程等待join线程执行结束。其实现原理是不停检查join线程是否存活，如果join线程存活就让当前线程继续等待下去。</strong> CountDownLatch也实现了join功能，并且比join功能更丰富。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;什么是CountDownLatch&quot;&gt;&lt;a href=&quot;#什么是CountDownLatch&quot; class=&quot;headerlink&quot; title=&quot;什么是CountDownLatch&quot;&gt;&lt;/a&gt;什么是CountDownLatch&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Co
     
     </summary>
     

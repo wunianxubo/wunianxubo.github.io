@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java，java基础," />
+  <meta name="keywords" content="java,java基础," />
 
 
 
@@ -95,17 +95,19 @@
 
 
 
-<meta name="description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
-<meta name="keywords" content="java，java基础">
+<meta name="description" content="一、简介静态代码块：用static声明，jvm加载类时执行，仅执行一次。构造代码块：类中直接用{}定义，每一次创建对象时执行。执行顺序优先级：静态块-&amp;gt;main()-&amp;gt;构造块-&amp;gt;构造函数。   二、详解1、构造函数123public Hello()&amp;#123;//构造函数    &amp;#125; 1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。2">
+<meta name="keywords" content="java,java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cglib动态代理">
-<meta property="og:url" content="http://yoursite.com/2017/08/25/cglib动态代理/index.html">
+<meta property="og:title" content="静态代码块、构造代码块、构造函数及类初始化顺序">
+<meta property="og:url" content="http://yoursite.com/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
-<meta property="og:updated_time" content="2017-08-25T09:22:49.333Z">
+<meta property="og:description" content="一、简介静态代码块：用static声明，jvm加载类时执行，仅执行一次。构造代码块：类中直接用{}定义，每一次创建对象时执行。执行顺序优先级：静态块-&amp;gt;main()-&amp;gt;构造块-&amp;gt;构造函数。   二、详解1、构造函数123public Hello()&amp;#123;//构造函数    &amp;#125; 1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。2">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png">
+<meta property="og:updated_time" content="2017-10-12T07:35:55.052Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="cglib动态代理">
-<meta name="twitter:description" content="一、cglib实现动态代理步骤使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。   1、定义业务逻辑12345public class UserService&amp;#123;    public void add()&amp;#123;        System.ou.println(&amp;quot;This is add service&amp;quot;);">
+<meta name="twitter:title" content="静态代码块、构造代码块、构造函数及类初始化顺序">
+<meta name="twitter:description" content="一、简介静态代码块：用static声明，jvm加载类时执行，仅执行一次。构造代码块：类中直接用{}定义，每一次创建对象时执行。执行顺序优先级：静态块-&amp;gt;main()-&amp;gt;构造块-&amp;gt;构造函数。   二、详解1、构造函数123public Hello()&amp;#123;//构造函数    &amp;#125; 1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。2">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png">
 
 
 
@@ -133,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/25/cglib动态代理/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/"/>
 
 
 
 
 
-  <title>cglib动态代理 | Wunian's Blog</title>
+  <title>静态代码块、构造代码块、构造函数及类初始化顺序 | Wunian's Blog</title>
   
 
 
@@ -298,7 +300,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/25/cglib动态代理/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xu Bo">
@@ -315,7 +317,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">cglib动态代理</h1>
+          <h1 class="post-title" itemprop="name headline">静态代码块、构造代码块、构造函数及类初始化顺序</h1>
         
 
         <div class="post-meta">
@@ -327,8 +329,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T17:22:04+08:00">
-                2017-08-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-12T15:35:00+08:00">
+                2017-10-12
               </time>
             
 
@@ -350,8 +352,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">java基础</span>
                   </a>
                 </span>
 
@@ -384,16 +386,15 @@
       
 
       
-        <h1 id="一、cglib实现动态代理步骤"><a href="#一、cglib实现动态代理步骤" class="headerlink" title="一、cglib实现动态代理步骤"></a>一、cglib实现动态代理步骤</h1><p>使用cglib实现动态代理，并不要求委托类必须实现接口，底层使用asm字节码生成框架生成代理类的字节码。  </p>
-<h2 id="1、定义业务逻辑"><a href="#1、定义业务逻辑" class="headerlink" title="1、定义业务逻辑"></a>1、定义业务逻辑</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class UserService&#123;</div><div class="line">    public void add()&#123;</div><div class="line">        System.ou.println(&quot;This is add service&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2、实现MethodInterceptor接口，定义方法的拦截器"><a href="#2、实现MethodInterceptor接口，定义方法的拦截器" class="headerlink" title="2、实现MethodInterceptor接口，定义方法的拦截器"></a>2、实现MethodInterceptor接口，定义方法的拦截器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class MyMethodInterceptor implements MethodInterceptor&#123;</div><div class="line">    public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">        System.ou.println(&quot;Before:&quot; + method);</div><div class="line">        Object object = proxy.invokeSuper(obj, arg);</div><div class="line">        System.ou.println(&quot;After:&quot; + method);</div><div class="line">        return object;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3、使用Enhancer类生成代理类"><a href="#3、使用Enhancer类生成代理类" class="headerlink" title="3、使用Enhancer类生成代理类"></a>3、使用Enhancer类生成代理类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Enhancer enhancer = new Enhancer();</div><div class="line">enhancer.setSuperClass(UserService.class);</div><div class="line">enhancer.setCallback(new MyMethodInterceptor());</div><div class="line">UserService userService = (UserService)enhancer.create();</div></pre></td></tr></table></figure>
-<h2 id="4、userService-add-的执行结果"><a href="#4、userService-add-的执行结果" class="headerlink" title="4、userService.add()的执行结果"></a>4、userService.add()的执行结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Before: add</div><div class="line">This is add service</div><div class="line">After: add</div></pre></td></tr></table></figure>
-<h1 id="二、cglib字节码生成"><a href="#二、cglib字节码生成" class="headerlink" title="二、cglib字节码生成"></a>二、cglib字节码生成</h1><p><strong>Enhancer</strong>是cglib字节码增强器，可以方便的对类进行扩展，<strong>内部调用GeneratorStrategy.generate方法生成代理类的字节码</strong><br>内部实现：<br><strong>1、代理类UserService$$EnhancerByCGLIB$$394dddeb继承了委托类UserService，且委托类的final方法不能被代理；<br>2、代理类为每个委托方法都生成两个方法，以add方法为例，一个是重写的add方法，一个是CGLIB$add$0方法，该方法直接调用委托类的add方法；<br>3、当执行代理对象的add方法时，会先判断是否存在实现了MethodInterceptor接口的对象cglib$CALLBACK_0（也就是这里的MyMethodInterceptor），如果存在，那么调用MethodInterceptor对象的intercept方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Object intercept(Object obj, Method method, Object[] arg, MethodProxy proxy)throws Throwable&#123;</div><div class="line">    System.ou.println(&quot;Before:&quot; + method);</div><div class="line">    Object object = proxy.invokeSuper(obj, arg);//最终调用的委托类中的method方法</div><div class="line">    System.ou.println(&quot;After:&quot; + method);</div><div class="line">    return object;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>参数分别是：①代理对象；②委托类方法；③方法参数；④代理方法的MethodProxy对象<br><strong>4、每个被代理的方法都对应一个MethodProxy对象，methodProxy.invokeSuper最终调用的是委托类的add方法</strong>，实现如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public Object invokeSuper(Object obj, Object[] args)throws Throwable&#123;</div><div class="line">    try&#123;</div><div class="line">        init();</div><div class="line">        FastClassInfo fci = fastClassInfo;</div><div class="line">        //fci.f2:代理类对象</div><div class="line">        //fci.i2:方法CGLIB$add$0在对象中的索引位置</div><div class="line">        return fci.f2.invoke(fci.i2, obj, args);//调用代理类对象的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在MethodProxy实现中，通过FastClassInfo维护了委托类和代理类的FastClass：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private static class FastClassInfo&#123;</div><div class="line">    FastClass f1;//指向委托类对象</div><div class="line">    FastClass f2;//指向代理类对象</div><div class="line">    int i1;//方法add在对象中的索引位置</div><div class="line">    int i2;//方法CGLIB$add$0在对象中的索引位置</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>FastClass提出概念下标index，通过索引来保存方法的引用信息，将原先的反射调用，转化为方法的直接调用，从而实现fast。当调用methodProxy.invokeSuper方法时，实际上是调用代理类的CGLIB$add$0方法，CGLIB$add$0方法又直接调用委托类的add方法，避免了使用反射机制来调用委托类的方法。</strong>  </p>
-<h1 id="三、jdk和cglib动态代理的区别"><a href="#三、jdk和cglib动态代理的区别" class="headerlink" title="三、jdk和cglib动态代理的区别"></a>三、jdk和cglib动态代理的区别</h1><p>1、jdk动态代理生成的代理类和委托类必须实现相同的接口；cglib动态代理则不需要。<br>2、cglib动态代理中，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法；<br>3、jdk采用反射机制来调用委托类的方法，cglib采用类似索引的方式直接调用委托类的方法。</p>
+        <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>静态代码块：用static声明，jvm加载类时执行，仅执行一次。<br>构造代码块：类中直接用{}定义，每一次创建对象时执行。<br>执行顺序优先级：<strong>静态块-&gt;main()-&gt;构造块-&gt;构造函数</strong>。  </p>
+<h2 id="二、详解"><a href="#二、详解" class="headerlink" title="二、详解"></a>二、详解</h2><h3 id="1、构造函数"><a href="#1、构造函数" class="headerlink" title="1、构造函数"></a>1、构造函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public Hello()&#123;//构造函数</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。<br>2.构造函数的作用是用于给对象初始化。<br>3.一个对象建立，构造函数只运行一次。  </p>
+<h3 id="2、构造代码块"><a href="#2、构造代码块" class="headerlink" title="2、构造代码块"></a>2、构造代码块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;//构造代码块</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.构造代码块的作用是给对象进行初始化。<br>2.对象一建立就运行构造代码块了，而且优先于构造函数。有对象建立，才会运行构造代码块，类是不能调用构造代码块的。<br>3.构造代码块和构造函数的区别：<strong>构造代码块是给所有对象进行统一初始化，而构造函数是给对应的对象初始化。</strong>因为构造函数可以有多个，运行哪个构造函数就会建立什么样的对象，但无论建立哪个对象，都会执行相同的构造代码块。也就是说，构造代码块中定义的是不同对象共性的初始化内容。  </p>
+<h3 id="3、静态代码块"><a href="#3、静态代码块" class="headerlink" title="3、静态代码块"></a>3、静态代码块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static&#123;//静态代码块</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.<strong>它随着类的加载而执行，只执行一次，并且优先于主函数</strong>。具体说，静态代码块是由类调用的，类调用时，先执行静态代码块，然后再执行主函数。<br>2.静态代码块其实是给类初始化的，而构造代码块是给对象初始化的。<br>3.静态代码块中的变量是局部变量，与普通函数中的局部变量没有区别。<br>4.一个类中可以有多个静态代码块。  </p>
+<h2 id="三、类初始化顺序"><a href="#三、类初始化顺序" class="headerlink" title="三、类初始化顺序"></a>三、类初始化顺序</h2><p>&emsp;其中，<strong>静态变量、静态初始化块，变量、初始化块（构造代码块）的初始化顺序取决于它们在类中出现的先后顺序。</strong><br>首先，访问SubClass.main()，这是一个static方法，于是装载器会寻找已经编译的SubClass.class文件。在装载过程中，如果注意到有基类（extends），会装载基类。不管创不创建基类对象，这个过程都会发生。之后是正常的初始化顺序：  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">class Parent&#123;</div><div class="line">    public static String p_StaticField=&quot;父类--静态变量&quot;;</div><div class="line">    </div><div class="line">    public String p_Field=&quot;父类--变量&quot;;</div><div class="line">    protected int i=9;</div><div class="line">    protected int j=0;</div><div class="line">    </div><div class="line">    static&#123;</div><div class="line">        System.out.println(p_StaticField);</div><div class="line">        System.out.println(&quot;父类--静态初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.out.println(p_Field);</div><div class="line">        System.out.println(&quot;父类--初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public Parent()&#123;</div><div class="line">        System.out.println(&quot;父类--构造器&quot;);</div><div class="line">        System.out.println(&quot;i=&quot; + i+ &quot;,j=&quot; + j);</div><div class="line">        j=20;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SubClass extends Parent&#123;</div><div class="line">    public static String s_StaticField=&quot;子类--静态变量&quot;;</div><div class="line">    </div><div class="line">    public String s_Field=&quot;子类--变量&quot;;</div><div class="line">    </div><div class="line">    static&#123;</div><div class="line">        System.out.println(s_StaticField);</div><div class="line">        System.out.println(&quot;子类--静态初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.out.println(s_Field);</div><div class="line">        System.out.println(&quot;子类--初始化块&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public SubClass()&#123;</div><div class="line">        System.out.println(&quot;子类--构造器&quot;);</div><div class="line">        System.out.println(&quot;i=&quot; + i+ &quot;,j=&quot; + j);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        System.out.println(&quot;子类main方法&quot;);</div><div class="line">        new SubClass();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">运行结果：  </div><div class="line">父类--静态变量  </div><div class="line">父类--静态初始化块  </div><div class="line">子类--静态变量  </div><div class="line">子类--静态初始化块  </div><div class="line">子类main方法  </div><div class="line">父类--变量  </div><div class="line">父类--初始化块  </div><div class="line">父类--构造器  </div><div class="line">i=9, j=0  </div><div class="line">子类--变量  </div><div class="line">子类--初始化块  </div><div class="line">子类--构造器  </div><div class="line">i=9,j=20</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -423,7 +424,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java，java基础/" rel="tag"># java，java基础</a>
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
           
         </div>
       
@@ -436,8 +439,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/25/JDK动态代理/" rel="next" title="JDK动态代理">
-                <i class="fa fa-chevron-left"></i> JDK动态代理
+              <a href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/" rel="next" title="字符串、基本数据类型等在堆、栈、常量池中的存储">
+                <i class="fa fa-chevron-left"></i> 字符串、基本数据类型等在堆、栈、常量池中的存储
               </a>
             
           </div>
@@ -446,8 +449,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/30/Java中的线程池/" rel="prev" title="Java中的线程池">
-                Java中的线程池 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/" rel="prev" title="Java实现二叉排序树的插入、查找和删除">
+                Java实现二叉排序树的插入、查找和删除 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -658,7 +661,7 @@ src="//music.163.com/outchain/player?type=2&id=5043107&auto=0&height=66"></ifram
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、cglib实现动态代理步骤"><span class="nav-number">1.</span> <span class="nav-text">一、cglib实现动态代理步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、定义业务逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">1、定义业务逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、实现MethodInterceptor接口，定义方法的拦截器"><span class="nav-number">1.2.</span> <span class="nav-text">2、实现MethodInterceptor接口，定义方法的拦截器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、使用Enhancer类生成代理类"><span class="nav-number">1.3.</span> <span class="nav-text">3、使用Enhancer类生成代理类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、userService-add-的执行结果"><span class="nav-number">1.4.</span> <span class="nav-text">4、userService.add()的执行结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、cglib字节码生成"><span class="nav-number">2.</span> <span class="nav-text">二、cglib字节码生成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、jdk和cglib动态代理的区别"><span class="nav-number">3.</span> <span class="nav-text">三、jdk和cglib动态代理的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、详解"><span class="nav-number">2.</span> <span class="nav-text">二、详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、构造函数"><span class="nav-number">2.1.</span> <span class="nav-text">1、构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、构造代码块"><span class="nav-number">2.2.</span> <span class="nav-text">2、构造代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、静态代码块"><span class="nav-number">2.3.</span> <span class="nav-text">3、静态代码块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、类初始化顺序"><span class="nav-number">3.</span> <span class="nav-text">三、类初始化顺序</span></a></li></ol></div>
             
 
           </div>
