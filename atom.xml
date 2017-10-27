@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-23T12:55:25.645Z</updated>
+  <updated>2017-10-27T12:36:33.176Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,75 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
+    <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2017-10-27T12:36:33.176Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p>
+<h2 id="一、select-的使用"><a href="#一、select-的使用" class="headerlink" title="一、select()的使用"></a>一、select()的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</div><div class="line">nfds:要监视的文件描述符的范围，一般取描述符数的最大值+1</div><div class="line">readfds：监视的可读描述符集合，只要有文件描述符即将进行读操作，这个文件描述符就存储到这。</div><div class="line">writefds：监视的可写描述符集合。</div><div class="line">exceptfds：监视的错误异常描述符集合。</div></pre></td></tr></table></figure>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化（可读、可写或错误异常）。select()函数监视的文件描述符分为三类，分别是readfds，writefds，exceptfds。调用select()函数会阻塞，直到有描述符就绪（有数据可读、可写或者有错误异常，或者超时），函数才会返回。当select()函数返回后，可以通过遍历fdset来找到就绪的描述符。</p>
+<h3 id="select-的优缺点"><a href="#select-的优缺点" class="headerlink" title="select()的优缺点"></a>select()的优缺点</h3><p><strong>优点：</strong> 几乎在所有平台是都支持，具有良好的跨平台支持。<br><strong>缺点：</strong><br>1、每次调用select()，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大；同时每次调用select()，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。<br>2、单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但是这样也会造成效率的降低。  </p>
+<h2 id="二、poll-的使用"><a href="#二、poll-的使用" class="headerlink" title="二、poll()的使用"></a>二、poll()的使用</h2><p>select()和poll()系统调用的本质一样，管理多个描述符也是进行轮询，根据描述符的状态进行处理，但是poll()没有最大文件描述符数量的限制（但数量过大后性能也会下降）。poll()和select()同样存在一个缺点是，包含大量文件描述符的集合被整体复制于用户态和内核态之间，而不论这些文件描述符是否就绪，随文件描述符数量的增加而线性增大。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int poll(struct pollfd *fds, nfds_t nfds, int timeout)</div></pre></td></tr></table></figure></p>
+<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化。<br>&emsp;poll()的实现和select()非常相似，只是描述fd集合的方式不同，poll()使用pollfd结构而不是select()的fd_set结构，还有就是poll()没有最大文件描述符数量的限制，其他的都差不多。  </p>
+<h2 id="三、epoll-的使用"><a href="#三、epoll-的使用" class="headerlink" title="三、epoll()的使用"></a>三、epoll()的使用</h2><p>epoll()是select()和poll()的增强版本。但epoll更加灵活，没有描述符限制。epoll()使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。<br>epoll操作过程需要三个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int epoll_create(int size);</div><div class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);</div><div class="line">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</div></pre></td></tr></table></figure></p>
+<h3 id="1、int-epoll-create-int-size"><a href="#1、int-epoll-create-int-size" class="headerlink" title="1、int epoll_create(int size)"></a>1、int epoll_create(int size)</h3><p><strong>功能：</strong> 该函数生成一个epoll专用的文件描述符（创建一个epoll的句柄）。在创建好epoll句柄后，它就是会占用一个fd值，在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。  </p>
+<h3 id="2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event"><a href="#2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event" class="headerlink" title="2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)"></a>2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</h3><p><strong>功能：</strong> epoll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，epoll需要先注册要监听的事件类型。  </p>
+<h3 id="3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout"><a href="#3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout" class="headerlink" title="3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)"></a>3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)</h3><p><strong>功能：</strong> 等待事件的发生，收集在epoll监控的事件中已经发送的事件，类似于select()调用。  </p>
+<p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
+<p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
+<h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2017-10-27T12:36:34.447Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>AVL树的Java实现</title>
@@ -581,78 +650,6 @@
     
     
       <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入java虚拟机之类加载机制</title>
-    <link href="http://yoursite.com/2017/08/31/%E6%B7%B1%E5%85%A5java%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
-    <id>http://yoursite.com/2017/08/31/深入java虚拟机之类加载机制/</id>
-    <published>2017-08-31T07:51:00.000Z</published>
-    <updated>2017-09-22T11:34:28.130Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、类加载过程"><a href="#一、类加载过程" class="headerlink" title="一、类加载过程"></a>一、类加载过程</h1><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了<strong>加载、验证、准备、解析和初始化</strong>五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会互相交叉的进行，通常在一个阶段的执行过程中调用或激活另一个阶段。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD1.png" alt="image">  </p>
-<h2 id="静态绑定和动态绑定"><a href="#静态绑定和动态绑定" class="headerlink" title="静态绑定和动态绑定"></a>静态绑定和动态绑定</h2><p><strong>绑定是指把一个方法的调用与方法所在的类关联起来</strong>，分来静态绑定和动态绑定。<br>1、静态绑定<br>即前期绑定。在程序执行前方法已经被绑定，此时由编译器或其它连接程序实现。对java来说，可以理解为程序编译期的绑定。<strong>Java方法中只有final、static、private和构造方法是前期绑定的。</strong><br>2、动态绑定<br>即晚期绑定，也叫运行时绑定。在运行时根据具体对象的类型进行绑定，在java中，几乎所有的方法都是后期绑定的。  </p>
-<h2 id="1、加载"><a href="#1、加载" class="headerlink" title="1、加载"></a>1、加载</h2><p>加载是类加载过程的第一个阶段，在这个阶段，虚拟机完成以下3件事情：<br>1、通过一个类的全限定名来获取定义此类的二进制字节流。<br>2、将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。<br>3、在内存中生成一个代表这个类的java.lang.Class对象，作为方法区中各种数据的访问入口。<br>在加载阶段，可控性强，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。  </p>
-<h2 id="2、验证"><a href="#2、验证" class="headerlink" title="2、验证"></a>2、验证</h2><p>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。大致分为四个阶段的验证：<br><strong>1、文件格式的验证</strong>：验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理，该验证的主要目的是保证输入的字节流能正确地解析并存储于方法区之内。经过这个阶段的验证后，字节流才会进入内存的方法区进行存储，后面三个验证都是基于方法区的存储结构进行的。<br><strong>2、元数据验证</strong>：对类中的各数据类型进行语法校验，保证不存在不符合Java语言规范的元数据信息。<br><strong>3、字节码验证</strong>：主要目的是通过数据流和控制流分析，对类的方法体进行校验分析，保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。<br><strong>4、符号引用验证</strong>：发生在虚拟机将符号引用转化为直接引用的时候（解析阶段发生该转化），主要是对类自身以外（常量池中的各种符号引用）的信息进行匹配性校验。  </p>
-<h2 id="3、准备"><a href="#3、准备" class="headerlink" title="3、准备"></a>3、准备</h2><p>准备阶段正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。<br>注意几点：<br>1、仅包括类变量（static修饰），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配到Java堆中。<br>2、这里设置的初始值通常是数据类型默认的零值（如0、0L、null、false等），而不是在java代码中被显式地赋予的值。<br>3、如果变量同时被final和static修饰（常量），类字段的字段属性表中存在ConstantValue属性，那么在准备阶段变量的值就会被初始化为ConstantValue属性所指定的值。可以理解为static final常量在编译期就将其结果放入了调用它的类的常量池中。  </p>
-<h2 id="4、解析"><a href="#4、解析" class="headerlink" title="4、解析"></a>4、解析</h2><p>解析阶段是虚拟机将常量池中的符号引用转化为直接引用的过程。  </p>
-<h3 id="符号引用和直接引用"><a href="#符号引用和直接引用" class="headerlink" title="符号引用和直接引用"></a>符号引用和直接引用</h3><p><strong>符号引用</strong>：以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。符合引用和虚拟机的内存布局无关，引用的目标并不一定已经加载到内存中。<br><strong>直接引用</strong>：可以是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄。直接引用和虚拟机的内存布局相关。<br>解析动作主要针对类或接口、字段、类方法、接口方法四类符号引用进行。</p>
-<h2 id="5、初始化"><a href="#5、初始化" class="headerlink" title="5、初始化"></a>5、初始化</h2><p>初始化阶段是类加载过程的最后一步，到这个阶段，才真正去执行类中定义的java代码。在准备阶段，类变量（static变量）已经被赋过一次系统要求的初始化值，而在初始化阶段，回去初始化类变量在java代码中定义的值以及其他资源。初始化阶段可理解为执行类构造器&lt;clinit&gt;()方法的过程。  </p>
-<h3 id="lt-clinit-gt-方法的执行规则："><a href="#lt-clinit-gt-方法的执行规则：" class="headerlink" title="&lt;clinit&gt;()方法的执行规则："></a>&lt;clinit&gt;()方法的执行规则：</h3><p><strong>1、&lt;clinit&gt;()方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块中的语句合并产生的，编译器收集的顺序是由语句在源文件中出现的顺序所决定的。静态语句块中只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句块中可以赋值，但是不能访问。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Test&#123;</div><div class="line">    static&#123;</div><div class="line">        i = 0;                 //给变量赋值可以正常编译通过</div><div class="line">        System.out.println(i); //编译器会提示“非法向前引用”，不可访问定义在静态语句块之后的变量       </div><div class="line">    &#125;</div><div class="line">    static int i = 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>2、&lt;clinit&gt;()方法和类的构造函数（实例构造器&lt;init&gt;()方法）不同，它不需要显式地调用父类构造器，虚拟机会保证在子类的&lt;clinit&gt;()方法执行之前，父类的&lt;clinit&gt;()方法已经执行完毕。因此在虚拟机中第一个被执行的&lt;clinit&gt;()方法的类肯定是Object。<br>3、由于父类的&lt;clinit&gt;()方法会先执行，意味着父类中定义的静态语句块要优先于子类的变量赋值操作。<br>4、&lt;clinit&gt;()方法对于类或接口来说并不是必需的，如果一个类中没有静态语句块，也没有对变量的赋值操作，那么这个类可以不用生成&lt;clinit&gt;()方法。<br>5、接口中不能使用静态语句块，但仍然有变量初始化的赋值操作，接口和类一样都会生成&lt;clinit&gt;()方法。但接口和类不同的是，执行接口的&lt;clinit&gt;()方法不需要执行父接口的&lt;clinit&gt;()方法。只有当父接口中定义的变量使用时，父接口才会初始化。<br>6、虚拟机会保证一个类的&lt;clinit&gt;()方法在多线程环境中能被正确地加锁和同步，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的&lt;clinit&gt;()方法，其他线程都需要阻塞等待，直到活动现场执行&lt;clinit&gt;()方法完毕。</strong>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">class Parent&#123;</div><div class="line">    public static int A = 1;</div><div class="line">    sttatic&#123;</div><div class="line">        A = 2;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">static class Sub extends Parent&#123;</div><div class="line">    public static int B = A;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public static void main(String[] args)&#123;</div><div class="line">    System.out.println(Sub.B);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>&emsp;&emsp;首先在准备阶段为类变量分配内存并设置类变量的初始值，此时A、B的值被赋为默认值0，之后在初始化阶段调用&lt;clinit&gt;()方法给他们赋予程序中指定的值。当我们调用Sub.B时会触发Sub的&lt;clinit&gt;()方法，根据规则2，在此之前，要先执行完其父类Parent的&lt;clinit&gt;()方法；又根据规则1，在执行&lt;clinit&gt;()方法时，需要按static语句或static变量赋值操作在代码中出现的顺序来执行相关的static语句，因此当触发执行Parent的&lt;clinit&gt;()方法时，会先将A赋值为1，再执行static语句块中语句，将A赋值为2；之后执行Sub的&lt;clinit&gt;()方法，这样会将B的赋值为2。  </p>
-<h1 id="二、类加载器"><a href="#二、类加载器" class="headerlink" title="二、类加载器"></a>二、类加载器</h1><p>类加载器用于实现类的加载动作。对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机中的唯一性。也就是说，比较两个类是否相等，只有在这两个类是由同一个类加载器加载的前提下才有意义。即使两个类来源于同一个Class文件，只要加载她们的类加载器i不同，那这两个类肯定是不同的。  </p>
-<h2 id="1、类加载器的分类"><a href="#1、类加载器的分类" class="headerlink" title="1、类加载器的分类"></a>1、类加载器的分类</h2><p>1、<strong>启动类加载器</strong>：负责加载存放在JDK\jre\lib下（JDK代表jdk安装目录），或是被-Xbootclasspath参数指定的路径中的，并且被虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。<br>2、<strong>扩展类加载器</strong>：负责加载JDK\jre\lib\ext目录下的或是被java.ext.dirs系统变量指定的路径中的所有类库。开发者可以直接使用扩展类加载器。<br>3、<strong>应用程序类加载器</strong>：负责加载用户类路径（ClassPath）上指定的类库。开发者可直接使用这个加载器，<strong>应用程序类加载器也是程序中默认的类加载器</strong>。<br>如果有必要，还可以加入自定义的类加载器。  </p>
-<h2 id="2、双亲委派模型"><a href="#2、双亲委派模型" class="headerlink" title="2、双亲委派模型"></a>2、双亲委派模型</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD2.png" alt="image"><br>这种层次关系称为类加载器的双亲委派模型。我们把每一层上面的类加载器叫做当前层类加载器的父加载器，它们之间的父子关系不是通过继承而来的，而是使用组合关系来复用父加载器中的代码。  </p>
-<h3 id="①双亲委派模型的工作流程"><a href="#①双亲委派模型的工作流程" class="headerlink" title="①双亲委派模型的工作流程"></a>①双亲委派模型的工作流程</h3><p>&emsp;&emsp;<strong>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是这样，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父类加载器反馈自己无法完成这个加载请求时，子加载器才会尝试自己去加载。</strong>  </p>
-<h3 id="②双亲委派模型的好处"><a href="#②双亲委派模型的好处" class="headerlink" title="②双亲委派模型的好处"></a>②双亲委派模型的好处</h3><p>&emsp;&emsp;<strong>Java类随着它的类加载器一起具备了一种带有优先级的层次关系。</strong> 例如，java.lang.Object类，无论哪个类加载器要加载这个类，最终都是委派给处于模型最顶端的启动类加载器进行加载，因此Object类在程序的各个类加载器环境中都是同一个类。如果没有双亲委派模型，由各个类加载器自行去加载的话，若用户自己编写了一个java.lang.Object类，那系统中将会出现多个不同的Object类，那么Java类型体系中最基本的行为也无法保证。  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、类加载过程&quot;&gt;&lt;a href=&quot;#一、类加载过程&quot; class=&quot;headerlink&quot; title=&quot;一、类加载过程&quot;&gt;&lt;/a&gt;一、类加载过程&lt;/h1&gt;&lt;p&gt;类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://yoursite.com/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java虚拟机" scheme="http://yoursite.com/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java中的线程池</title>
-    <link href="http://yoursite.com/2017/08/30/Java%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
-    <id>http://yoursite.com/2017/08/30/Java中的线程池/</id>
-    <published>2017-08-30T07:57:00.000Z</published>
-    <updated>2017-10-10T14:06:32.167Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="线程池的好处"><a href="#线程池的好处" class="headerlink" title="线程池的好处"></a>线程池的好处</h1><p><strong>1、降低资源消耗</strong><br>通过重复利用已创建的线程降低线程创建和销毁造成的消耗。<br><strong>2、提高响应速度</strong><br>当任务到达时，任务可以不需要等到线程创建就能立即执行。<br><strong>3、提高线程的可管理性</strong><br>线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。  </p>
-<h1 id="一、线程池的实现原理"><a href="#一、线程池的实现原理" class="headerlink" title="一、线程池的实现原理"></a>一、线程池的实现原理</h1><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%89%AF%E6%9C%AC1.jpg" alt="image"><br><strong>ThreadPoolExecutor执行execute()方法步骤：</strong><br>1、如果当前运行的线程少于corePoolSize，那么创建新的线程来执行任务<br>2、如果运行的线程等于或者多于corePoolSize，那么将任务加入BlockingQueue<br>3、如果BlockingQueue中任务已满，并且当前运行的线程数少于maximumPoolSize，那么创建新的线程来处理任务<br>4、如果当前运行的线程数多于maximumPoolSize，任务将被拒绝，并调用RejectedExecutionHandler.rejectdExecution()方法（饱和策略）<br><img src="http://osrmzp0jr.bkt.clouddn.com/1_%E5%89%AF%E6%9C%AC.jpg" alt="image"><br><strong>线程池中的线程执行任务分两种情况：</strong><br>1、在execute()方法中创建一个线程时，会让这个线程执行当前任务<br>2、这个线程执行完图中1的任务后，会反复从BlockingQueue中获取任务来执行  </p>
-<h1 id="二、线程池的使用"><a href="#二、线程池的使用" class="headerlink" title="二、线程池的使用"></a>二、线程池的使用</h1><h2 id="1、线程池的创建"><a href="#1、线程池的创建" class="headerlink" title="1、线程池的创建"></a>1、线程池的创建</h2><p>new ThreadPoolExecutor(corePoolSize, runnableTaskQueue, maximumPoolSize, handler, keepAliveTime);<br><strong>①corePoolSize（线程池的核心线程数）</strong>：当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使其他空闲的基本线程能够执行新任务也会创建新线程，等到需要执行的任务数大于线程池的核心线程数时就不再创建。具体可以参考上图<br><strong>②runnableTaskQueue（任务队列）</strong>：用于保存等待执行的任务的阻塞队列。有以下几个阻塞队列：<br>&emsp;1、ArrayBlockingQueue：是一个基于数组结构的<strong>有界阻塞队列</strong>，按先进先出原则对元素进行排序。<br>&emsp;2、LinkedBlockingQueue：一个基于链表结构的<strong>无界阻塞队列</strong>，吞吐量高于有界队列，newFixedThreadPool采用这个队列。<br>&emsp;3、SynchronousQueue：不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，newCachedThreadPool使用这个队列。<br>&emsp;4、PriporityBlockingQueue：一个具有优先级的<strong>无界阻塞队列</strong>。<br><strong>③maximumPoolSize（线程池最大数量）</strong>：线程池允许创建线程的最大数量。如果队列满了，且创建的线程数小于最大线程数，那么线程池会创建新的线程执行任务。<br><strong>④handler（饱和策略）</strong>：当队列和线程池都满了，说明线程池处于饱和状态，采取饱和策略处理提交的任务。有四种策略：<br>&emsp;1、AbortPolicy：终止策略，直接抛出异常（默认采用）<br>&emsp;2、CallerRunsPolicy：调用者运行策略，将某些任务回退给调用者，来降低新任务的流量<br>&emsp;3、DiscardOldestPolicy：抛弃策略，丢弃队列里最近的一个任务，并执行当前任务<br>&emsp;4、DiscardPolicy：抛弃最旧的策略，不处理，丢弃掉<br><strong>⑤keepAliveTime（线程活动保持的时间）</strong>：线程池的工作线程空闲后，保持存活的时间。  </p>
-<h2 id="2、线程池的关闭"><a href="#2、线程池的关闭" class="headerlink" title="2、线程池的关闭"></a>2、线程池的关闭</h2><p>可以通过shutdown或者shutdownNow方法来关闭线程池。原理是遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程。但也存在一些区别：<br>shutdownNow：首先将线程池的状态设置为STOP，然后尝试<strong>停止所有正在执行或暂停任务的线程，并返回等待执行任务的列表</strong>。<br>shutdown：将线程池的状态设置为SHUTDOWN状态，然后<strong>中断所有没有正在执行任务的线程</strong>。  </p>
-<h2 id="3、合理配置线程池"><a href="#3、合理配置线程池" class="headerlink" title="3、合理配置线程池"></a>3、合理配置线程池</h2><p>从下面几个角度分析：<br>1、任务的性质：CPU密集型任务、IO密集型任务和混合型任务。<br>2、任务的优先级：高、中、低<br>3、任务的执行时间：长、中、短<br>4、任务的依赖性：是否依赖其他系统资源，比如数据库连接<br>如果<strong>任务是CPU密集型的，应配置尽可能少的线程</strong>，如等于可用的处理器核数，这样就可以充分利用处理器，让它以最大火力不停进行计算。创建更多的线程反而是不利的，因为多个线程频繁进行上下文切换对性能消耗太大。<br>如果<strong>任务是IO密集型的，应尽可能配置多的线程</strong>，如处理器核数的几倍。因为在执行IO操作时，线程将被阻塞，此时处理器可以立即进行上下文切换以便其他线程开始任务。如果线程数不够，那么有待执行的任务也无法调度处理了。<br>可以使用公式计算出程序所需线程数：<strong>线程数=CPU可用核心数/(1-阻塞系数)</strong>，其中阻塞系数在0到1范围内。CPU密集型的阻塞系数为0，IO密集型的阻塞系数接近1。  </p>
-<h1 id="三、线程池的本质"><a href="#三、线程池的本质" class="headerlink" title="三、线程池的本质"></a>三、线程池的本质</h1><p><strong>线程池的本质是使用了一个线程安全的工作队列连接工作者线程和客户端线程，客户端线程将任务放入工作队列后便返回，而工作者线程则不断地从工作队列上取出工作并执行，典型的生产者-消费者模型。</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;线程池的好处&quot;&gt;&lt;a href=&quot;#线程池的好处&quot; class=&quot;headerlink&quot; title=&quot;线程池的好处&quot;&gt;&lt;/a&gt;线程池的好处&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;1、降低资源消耗&lt;/strong&gt;&lt;br&gt;通过重复利用已创建的线程降低线程创建和销毁造成的消
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   
