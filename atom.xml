@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-10-27T12:57:56.984Z</updated>
+  <updated>2017-12-01T12:43:24.010Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,37 +16,147 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>IO多路复用select、poll、epoll的区别与使用</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
-    <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2017-10-27T12:57:56.984Z</updated>
+    <title>抽象工厂模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2017-12-01T12:43:24.010Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p>
-<h2 id="一、select-的使用"><a href="#一、select-的使用" class="headerlink" title="一、select()的使用"></a>一、select()的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</div><div class="line">nfds:要监视的文件描述符的范围，一般取描述符数的最大值+1</div><div class="line">readfds：监视的可读描述符集合，只要有文件描述符即将进行读操作，这个文件描述符就存储到这。</div><div class="line">writefds：监视的可写描述符集合。</div><div class="line">exceptfds：监视的错误异常描述符集合。</div></pre></td></tr></table></figure>
-<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化（可读、可写或错误异常）。select()函数监视的文件描述符分为三类，分别是readfds，writefds，exceptfds。调用select()函数会阻塞，直到有描述符就绪（有数据可读、可写或者有错误异常，或者超时），函数才会返回。当select()函数返回后，可以通过遍历fdset来找到就绪的描述符。</p>
-<h3 id="select-的优缺点"><a href="#select-的优缺点" class="headerlink" title="select()的优缺点"></a>select()的优缺点</h3><p><strong>优点：</strong> 几乎在所有平台是都支持，具有良好的跨平台支持。<br><strong>缺点：</strong><br>1、每次调用select()，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大；同时每次调用select()，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。<br>2、单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但是这样也会造成效率的降低。  </p>
-<h2 id="二、poll-的使用"><a href="#二、poll-的使用" class="headerlink" title="二、poll()的使用"></a>二、poll()的使用</h2><p>select()和poll()系统调用的本质一样，管理多个描述符也是进行轮询，根据描述符的状态进行处理，但是poll()没有最大文件描述符数量的限制（但数量过大后性能也会下降）。poll()和select()同样存在一个缺点是，包含大量文件描述符的集合被整体复制于用户态和内核态之间，而不论这些文件描述符是否就绪，随文件描述符数量的增加而线性增大。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int poll(struct pollfd *fds, nfds_t nfds, int timeout)</div></pre></td></tr></table></figure></p>
-<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化。<br>&emsp;poll()的实现和select()非常相似，只是描述fd集合的方式不同，poll()使用pollfd结构而不是select()的fd_set结构，还有就是poll()没有最大文件描述符数量的限制，其他的都差不多。  </p>
-<h2 id="三、epoll-的使用"><a href="#三、epoll-的使用" class="headerlink" title="三、epoll()的使用"></a>三、epoll()的使用</h2><p>epoll()是select()和poll()的增强版本。但epoll更加灵活，没有描述符限制。epoll()使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。<br>epoll操作过程需要三个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int epoll_create(int size);</div><div class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);</div><div class="line">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</div></pre></td></tr></table></figure></p>
-<h3 id="1、int-epoll-create-int-size"><a href="#1、int-epoll-create-int-size" class="headerlink" title="1、int epoll_create(int size)"></a>1、int epoll_create(int size)</h3><p><strong>功能：</strong> 该函数生成一个epoll专用的文件描述符（创建一个epoll的句柄）。在创建好epoll句柄后，它就是会占用一个fd值，在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。  </p>
-<h3 id="2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event"><a href="#2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event" class="headerlink" title="2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)"></a>2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</h3><p><strong>功能：</strong> epoll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，epoll需要先注册要监听的事件类型。  </p>
-<h3 id="3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout"><a href="#3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout" class="headerlink" title="3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)"></a>3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)</h3><p><strong>功能：</strong> 等待事件的发生，收集在epoll监控的事件中已经发送的事件，类似于select()调用。  </p>
-<p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
-<p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
-<h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个实现类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MailSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is mailSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SmsSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is smsSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个工厂类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class SendMailFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new MailSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SendSmsFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>提供一个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Provider&#123;</div><div class="line">    public Sender produce();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class Test&#123;</div><div class="line">    public void main(String[] args)&#123;</div><div class="line">        Provider provider = new SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=
     
     </summary>
     
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
     
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单例模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/单例模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2017-12-01T12:41:07.799Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。  </p>
+<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">    private Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private static修饰</div><div class="line">    private static Singleton instance = new Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public static修饰</div><div class="line">    public static Singleton getInstance()&#123;</div><div class="line">        return instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">    private Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private static修饰</div><div class="line">    private static Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public static修饰</div><div class="line">    public static Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">            instance = new Singleton();</div><div class="line">        &#125;</div><div class="line">        return instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
+<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">            instance = new Singleton();</div><div class="line">        &#125;</div><div class="line">        return instance;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance==null)&#123;</div><div class="line">                instance = new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return instance;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法，防止被实例化</div><div class="line">    private Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //使用内部类来维护单例</div><div class="line">    private static class SingletonFactory&#123;</div><div class="line">        private static Singleton instance = new Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">    public static Singleton getInstance()&#123;</div><div class="line">        return SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">    private Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">    private static volatile Singleton instance = null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">    public static Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                    instance = new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>工厂方法模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/工厂方法模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2017-12-01T12:42:40.460Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">//两者的共同接口</div><div class="line">public interface Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//创建实现类</div><div class="line">public class MailSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is mailSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SmsSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is smsSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//建工厂类</div><div class="line">public class SendFactory&#123;</div><div class="line">    public Sender produce(String type)&#123;</div><div class="line">        if(&quot;mail&quot;.equals(type))&#123;</div><div class="line">            return new MailSender();</div><div class="line">        &#125;else if(&quot;sms&quot;.equals(type))&#123;</div><div class="line">            return new SmsSender();</div><div class="line">        &#125;else&#123;</div><div class="line">            System.out.println(&quot;请输入正确的类型！&quot;)</div><div class="line">            return null;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试类</div><div class="line">public class FactoryTest&#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        SendFactory factory = new SendFactory();</div><div class="line">        Sender sender = factory.produce(&quot;mail&quot;);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//只需工厂方法进行修改</div><div class="line">public class SendFactory&#123;</div><div class="line">    </div><div class="line">    public Sender produceMail()&#123;</div><div class="line">        return new MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public Sender produceSms()&#123;</div><div class="line">        return new SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试类</div><div class="line">public class FactoryTest&#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        SendFactory factory = new SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public class SendFactory&#123;</div><div class="line">    public static Sender produceMail()&#123;</div><div class="line">        return new MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public static Sender produceSms()&#123;</div><div class="line">        return new SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试类</div><div class="line">public class FactoryTest&#123;</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、普通工厂模式&quot;&gt;&lt;a href=&quot;#一、普通工厂模式&quot; class=&quot;headerlink&quot; title=&quot;一、普通工厂模式&quot;&gt;&lt;/a&gt;一、普通工厂模式&lt;/h1&gt;&lt;p&gt;就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：&lt;br&gt;&lt;img s
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HashMap的四种遍历方式</title>
+    <link href="http://yoursite.com/2017/12/01/HashMap%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/HashMap的四种遍历方式/</id>
+    <published>2017-12-01T12:39:00.000Z</published>
+    <updated>2017-12-01T12:39:41.016Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、Map的四种遍历方式"><a href="#一、Map的四种遍历方式" class="headerlink" title="一、Map的四种遍历方式"></a>一、Map的四种遍历方式</h1><h2 id="1、foreach-map-entrySet"><a href="#1、foreach-map-entrySet" class="headerlink" title="1、foreach map.entrySet()"></a>1、foreach map.entrySet()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Map&lt;String,String&gt; map = new HashMap&lt;String,String&gt;();</div><div class="line">for(Entry&lt;String,String&gt; entry : map.entrySet())&#123;</div><div class="line">    entry.getKey();</div><div class="line">    entry.getValue();</div><div class="line">    </div><div class="line">    //在遍历过程中删除元素，会抛出异常java.util.ConcurrentModificationException</div><div class="line">    //entry.remove(entry.getKey());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、调用map-entrySet-的集合迭代器"><a href="#2、调用map-entrySet-的集合迭代器" class="headerlink" title="2、调用map.entrySet()的集合迭代器"></a>2、调用map.entrySet()的集合迭代器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator&lt;Map.Entry&lt;String,String&gt;&gt; it = map.entrySet().iterator();</div><div class="line">while(it.hasNext())&#123;</div><div class="line">    Map.Entry&lt;String,String&gt; entry = it.next();</div><div class="line">    entry.getKey();</div><div class="line">    entry.getValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、foreach-map-keySet"><a href="#3、foreach-map-keySet" class="headerlink" title="3、foreach map.keySet()"></a>3、foreach map.keySet()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;String,String&gt; map = new HashMap&lt;String,String&gt;();</div><div class="line">for(String key : map.keySet())&#123;</div><div class="line">    map.get(key);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4、foreach-map-entrySet-，用临时变量保存map-entrySet"><a href="#4、foreach-map-entrySet-，用临时变量保存map-entrySet" class="headerlink" title="4、foreach map.entrySet()，用临时变量保存map.entrySet()"></a>4、foreach map.entrySet()，用临时变量保存map.entrySet()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Set&lt;Entry&lt;String,String&gt;&gt; entrySet = map.entrySet();</div><div class="line">for(Entry&lt;String,String&gt; entry : entrySet())&#123;</div><div class="line">    entry.getKey();</div><div class="line">    entry.getValue();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="二、结论"><a href="#二、结论" class="headerlink" title="二、结论"></a>二、结论</h1><p>1、在foreach map.entrySet()这种遍历方法的遍历过程中，不能删除元素，由于在遍历HashMap中删除了当前元素，下一个待访问的元素的指针也丢失了，所以会抛出java.util.ConcurrentModificationException。<br>2、如果需要在遍历过程中进行删除元素，可以使用调用map.entrySet()的集合迭代器来进行遍历。<br>3、如果只需要遍历key而不需要value的话，可以使用foreach map.keySet()的方式进行遍历。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、Map的四种遍历方式&quot;&gt;&lt;a href=&quot;#一、Map的四种遍历方式&quot; class=&quot;headerlink&quot; title=&quot;一、Map的四种遍历方式&quot;&gt;&lt;/a&gt;一、Map的四种遍历方式&lt;/h1&gt;&lt;h2 id=&quot;1、foreach-map-entrySet&quot;&gt;&lt;
+    
+    </summary>
+    
+      <category term="java基础" scheme="http://yoursite.com/categories/java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java三大特性之多态性</title>
+    <link href="http://yoursite.com/2017/12/01/Java%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7%E4%B9%8B%E5%A4%9A%E6%80%81/"/>
+    <id>http://yoursite.com/2017/12/01/Java三大特性之多态/</id>
+    <published>2017-12-01T12:38:00.000Z</published>
+    <updated>2017-12-01T12:38:43.633Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、多态的定义"><a href="#一、多态的定义" class="headerlink" title="一、多态的定义"></a>一、多态的定义</h1><p>&nbsp;&nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量到底会指向哪个类的实例对象，该引用变量发出的方法到底是哪个类中实现的方法，必须由程序运行期间才能决定。这样，不需要修改源程序，就可以让引用变量绑定到各种不同的类实现上，从而导致该引用调用的具体方法随之改变，即不修改程序代码就可以改变程序运行时所绑定的具体代码，让程序选择多个运行状态，这就是多态性。  </p>
+<h1 id="二、多态的实现条件"><a href="#二、多态的实现条件" class="headerlink" title="二、多态的实现条件"></a>二、多态的实现条件</h1><p>Java实现多态有三个必要条件：<strong>继承、重写、向上转型</strong>。<br>继承：在多台中必须存在有继承关系的子类和父类。<br>重写：子类对父类中的某些方法进行重新定义，在调用这些方法时就会调用子类的方法。<br>向上转型：在多态中需要把父类型的引用变量指向子类对象。<br>&nbsp;&nbsp;多态的实现机制遵循一个原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。  </p>
+<h1 id="三、经典实例"><a href="#三、经典实例" class="headerlink" title="三、经典实例"></a>三、经典实例</h1><p>&nbsp;&nbsp;<strong>原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。如果不符合前面的条件，它仍然需要根据继承链中方法调用的优先级来确认方法，优先级为：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//这类this指的是引用变量的类型</div><div class="line">this.show(o)---&gt;super.show(o)---&gt;this.show((super)o)---&gt;super.show((super)o)</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">public class A &#123;</div><div class="line">    public String show(D obj) &#123;</div><div class="line">        return (&quot;A and D&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public String show(A obj) &#123;</div><div class="line">        return (&quot;A and A&quot;);</div><div class="line">    &#125; </div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public class B extends A&#123;</div><div class="line">    public String show(B obj)&#123;</div><div class="line">        return (&quot;B and B&quot;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public String show(A obj)&#123;</div><div class="line">        return (&quot;B and A&quot;);</div><div class="line">    &#125; </div><div class="line">&#125;</div><div class="line"></div><div class="line">public class C extends B&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public class D extends B&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public class Test &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        A a1 = new A();</div><div class="line">        A a2 = new B();</div><div class="line">        B b = new B();</div><div class="line">        C c = new C();</div><div class="line">        D d = new D();</div><div class="line">        </div><div class="line">        System.out.println(&quot;1--&quot; + a1.show(b));</div><div class="line">        System.out.println(&quot;2--&quot; + a1.show(c));</div><div class="line">        System.out.println(&quot;3--&quot; + a1.show(d));</div><div class="line">        System.out.println(&quot;4--&quot; + a2.show(b));</div><div class="line">        System.out.println(&quot;5--&quot; + a2.show(c));</div><div class="line">        System.out.println(&quot;6--&quot; + a2.show(d));</div><div class="line">        System.out.println(&quot;7--&quot; + b.show(b));</div><div class="line">        System.out.println(&quot;8--&quot; + b.show(c));</div><div class="line">        System.out.println(&quot;9--&quot; + b.show(d));      </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//运行结果</div><div class="line">1--A and A</div><div class="line">2--A and A</div><div class="line">3--A and D</div><div class="line">4--B and A</div><div class="line">5--B and A</div><div class="line">6--A and D</div><div class="line">7--B and B</div><div class="line">8--B and B</div><div class="line">9--A and D</div></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;比如分析4，a2.show(b)，按照上面原则的意思，是由B来决定调用谁的方法，所有a2.show(b)应该要调用B中的show(B obj)，产生的结果应该是“B and B”，但是这样是错误的，因为我们忽略了后面那句话：被调用的方法必须要在父类中定义过的，不符合要求，不能直接这么做！所以仍然要按照继承链的调用方法的优先级来确认。由于this(A)没有父类，跳到第三级this((super)o)，找到了A中的show(A obj)方法，同时由于B重写了该方法，所以最终会调用B类中的show(A obj)方法，最后输出“B and A”。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、多态的定义&quot;&gt;&lt;a href=&quot;#一、多态的定义&quot; class=&quot;headerlink&quot; title=&quot;一、多态的定义&quot;&gt;&lt;/a&gt;一、多态的定义&lt;/h1&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调
+    
+    </summary>
+    
+      <category term="java基础" scheme="http://yoursite.com/categories/java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
@@ -74,6 +184,41 @@
     <summary type="html">
     
       &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>IO多路复用select、poll、epoll的区别与使用</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
+    <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2017-10-27T12:57:56.984Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p>
+<h2 id="一、select-的使用"><a href="#一、select-的使用" class="headerlink" title="一、select()的使用"></a>一、select()的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</div><div class="line">nfds:要监视的文件描述符的范围，一般取描述符数的最大值+1</div><div class="line">readfds：监视的可读描述符集合，只要有文件描述符即将进行读操作，这个文件描述符就存储到这。</div><div class="line">writefds：监视的可写描述符集合。</div><div class="line">exceptfds：监视的错误异常描述符集合。</div></pre></td></tr></table></figure>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化（可读、可写或错误异常）。select()函数监视的文件描述符分为三类，分别是readfds，writefds，exceptfds。调用select()函数会阻塞，直到有描述符就绪（有数据可读、可写或者有错误异常，或者超时），函数才会返回。当select()函数返回后，可以通过遍历fdset来找到就绪的描述符。</p>
+<h3 id="select-的优缺点"><a href="#select-的优缺点" class="headerlink" title="select()的优缺点"></a>select()的优缺点</h3><p><strong>优点：</strong> 几乎在所有平台是都支持，具有良好的跨平台支持。<br><strong>缺点：</strong><br>1、每次调用select()，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大；同时每次调用select()，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。<br>2、单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但是这样也会造成效率的降低。  </p>
+<h2 id="二、poll-的使用"><a href="#二、poll-的使用" class="headerlink" title="二、poll()的使用"></a>二、poll()的使用</h2><p>select()和poll()系统调用的本质一样，管理多个描述符也是进行轮询，根据描述符的状态进行处理，但是poll()没有最大文件描述符数量的限制（但数量过大后性能也会下降）。poll()和select()同样存在一个缺点是，包含大量文件描述符的集合被整体复制于用户态和内核态之间，而不论这些文件描述符是否就绪，随文件描述符数量的增加而线性增大。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int poll(struct pollfd *fds, nfds_t nfds, int timeout)</div></pre></td></tr></table></figure></p>
+<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化。<br>&emsp;poll()的实现和select()非常相似，只是描述fd集合的方式不同，poll()使用pollfd结构而不是select()的fd_set结构，还有就是poll()没有最大文件描述符数量的限制，其他的都差不多。  </p>
+<h2 id="三、epoll-的使用"><a href="#三、epoll-的使用" class="headerlink" title="三、epoll()的使用"></a>三、epoll()的使用</h2><p>epoll()是select()和poll()的增强版本。但epoll更加灵活，没有描述符限制。epoll()使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。<br>epoll操作过程需要三个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int epoll_create(int size);</div><div class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);</div><div class="line">int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</div></pre></td></tr></table></figure></p>
+<h3 id="1、int-epoll-create-int-size"><a href="#1、int-epoll-create-int-size" class="headerlink" title="1、int epoll_create(int size)"></a>1、int epoll_create(int size)</h3><p><strong>功能：</strong> 该函数生成一个epoll专用的文件描述符（创建一个epoll的句柄）。在创建好epoll句柄后，它就是会占用一个fd值，在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。  </p>
+<h3 id="2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event"><a href="#2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event" class="headerlink" title="2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)"></a>2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</h3><p><strong>功能：</strong> epoll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，epoll需要先注册要监听的事件类型。  </p>
+<h3 id="3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout"><a href="#3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout" class="headerlink" title="3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)"></a>3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)</h3><p><strong>功能：</strong> 等待事件的发生，收集在epoll监控的事件中已经发送的事件，类似于select()调用。  </p>
+<p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
+<p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
+<h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
     
     </summary>
     
@@ -503,153 +648,6 @@
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
       <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>（转）Java中锁概念总结</title>
-    <link href="http://yoursite.com/2017/09/30/%EF%BC%88%E8%BD%AC%EF%BC%89Java%E4%B8%AD%E9%94%81%E6%A6%82%E5%BF%B5%E6%80%BB%E7%BB%93/"/>
-    <id>http://yoursite.com/2017/09/30/（转）Java中锁概念总结/</id>
-    <published>2017-09-30T02:41:04.000Z</published>
-    <updated>2017-09-30T02:41:52.938Z</updated>
-    
-    <content type="html"><![CDATA[<p>原文链接：<a href="http://www.jianshu.com/p/4a8415140406" target="_blank" rel="external">http://www.jianshu.com/p/4a8415140406</a></p>
-<h2 id="公平锁和非公平锁"><a href="#公平锁和非公平锁" class="headerlink" title="公平锁和非公平锁"></a>公平锁和非公平锁</h2><p><strong>公平锁</strong>：多个线程申请获取同一个锁，按照线程的申请顺序，排队获取锁。公平锁的好处是等待的线程不会被饿死，相应的缺陷就是整体吞吐量很低、效率很低。使用new ReentrantLock(true)可以构造一个公平锁。<br><strong>非公平锁</strong>：多个线程申请获取同一个锁，获取锁的顺序不按照申请顺序，抢占式的获取。非公平锁的好处是整体效率很高，但是可能会使有些线程一致在等待，造成饿死。使用Synchronized、new ReentrantLock()和new ReentrantLock(false)可以构建一个非公平锁。  </p>
-<h2 id="共享锁和独占锁"><a href="#共享锁和独占锁" class="headerlink" title="共享锁和独占锁"></a>共享锁和独占锁</h2><p><strong>共享锁</strong>：简单的理解就是锁可以被多个线程持有。在实际使用过程中，线程A获取到了共享资源D的共享锁，其它线程只能获取D的共享锁，不能获取独占锁。<br><strong>独占锁</strong>：一次只能有一个线程获得锁，即只能被一个线程持有。在实际使用过程中，线程A获取到了共享资源D的独占锁，其它线程不能获取D的任何类型锁。  </p>
-<h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p><strong>读写锁</strong>一次只有一个线程（writer线程）可以修改共享数据，但在许多情况下，任何数量的线程可以同时读取共享数据（reader线程）。Java中的读写锁通过ReentrantReadWriteLock实现。ReentrantReadWriteLock.ReadLock是读锁，它是共享锁。ReentrantReadWriteLock.WriteLock是写锁，它是独占锁。  </p>
-<h2 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h2><p><strong>互斥锁</strong>即一次只能有一个线程持有的锁。ReentrantLock和synchronized都是互斥锁。  </p>
-<h2 id="悲观锁和乐观锁"><a href="#悲观锁和乐观锁" class="headerlink" title="悲观锁和乐观锁"></a>悲观锁和乐观锁</h2><p><strong>悲观锁</strong>认为对同一数据的并发操作一定会出现冲突问题，所以，在对数据操作之前一定要加锁。Java编码中悲观锁的实现有很多种，for update就是一种。<br><strong>乐观锁</strong>认为对同一数据的并发操作不会出现冲突问题，数据操作不加锁，会在操作提交时检查数据的完整性。Java中常用的乐观锁方式有版本号、时间戳。  </p>
-<h2 id="偏向锁、轻量级锁、重量级锁"><a href="#偏向锁、轻量级锁、重量级锁" class="headerlink" title="偏向锁、轻量级锁、重量级锁"></a>偏向锁、轻量级锁、重量级锁</h2><p><strong>偏向锁</strong>：对于一段同步代码来说，锁偏向于第一次获取它的线程，如果继续执行的过程中，锁没有被其它线程持有，则持有偏向锁的线程将不需要同步，自动获取锁。<br><strong>轻量级锁</strong>：当偏向锁被另一个线程持有的时候，偏向锁升级为轻量级锁，其它线程通过自旋转的方式尝试获取锁。<br><strong>重量级锁</strong>：当轻量级锁被另一个线程持有的时候，轻量级锁升级为重量级锁。  </p>
-<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>Java线程在得不到锁时不会立即阻塞，而是执行一个循环，不断的去尝试获取锁，这种技术就是<strong>自旋锁</strong>。它可以减少在获取锁的过程中，因为线程上下文的切换而导致的额外消耗。  </p>
-<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><p><strong>可重入锁</strong>，也称为递归锁，即线程在获取到某方法的锁之后，如果在该方法内部调用其它方法，这个方法也需要获取锁，那么进入这个方法将自动获取锁，它可以在一定程度上避免死锁。  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;原文链接：&lt;a href=&quot;http://www.jianshu.com/p/4a8415140406&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.jianshu.com/p/4a8415140406&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java多线程之锁优化策略</title>
-    <link href="http://yoursite.com/2017/09/30/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%94%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/"/>
-    <id>http://yoursite.com/2017/09/30/Java多线程之锁优化策略/</id>
-    <published>2017-09-30T02:26:04.000Z</published>
-    <updated>2017-09-30T02:26:45.191Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p>
-<h2 id="2、减小锁粒度"><a href="#2、减小锁粒度" class="headerlink" title="2、减小锁粒度"></a>2、减小锁粒度</h2><p>如：jdk1.6中，  ConcurrentHashMap中采取对segement加锁而不是整个map加锁，提高并发性。类似数据库中的行锁对表锁的优势。  </p>
-<h2 id="3、锁分离"><a href="#3、锁分离" class="headerlink" title="3、锁分离"></a>3、锁分离</h2><p>根据同步操作的性质，把锁划分为读锁和写锁，读锁之间不互斥，提高了并发性。  </p>
-<h2 id="4、锁粗化"><a href="#4、锁粗化" class="headerlink" title="4、锁粗化"></a>4、锁粗化</h2><p>在一个间隔性需要执行同步语句的线程中，如果在不连续的同步块间频繁加锁解锁是很耗性能的，因此把加锁范围扩大，把这些不连续的同步语句进行一次性加锁解锁。虽然线程持有锁的时间增加了，但是总体还是优化了的。  </p>
-<h2 id="5、锁消除"><a href="#5、锁消除" class="headerlink" title="5、锁消除"></a>5、锁消除</h2><p>锁消除是编译器做的事：根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸当前线程（即不会影响线程外的数据），那么可以认为这段代码是线程安全的，不需要加锁。  </p>
-<h1 id="二、Java虚拟机中采用的锁优化策略："><a href="#二、Java虚拟机中采用的锁优化策略：" class="headerlink" title="二、Java虚拟机中采用的锁优化策略："></a>二、Java虚拟机中采用的锁优化策略：</h1><p>主要包括偏向锁、轻量级锁和自旋锁。其中，<a href="http://xiaonanbobo.com/2017/08/13/synchronized的实现原理及锁的升级/" target="_blank" rel="external">偏向锁、轻量级锁及重量锁及其膨胀过程在之前博客中有了详细描述，</a>在这篇文章，我主要介绍下自旋锁。  </p>
-<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>如果当线程申请锁时，发现锁被占用，就让当前线程执行忙循环（自旋），观察持有锁的线程是否会很快释放锁。如果自旋后还没获得锁，才进入同步阻塞状态。  </p>
-<h3 id="自适应自旋"><a href="#自适应自旋" class="headerlink" title="自适应自旋"></a>自适应自旋</h3><p>自旋的线程的自旋时间为在同一个锁上，上一次线程自旋并获得锁的耗时。如果对于这个锁，自旋很少成功，就不自旋了，避免浪费CPU资源。 </p>
-<p>&emsp;<strong>为了尽量避免使用重量级锁，JVM首先会尝试轻量级锁，轻量级锁尝试使用CAS操作来获取锁，如果轻量级锁获取失败，说明存在竞争，但是可能很快就能获得锁，就会尝试自旋锁，将线程做几个空循环，每一次循环都不断尝试获得锁。如果自旋锁也失败，那么只能升级为重量级锁。</strong></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、编码过程中可采取的锁优化的思路：&quot;&gt;&lt;a href=&quot;#一、编码过程中可采取的锁优化的思路：&quot; class=&quot;headerlink&quot; title=&quot;一、编码过程中可采取的锁优化的思路：&quot;&gt;&lt;/a&gt;一、编码过程中可采取的锁优化的思路：&lt;/h1&gt;&lt;h2 id=&quot;1
-    
-    </summary>
-    
-      <category term="java" scheme="http://yoursite.com/categories/java/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>26、复杂链表的复制</title>
-    <link href="http://yoursite.com/2017/09/29/26%E3%80%81%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/"/>
-    <id>http://yoursite.com/2017/09/29/26、复杂链表的复制/</id>
-    <published>2017-09-29T12:08:00.000Z</published>
-    <updated>2017-09-29T12:08:56.869Z</updated>
-    
-    <content type="html"><![CDATA[<p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    public RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        if(pHead==null)</div><div class="line">            return null;</div><div class="line">        //第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A&apos;-&gt;B-&gt;B&apos;-&gt;C-&gt;C&apos;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            RandomListNode node=new RandomListNode(pCur.label);</div><div class="line">            node.next=pCur.next;</div><div class="line">            pCur.next=node;</div><div class="line">            pCur=node.next;</div><div class="line">        &#125;</div><div class="line">        //第二步，复制random</div><div class="line">        pCur=pHead;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            if(pCur.random!=null)</div><div class="line">                pCur.next.random=pCur.random.next;</div><div class="line">            pCur=pCur.next.next;</div><div class="line">        &#125;</div><div class="line">        //第三步，拆分链表</div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.next;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        while(pCur!=null)&#123;</div><div class="line">            pCur.next=pCur.next.next;</div><div class="line">            if(cur.next!=null)&#123;</div><div class="line">                cur.next=cur.next.next;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.next;</div><div class="line">            cur=cur.next;</div><div class="line">        &#125;</div><div class="line">    	return pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  &lt;/p&gt;
-&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title
-    
-    </summary>
-    
-      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
-    
-    
-      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>27、二叉搜索树转双向链表</title>
-    <link href="http://yoursite.com/2017/09/29/27%E3%80%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/"/>
-    <id>http://yoursite.com/2017/09/29/27、二叉搜索树转双向链表/</id>
-    <published>2017-09-29T10:35:00.000Z</published>
-    <updated>2017-09-29T10:39:21.439Z</updated>
-    
-    <content type="html"><![CDATA[<p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">public class TreeNode &#123;</div><div class="line">    int val = 0;</div><div class="line">    TreeNode left = null;</div><div class="line">    TreeNode right = null;</div><div class="line"></div><div class="line">    public TreeNode(int val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line">public class Solution &#123;</div><div class="line">    TreeNode leftHead=null;</div><div class="line">    TreeNode rightHead=null;</div><div class="line">    public TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        if(pRootOfTree==null)</div><div class="line">            return null;</div><div class="line">        Convert(pRootOfTree.left);</div><div class="line">        if(leftHead==null)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;else&#123;</div><div class="line">            rightHead.right=pRootOfTree;</div><div class="line">            pRootOfTree.left=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.right);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  &lt;/p&gt;
-&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title=&quot;一、思路&quot;&gt;&lt;/a&gt;一
-    
-    </summary>
-    
-      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
-    
-    
-      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>28、字符串的排列</title>
-    <link href="http://yoursite.com/2017/09/29/28%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/"/>
-    <id>http://yoursite.com/2017/09/29/28、字符串的排列/</id>
-    <published>2017-09-29T08:34:00.000Z</published>
-    <updated>2017-09-29T10:39:19.529Z</updated>
-    
-    <content type="html"><![CDATA[<p>&emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、将第一个字符与后面每个字符交换<br>2、固定第一个字符<br>3、将固定后，后面字符的第一位字符分别与后面每个字符交换<br>以此类推。。。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9B%9E%E6%BA%AF.png" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">import java.util.*;</div><div class="line">public class Solution &#123;</div><div class="line">    public ArrayList&lt;String&gt; Permutation(String str) &#123;</div><div class="line">       ArrayList list =new ArrayList();</div><div class="line">        if(str!=null &amp;&amp; str.length()&gt;0)&#123;</div><div class="line">            PermutationHelper(str.toCharArray(),0,list);</div><div class="line">            Collections.sort(list);</div><div class="line">        &#125;</div><div class="line">        return list;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    void PermutationHelper(char[] cs,int i,ArrayList list)&#123;</div><div class="line">        //结束条件，排到最后一位元素</div><div class="line">        if(i==cs.length-1)&#123;</div><div class="line">            String val=String.valueOf(cs);</div><div class="line">            if(!list.contains(val))</div><div class="line">            	list.add(val);</div><div class="line">        &#125;else&#123;</div><div class="line">            for(int j=i;j&lt;cs.length;j++)&#123;</div><div class="line">                swap(cs,i,j);//将第一个字符与后面每个字符交换</div><div class="line">                PermutationHelper(cs,i+1,list);//将第一位字符固定</div><div class="line">                swap(cs,i,j);//第一个字符固定后，之后第一个字符与后面每个字符交换，直至固定后的第一个字符就是最后一个字符</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //两元素的交换</div><div class="line">    void swap(char[] cs,int i,int j)&#123;</div><div class="line">        char temp=cs[i];</div><div class="line">        cs[i]=cs[j];</div><div class="line">        cs[j]=temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  &lt;/p&gt;
-&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;
-    
-    </summary>
-    
-      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
-    
-    
-      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
     
   </entry>
   
