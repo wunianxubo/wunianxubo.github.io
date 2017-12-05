@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-01T12:43:24.010Z</updated>
+  <updated>2017-12-05T08:43:24.137Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,30 +16,32 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>抽象工厂模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
-    <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2017-12-01T12:43:24.010Z</updated>
+    <title>如何保证线程的顺序执行？</title>
+    <link href="http://yoursite.com/2017/12/05/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%A1%BA%E5%BA%8F%E6%89%A7%E8%A1%8C%EF%BC%9F/"/>
+    <id>http://yoursite.com/2017/12/05/如何保证线程的顺序执行？/</id>
+    <published>2017-12-05T08:43:00.000Z</published>
+    <updated>2017-12-05T08:43:24.137Z</updated>
     
-    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>两个实现类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MailSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is mailSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SmsSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is smsSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>两个工厂类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class SendMailFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new MailSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SendSmsFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>提供一个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Provider&#123;</div><div class="line">    public Sender produce();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>测试类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class Test&#123;</div><div class="line">    public void main(String[] args)&#123;</div><div class="line">        Provider provider = new SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  </p>
+<h2 id="1、使用join关键字实现"><a href="#1、使用join关键字实现" class="headerlink" title="1、使用join关键字实现"></a>1、使用join关键字实现</h2><p>join关键字用于让当前线程等待join线程执行完毕后再执行，否则会处于等待阻塞状态。有两种方法：<br>方法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">class Task implements Runnable&#123;</div><div class="line"></div><div class="line">    private int taskId;</div><div class="line">    </div><div class="line">    public Task(int taskId)&#123;</div><div class="line">        this.taskId = taskId; </div><div class="line">    &#125;    </div><div class="line">    </div><div class="line">    @Override</div><div class="line">    public void run()&#123;</div><div class="line">        System.out.println(&quot;线程&quot;+taskId+&quot;运行！&quot;)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public void method1() throws InterruptedException&#123;</div><div class="line">    Thread t1 = new Thread(new Task(1));</div><div class="line">    Thread t2 = new Thread(new Task(2));</div><div class="line">    Thread t3 = new Thread(new Task(3));</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t1.join();//阻塞主线程，直到线程1执行完</div><div class="line">    t2.start();</div><div class="line">    t2.join();//阻塞主线程，直到线程2执行完</div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public void method2()&#123;</div><div class="line">    Thread t1 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            System.out.println(&quot;线程1运行！&quot;)；</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t2 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            try&#123;</div><div class="line">                t1.join();</div><div class="line">                System.out.println(&quot;线程2运行！&quot;);</div><div class="line">            &#125;catch(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t3 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            try&#123;</div><div class="line">                t2.join();</div><div class="line">                System.out.println(&quot;线程3运行！&quot;);</div><div class="line">            &#125;catch(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t2.start();</div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="2、使用队列"><a href="#2、使用队列" class="headerlink" title="2、使用队列"></a>2、使用队列</h2><p>把线程依次加入到队列里，按顺序执行即可。newSingleThreadExecutor是一个只有一个消费线程的线程池，这个消费线程会按队列FIFO的顺序去任务队列里取任务，只要保证三个线程按顺序放入就可以了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">class Task implements Runnable&#123;</div><div class="line">    </div><div class="line">    private int taskId;</div><div class="line">    </div><div class="line">    public Task(int taskId)&#123;</div><div class="line">        this.taskId = taskId;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public void run()&#123;</div><div class="line">        System.out.println(&quot;线程&quot;+taskId+&quot;执行！&quot;)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public void method3()&#123;</div><div class="line">    ExecutorService threadPool = Executors.newSingleThreadExecutor();</div><div class="line">    threadPool.execute(new Task(1));</div><div class="line">    threadPool.execute(new Task(2));</div><div class="line">    threadPool.execute(new Task(3));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="3、使用CountDownLatch关键字实现"><a href="#3、使用CountDownLatch关键字实现" class="headerlink" title="3、使用CountDownLatch关键字实现"></a>3、使用CountDownLatch关键字实现</h2><p>执行它的latch.await()方法，如果计数器不为0，那么当前线程就会被阻塞；每完成一个任务，就执行latch.countDown()，计数器减一，当计数器为0时，阻塞的线程恢复执行状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">public void method4()&#123;</div><div class="line">    final CountDownLatch latch1 = new CountDownLatch(1);</div><div class="line">    final CountDownLatch latch1 = new CountDownLatch(1);</div><div class="line">    </div><div class="line">    Thread t1 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            System.out.println(&quot;线程1执行！&quot;);</div><div class="line">            lacth1.countDown();//执行完任务后，计数器减一</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">    </div><div class="line">    Thread t2 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            try&#123;</div><div class="line">                latch1.await();//直到t1中countDown后计数器为0时，t2才继续执行</div><div class="line">            &#125;catch(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;线程2执行！&quot;);</div><div class="line">            lacth2.countDown();</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">    </div><div class="line">    Thread t2 = new Thread(new Runnable()&#123;</div><div class="line">        @Override</div><div class="line">        public void run()&#123;</div><div class="line">            try&#123;</div><div class="line">                latch2.await();//直到t2中countDown后计数器为0时，t3才继续执行</div><div class="line">            &#125;catch(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;线程3执行！&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  &lt;/p&gt;
+&lt;h2 id=&quot;1、使用join关键字实现&quot;&gt;&lt;a hre
     
     </summary>
     
-      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+      <category term="java" scheme="http://yoursite.com/categories/java/"/>
     
     
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+      <category term="java" scheme="http://yoursite.com/tags/java/"/>
+    
+      <category term="java并发" scheme="http://yoursite.com/tags/java%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   
@@ -66,6 +68,34 @@
     <summary type="html">
     
       &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>抽象工厂模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2017-12-01T12:43:24.010Z</updated>
+    
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个实现类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class MailSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is mailSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SmsSender implements Sender&#123;</div><div class="line">    @Override</div><div class="line">    public void Send()&#123;</div><div class="line">        System.out.println(&quot;this is smsSender!&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个工厂类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public class SendMailFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new MailSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public class SendSmsFactory implements Provider&#123;</div><div class="line">    @Override</div><div class="line">    public Sender produce()&#123;</div><div class="line">        return new SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>提供一个接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Provider&#123;</div><div class="line">    public Sender produce();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class Test&#123;</div><div class="line">    public void main(String[] args)&#123;</div><div class="line">        Provider provider = new SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=
     
     </summary>
     
@@ -161,40 +191,6 @@
   </entry>
   
   <entry>
-    <title>linux的五种I/O模型</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2017-10-27T12:36:34.447Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
-    
-    </summary>
-    
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>IO多路复用select、poll、epoll的区别与使用</title>
     <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
@@ -219,6 +215,40 @@
     <summary type="html">
     
       &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2017-10-27T12:36:34.447Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
     
     </summary>
     
@@ -622,32 +652,6 @@
       <category term="java" scheme="http://yoursite.com/tags/java/"/>
     
       <category term="java虚拟机" scheme="http://yoursite.com/tags/java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java中的异常和处理</title>
-    <link href="http://yoursite.com/2017/10/09/Java%E4%B8%AD%E7%9A%84%E5%BC%82%E5%B8%B8%E5%92%8C%E5%A4%84%E7%90%86/"/>
-    <id>http://yoursite.com/2017/10/09/Java中的异常和处理/</id>
-    <published>2017-10-09T08:49:00.000Z</published>
-    <updated>2017-10-09T08:52:45.084Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为<strong>异常处理机制</strong>。<br>异常处理机制能让程序在异常发生时，按照代码预先设定的异常处理逻辑，针对性的处理异常，让程序尽最大可能恢复正常并继续执行，且保持代码的清晰。<br>java中的异常可以是函数中的语句执行时引发的，也可以是程序员通过throw关键字手动抛出的，只要程序中产生了异常，就会用一个对应类型的异常对象来封装异常，jre就会试图寻找异常处理程序来处理异常。<br>Throwable类是Java异常类型的顶层父类，一个对象只有是Throwable类的实例，他才是一个异常对象，才能被异常处理机制识别。jdk中内置了一些常用的异常类，同时程序员自己也可以自定义异常。  </p>
-<h1 id="java异常的分类和类结构图"><a href="#java异常的分类和类结构图" class="headerlink" title="java异常的分类和类结构图"></a>java异常的分类和类结构图</h1><p>Throwable类是顶层父类，Throwable类派生出Error类和Exception类。<br><strong>错误</strong>：Error类以及他的子类的实例，代表了JVM本身的错误。错误不能被程序员通过代码处理，Error很少出现。<br><strong>异常</strong>：Exception以及它的子类，代表程序运行时发送的各种不期望发生的事件。<strong>可以被java异常处理机制使用，是异常处理的核心</strong>。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.jpg" alt="image"><br>根据javac对异常的处理要求，将异常类分为2类：<br><strong>非检查异常（unchecked exception）</strong>：Error和RuntimeException以及他们的子类。javac在编译时，不会提示和发现这样的异常，不要求在程序中处理这些异常。对于这样的异常，我们可以编写代码处理（try…catch…finally），也可以不处理。对于这些异常，我们要做的应该是修正代码，而不是去通过异常处理器处理。这样的异常多半是代码编写的问题。如除0错误ArithmeticException，错误的类型强转错误ClassCastException，数组越界错误ArrayIndexOutOfBoundsException，空指针错误NullPointerException等等。<br><strong>检查异常（checked exception）</strong>：除了Error和RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（try…catch…finally）。在方法中，<strong>要么通过try-catch语句捕获异常并处理，要么用throws子句声明交给函数调用者去解决</strong>，否则编译不会通过。这种异常一般由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，但是程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着，如SQLException，IOException，ClassNotFoundException，FileNotFoundException等等。<br>这里的检查与非检查是针对javac而言的。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为&lt;strong&gt;异常处理机制&lt;/str
-    
-    </summary>
-    
-      <category term="java基础" scheme="http://yoursite.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java" scheme="http://yoursite.com/tags/java/"/>
-    
-      <category term="java基础" scheme="http://yoursite.com/tags/java%E5%9F%BA%E7%A1%80/"/>
     
   </entry>
   
