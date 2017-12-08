@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="java,java虚拟机," />
 
 
 
@@ -96,15 +96,16 @@
 
 
 <meta name="description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
+<meta name="keywords" content="java,java虚拟机">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Wunian&#39;s Blog">
+<meta property="og:title" content="Java内存溢出与内存泄漏">
 <meta property="og:url" content="http://yoursite.com/2017/12/08/（转）Java内存溢出和内存泄漏/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
 <meta property="og:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png">
-<meta property="og:updated_time" content="2017-12-08T02:19:43.351Z">
+<meta property="og:updated_time" content="2017-12-08T02:23:06.754Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wunian&#39;s Blog">
+<meta name="twitter:title" content="Java内存溢出与内存泄漏">
 <meta name="twitter:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
 <meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png">
 
@@ -140,7 +141,7 @@
 
 
 
-  <title> | Wunian's Blog</title>
+  <title>Java内存溢出与内存泄漏 | Wunian's Blog</title>
   
 
 
@@ -316,7 +317,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Java内存溢出与内存泄漏</h1>
         
 
         <div class="post-meta">
@@ -328,7 +329,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-08T10:21:00+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-08T10:23:00+08:00">
                 2017-12-08
               </time>
             
@@ -338,6 +339,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">深入理解Java虚拟机</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -407,6 +430,14 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/java虚拟机/" rel="tag"># java虚拟机</a>
+          
+        </div>
       
 
       
