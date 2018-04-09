@@ -15,17 +15,17 @@
 
 
 
-<meta name="description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：   1、分层&amp;nbsp;分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调">
+<meta name="description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：">
 <meta name="keywords" content="大型网站技术架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="大型网站的架构模式">
 <meta property="og:url" content="http://yoursite.com/2018/01/04/大型网站的架构模式/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：   1、分层&amp;nbsp;分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调">
-<meta property="og:updated_time" content="2018-04-09T01:06:17.620Z">
+<meta property="og:description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：">
+<meta property="og:updated_time" content="2018-04-09T03:37:19.880Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="大型网站的架构模式">
-<meta name="twitter:description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：   1、分层&amp;nbsp;分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调">
+<meta name="twitter:description" content="&amp;nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -283,7 +283,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：  </p>
+        <p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：<br><a id="more"></a></p>
 <h3 id="1、分层"><a href="#1、分层" class="headerlink" title="1、分层"></a>1、分层</h3><p>&nbsp;<strong>分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调用组成一个完整的系统。</strong> 网络的七层通信协议也是一种分层结构。<br>&nbsp;通过分层，可以将一个庞大的系统切分成多个不同的部分，便于分工合作开发和维护；各层之间具有一定的独立性，只要维持调用接口不变，各层可以根据具体的问题独立演化发展而不需要其他层必须作出相应的调整。  </p>
 <h3 id="2、分割"><a href="#2、分割" class="headerlink" title="2、分割"></a>2、分割</h3><p>&nbsp;<strong>分层是横向的切分，而分割是在纵向进行切分。网站越大，其功能越复杂，服务和数据处理的种类也越多，通过分割，将这些不同的服务和功能切分开来，不仅有利于软件的开发和维护，也便于不同模块的分布式部署，来提高网站的并发处理能力和功能扩展能力。</strong><br>&nbsp;比如购物业务，可分割成机票酒店业务、3C业务、小商品业务等更小的粒度。在这个粒度上，还可以继续分割成首页、搜索列表、商品详情等模块，这些模式不管是物理上还是逻辑上都可以是独立的。  </p>
 <h3 id="3、分布式"><a href="#3、分布式" class="headerlink" title="3、分布式"></a>3、分布式</h3><p>&nbsp;<strong>分层和分割可以更好的便于分布式部署，将不同模块部署在不同的服务器上，通过远程调用协同工作。</strong> 分布式意味着可以使用更多的计算机完成同样的功能，计算机越多，CPU、内存、存储资源也越多，能够处理的并发访问和数据量就越大，可以为更多的用户服务。  </p>
@@ -304,7 +304,7 @@
         <p><span>Title:</span><a href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage">Xu Bo</a></p>
         <p><span>Created:</span>2018-01-04, 11:24:00</p>
-        <p><span>Updated:</span>2018-04-09, 09:06:17</p>
+        <p><span>Updated:</span>2018-04-09, 11:37:19</p>
         <p>
             <span>Full URL:</span><a class="post-url" href="/2018/01/04/大型网站的架构模式/" title="大型网站的架构模式">http://yoursite.com/2018/01/04/大型网站的架构模式/</a>
             <span class="copy-path" data-clipboard-text="From http://yoursite.com/2018/01/04/大型网站的架构模式/　　By Xu Bo" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>

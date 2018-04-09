@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
+<meta name="description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。">
 <meta name="keywords" content="java,java虚拟机">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java内存溢出与内存泄漏">
 <meta property="og:url" content="http://yoursite.com/2017/12/08/（转）Java内存溢出和内存泄漏/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
-<meta property="og:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
+<meta property="og:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png">
-<meta property="og:updated_time" content="2018-04-09T01:06:17.622Z">
+<meta property="og:updated_time" content="2018-04-09T03:37:52.371Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java内存溢出与内存泄漏">
-<meta name="twitter:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。   二、基本概念内存泄露：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。内存溢出：指程序运行过程中无">
+<meta name="twitter:description" content="一、为什么要了解内存泄露和内存溢出？1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。">
 <meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -285,7 +285,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。  </p>
+        <h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。<br><a id="more"></a></p>
 <h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><p><strong>内存泄露</strong>：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。<br><strong>内存溢出</strong>：指程序运行过程中无法申请到足够的内存而导致的一种错误。内存溢出通常发生于OLD段（老年代）或Perm段（永久代）垃圾回收后，仍然无内存空间容纳新的Java对象的情况。<br>从定义上可以看出内存泄露是内存溢出的一种诱因，不是唯一因素。  </p>
 <h2 id="三、Java中主要的内存泄漏场景"><a href="#三、Java中主要的内存泄漏场景" class="headerlink" title="三、Java中主要的内存泄漏场景"></a>三、Java中主要的内存泄漏场景</h2><ul>
 <li><p>静态集合类，容器中的对象在程序结束之前都不会释放。这些静态变量的生命周期和应用程序一致，他们所引用的对象Object也不能被释放，因为他们也将一直被Vector引用。</p>
@@ -314,7 +314,7 @@
         <p><span>Title:</span><a href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage">Xu Bo</a></p>
         <p><span>Created:</span>2017-12-08, 10:23:00</p>
-        <p><span>Updated:</span>2018-04-09, 09:06:17</p>
+        <p><span>Updated:</span>2018-04-09, 11:37:52</p>
         <p>
             <span>Full URL:</span><a class="post-url" href="/2017/12/08/（转）Java内存溢出和内存泄漏/" title="Java内存溢出与内存泄漏">http://yoursite.com/2017/12/08/（转）Java内存溢出和内存泄漏/</a>
             <span class="copy-path" data-clipboard-text="From http://yoursite.com/2017/12/08/（转）Java内存溢出和内存泄漏/　　By Xu Bo" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>

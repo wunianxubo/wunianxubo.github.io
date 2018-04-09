@@ -351,17 +351,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：  </p>
-<h3 id="1、分层"><a href="#1、分层" class="headerlink" title="1、分层"></a>1、分层</h3><p>&nbsp;<strong>分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调用组成一个完整的系统。</strong> 网络的七层通信协议也是一种分层结构。<br>&nbsp;通过分层，可以将一个庞大的系统切分成多个不同的部分，便于分工合作开发和维护；各层之间具有一定的独立性，只要维持调用接口不变，各层可以根据具体的问题独立演化发展而不需要其他层必须作出相应的调整。  </p>
-<h3 id="2、分割"><a href="#2、分割" class="headerlink" title="2、分割"></a>2、分割</h3><p>&nbsp;<strong>分层是横向的切分，而分割是在纵向进行切分。网站越大，其功能越复杂，服务和数据处理的种类也越多，通过分割，将这些不同的服务和功能切分开来，不仅有利于软件的开发和维护，也便于不同模块的分布式部署，来提高网站的并发处理能力和功能扩展能力。</strong><br>&nbsp;比如购物业务，可分割成机票酒店业务、3C业务、小商品业务等更小的粒度。在这个粒度上，还可以继续分割成首页、搜索列表、商品详情等模块，这些模式不管是物理上还是逻辑上都可以是独立的。  </p>
-<h3 id="3、分布式"><a href="#3、分布式" class="headerlink" title="3、分布式"></a>3、分布式</h3><p>&nbsp;<strong>分层和分割可以更好的便于分布式部署，将不同模块部署在不同的服务器上，通过远程调用协同工作。</strong> 分布式意味着可以使用更多的计算机完成同样的功能，计算机越多，CPU、内存、存储资源也越多，能够处理的并发访问和数据量就越大，可以为更多的用户服务。  </p>
-<h3 id="4、集群"><a href="#4、集群" class="headerlink" title="4、集群"></a>4、集群</h3><p>&nbsp;使用分布式将分层和分割后的模块进行独立部署，但是<strong>对于用户访问集中的模块（比如首页），还需要将独立部署的服务器集群化，即多台服务器部署相同应用构成一个集群，通过负载均衡设备共同对外提供服务</strong> 。当某台服务器发生故障时，负载均衡设备或者系统的失效转移机制会将请求转发到集群中其他服务器上，使服务器故障不影响用户使用。  </p>
-<h3 id="5、缓存"><a href="#5、缓存" class="headerlink" title="5、缓存"></a>5、缓存</h3><p>&nbsp;<strong>缓存就是将数据存放在距离计算最近的位置以加快处理速度</strong>，是改善软件性能的第一手段。<br><strong>CDN：</strong> 即内容分发网络，部署在距离终端用户最近的网络服务商，用户的网络请求总是先到达他的网络服务商哪里，在这里缓存网站的一些静态资源，可以就近以最快速度返回给用户，如将用户访问量很大的热点内容缓存在CDN。<br><strong>反向代理：</strong> 反向代理部署在网站的前端，当用户请求到达网站的数据中心时，最先访问的就是反向代理服务器，这里缓存网站的静态资源，无需将请求转发给应用服务器就可以返回给用户。<br><strong>本地缓存：</strong> 在应用服务器本地缓存着热点数据，应用程序可以在本机内存中直接访问数据，而不需要访问数据库。<br><strong>分布式缓存：</strong> 单机无法承受大量的缓存，需要将数据缓存在一个专门的分布式缓存集群中，应用程序通过网络通信访问缓存数据。<br>使用缓存的两个前提：一个是数据访问热点不均衡，某些数据会被更频繁的访问，将这部分数据进行缓存；还有一个是数据在某个时间段内是有效的，不会很快过期，否则会产生脏读，影响结果的正确性。  </p>
-<h3 id="6、异步"><a href="#6、异步" class="headerlink" title="6、异步"></a>6、异步</h3><p>&nbsp;<strong>异步架构是典型的生产者-消费者模式，处在业务操作前面的线程将输出写入到队列，后面的线程从队列中读取数据进行处理，两者不存在直接调用，彼此功能可以随意变化而互不影响。</strong> 异步还有其他几点优势：<br><strong>1.提供系统可用性：</strong> 消费者服务器发生故障，数据会在消息队列器中存储的堆积，生产者服务器可以继续处理业务请求，等消费者服务器恢复后可以继续从队列中取数据进行处理。<br><strong>2.加快网站的响应速度：</strong> 处在业务前端的生产者服务器在处理完业务请求后，将数据写入消息队列，不需要等待消费者服务器处理就可以返回，响应延迟小。<br><strong>3.消除并发访问高峰：</strong> 使用消息队列将突然增加的访问请求数据放入消息队列，等待消费者服务器依次处理，就不会对整个网站负载造成太大压力。  </p>
-<h3 id="7、冗余"><a href="#7、冗余" class="headerlink" title="7、冗余"></a>7、冗余</h3><p>&nbsp;网站需要24小时的运行，但是服务器可能随时都会出现故障，<strong>要想保证在服务器宕机的情况下网站依然可以继续服务，不丢失数据，就需要一定程度的服务器冗余运行，数据冗余备份，这样在某台服务器宕机时，可以将其上的服务和数据访问转移到其他机器上。</strong> 数据库除了要定期备份，存档保存，实现冷备份外，为了保证在线业务高可用，还需要对数据库进行主从分离，实时同步实现热备份。为抵御自然灾害，还需要对整个数据中心进行备份，全球范围内部署灾备数据中心，网站程序和数据实时同步到多个灾备数据中心。  </p>
-<h3 id="8、自动化"><a href="#8、自动化" class="headerlink" title="8、自动化"></a>8、自动化</h3><p>&nbsp;通过减少认为的干预，使发布过程自动化可以有效减少故障。自动化的代码管理，自动化的测试，自动化的安全检测，及最后自动化的部署。此外，还需要，对生产环境进行自动化监控，出现异常、超出预设阈值，会自动化报警，故障发生时自动化的失效转移，故障消除时自动化的失效恢复等等等。  </p>
-<h3 id="9、安全"><a href="#9、安全" class="headerlink" title="9、安全"></a>9、安全</h3><p>&nbsp;通过密码和手机验证码进行身份认证；登录交易等操作对网络通信进行加密；为防止机器人程序滥用网络资源攻击网站，使用验证码进行识别；对于常用的攻击网络的XSS攻击，SQL注入进行编码转换等处理；对垃圾信息、敏感信息进行过滤；对交易转账等重要操作根据交易模式和交易信息进行风险控制。  </p>
-
+              <p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：<br>
+          
       
     </div>
     
@@ -378,6 +369,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2018/01/04/大型网站的架构模式/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -424,25 +419,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。  </p>
-<h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><p><strong>内存泄露</strong>：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。<br><strong>内存溢出</strong>：指程序运行过程中无法申请到足够的内存而导致的一种错误。内存溢出通常发生于OLD段（老年代）或Perm段（永久代）垃圾回收后，仍然无内存空间容纳新的Java对象的情况。<br>从定义上可以看出内存泄露是内存溢出的一种诱因，不是唯一因素。  </p>
-<h2 id="三、Java中主要的内存泄漏场景"><a href="#三、Java中主要的内存泄漏场景" class="headerlink" title="三、Java中主要的内存泄漏场景"></a>三、Java中主要的内存泄漏场景</h2><ul>
-<li><p>静态集合类，容器中的对象在程序结束之前都不会释放。这些静态变量的生命周期和应用程序一致，他们所引用的对象Object也不能被释放，因为他们也将一直被Vector引用。</p>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> Vector v = <span class="keyword">new</span> Vector();</div><div class="line"><span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i&lt;<span class="number">100</span>; i++)&#123;</div><div class="line">    <span class="keyword">Object</span> o = <span class="keyword">new</span> <span class="keyword">Object</span>();</div><div class="line">    v.<span class="built_in">add</span>(o);</div><div class="line">    o = <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>修改hashset中对象的参数值，且参数是计算哈希值的字段。<br>  当一个对象被存储进HashSet集合中以后，就不能修改这个对象中的那些参与计算哈希值的字段，否则对象修改后的哈希值与最初存储进HashSet集合中时的哈希值就不同了，在这种情况下，即使在contains方法使用该对象的当前引用作为参数去HashSet集合中检索对象，也将返回找不到对象的结果，这也会导致无法从HashSet集合中删除当前对象，造成内存泄露。</p>
-</li>
-<li>数据库连接、网络连接、IO连接，不再使用时需要close方法释放</li>
-<li>监听器，用到的监听器在释放的时候没有去删除，从而增加了内存泄漏的可能性</li>
-<li>变量不合理的作用域，成员变量在使用后依然存在（结局：将变量设为局部变量）</li>
-<li>单例造成内存泄漏，单例对象在初始化后将在JVM的整个生命周期内存在，如果外部对象（生命周期比较短）持有该引用，那么该外部对象就不能被回收，从而导致内存泄漏</li>
-</ul>
-<h2 id="四、内存溢出的几种情况："><a href="#四、内存溢出的几种情况：" class="headerlink" title="四、内存溢出的几种情况："></a>四、内存溢出的几种情况：</h2><h3 id="1、堆内存溢出（outOfMemoryError：java-heap-space）"><a href="#1、堆内存溢出（outOfMemoryError：java-heap-space）" class="headerlink" title="1、堆内存溢出（outOfMemoryError：java heap space）"></a>1、堆内存溢出（outOfMemoryError：java heap space）</h3><p>&nbsp;&nbsp;分为两种情况：一种是堆内存确实不够，还有一种是由于内存的泄漏而造成的内存溢出。<br>&nbsp;&nbsp;在jvm规范中，堆中的内存是用来生成对象实例和数组的。我们只要不断的创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，当对象数量达到最大堆容量限制后产生内存溢出异常。    如果细分，堆内存还可以分为年轻代和年老代，年轻代包括一个eden区和两个survivor区。<br><img src="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png" alt="image"><br>当生成新对象时，内存的申请过程如下：<br>a、jvm先尝试在eden区分配新建对象所需的内存；<br>b、如果内存大小足够，申请结束，否则下一步；<br>c、jvm启动Minor GC，试图将eden区中不活跃的对象释放掉，释放后若Eden空间仍然不足以放入新对象，则试图将部分Eden中活跃对象放入Survivor区；如果整个新生代都放不下对象时，可以直接在老年代分配内存；<br>d、Survivor区被用来作为Eden及old的中间交换区域，当OLD区空间足够时，Survivor区的对象会被移到Old区，否则会被保留在Survivor区；<br>e、当OLD区空间不够时，JVM会在OLD区进行full GC；<br>f、full GC后，若Survivor及OLD区仍然无法存放从Eden复制过来的部分对象，导致JVM无法在Eden区为新对象创建内存区域，则出现”out of memory错误”。<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> class MemoryLeak &#123;</div><div class="line">   </div><div class="line">    <span class="keyword">private</span> <span class="keyword">String</span>[] s = <span class="keyword">new</span> <span class="keyword">String</span>[<span class="number">1000</span>];</div><div class="line"> </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) <span class="keyword">throws</span> InterruptedException &#123;</div><div class="line">        Map&lt;<span class="keyword">String</span>,<span class="keyword">Object</span>&gt; m =<span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">Object</span>&gt;();</div><div class="line">        <span class="built_in">int</span> i =<span class="number">0</span>;</div><div class="line">        <span class="built_in">int</span> j=<span class="number">10000</span>;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">for</span>(;i&lt;j;i++)&#123;</div><div class="line">                MemoryLeak memoryLeak = <span class="keyword">new</span> MemoryLeak();</div><div class="line">                m.put(<span class="keyword">String</span>.valueOf(i), memoryLeak);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><p>&nbsp;&nbsp;出现这种异常，一般手段是先通过内存映像分析工具(如Eclipse Memory Analyzer)对dump出来的堆转存快照进行分析，重点是确认内存中的对象是否是必要的，先分清是因为内存泄漏(Memory Leak)还是内存溢出(Memory Overflow)。<br>&nbsp;&nbsp;如果是内存泄漏，可进一步通过工具（如Jrockit等工具）查看泄漏对象到GC Roots的引用链。于是就能找到泄漏对象时通过怎样的路径与GC Roots相关联并导致垃圾收集器无法自动回收。<br>如果不存在泄漏，那就应该检查虚拟机的参数(-Xmx与-Xms)的设置是否适当。</p>
-<h3 id="2、方法区内存溢出（outOfMemoryError：permgem-space）"><a href="#2、方法区内存溢出（outOfMemoryError：permgem-space）" class="headerlink" title="2、方法区内存溢出（outOfMemoryError：permgem space）"></a>2、方法区内存溢出（outOfMemoryError：permgem space）</h3><p>在jvm规范中，方法区主要存放的是类相关信息（如类名、访问修饰符、常量池、字段描述、方法描述等），静态变量，常量，即时编译器编译后的代码等。<br>所以<strong>如果程序加载的类过多，或者使用反射、gclib等这种动态代理生成类的技术，就可能导致该区发生内存溢出。</strong>  在经常动态生成大量Class的应用中，要注意这点。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jvm参数：-XX:<span class="attribute">PermSize</span>=2m -XX:<span class="attribute">MaxPermSize</span>=2m</div><div class="line">将方法区的大小设置很低即可，在启动加载类库时就会出现内存不足的情况</div></pre></td></tr></table></figure></p>
-<h3 id="3、线程栈溢出（java-lang-StackOverflowError）"><a href="#3、线程栈溢出（java-lang-StackOverflowError）" class="headerlink" title="3、线程栈溢出（java.lang.StackOverflowError）"></a>3、线程栈溢出（java.lang.StackOverflowError）</h3><p>线程栈时线程独有的一块内存结构，所以线程栈发生问题必定是某个线程运行时产生的错误。<br><strong>一般线程栈溢出是由于递归太深或方法调用层级过多导致的。</strong><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StackOverflowTest</span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</div><div class="line">    <span class="keyword">int</span> i =<span class="number">0</span>;</div><div class="line">    digui(i);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">digui</span>(<span class="params"><span class="keyword">int</span> i</span>)</span>&#123;</div><div class="line">    System.<span class="keyword">out</span>.println(i++);</div><div class="line">    String[] s = <span class="keyword">new</span> String[<span class="number">50</span>];</div><div class="line">    digui(i);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议："><a href="#五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议：" class="headerlink" title="五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议："></a>五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议：</h2><p>1、尽早释放无用对象的引用<br>2、使用字符串处理，避免使用String，应大量使用StringBuffer，每一个String对象都得独立占用内存一块区域<br>3、尽量少用静态变量，因为静态变量存放在永久代（方法区），永久代基本不参与垃圾回收<br>4、避免在循环中创建对象<br>5、开启大型文件或从数据库一次拿了太多的数据很容易造成内存溢出，所以在这些地方要大概计算一下数据量的最大值是多少，并且设定所需最小及最大的内存空间值。  </p>
-
+              <h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。<br>
+          
       
     </div>
     
@@ -459,6 +437,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/12/08/（转）Java内存溢出和内存泄漏/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
