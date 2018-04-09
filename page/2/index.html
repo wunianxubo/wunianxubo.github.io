@@ -1,4 +1,1082 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Wunian"><title>Wunian's Blog | 清风徐来，水波不兴</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Wunian's Blog</h1><a id="logo" href="/.">Wunian's Blog</a><p class="description">清风徐来，水波不兴</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a></h1><div class="post-meta">2017-10-27</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/27/Linux的五种IO模型/" href="/2017/10/27/Linux的五种IO模型/#disqus_thread"></a><div class="post-content"><h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p></div><p class="readmore"><a href="/2017/10/27/Linux的五种IO模型/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/23/AVL树的java实现/">AVL树的Java实现</a></h1><div class="post-meta">2017-10-23</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/23/AVL树的java实现/" href="/2017/10/23/AVL树的java实现/#disqus_thread"></a><div class="post-content"><p>AVL树，也叫二叉平衡树，是一种二叉排序树，其中每一个节点的左子树和右子树的高度差至多等于1。  </p>
-<h1 id="AVL树的Java实现"><a href="#AVL树的Java实现" class="headerlink" title="AVL树的Java实现"></a>AVL树的Java实现</h1><h2 id="1、节点"><a href="#1、节点" class="headerlink" title="1、节点"></a>1、节点</h2><h3 id="1-1节点定义"><a href="#1-1节点定义" class="headerlink" title="1.1节点定义"></a>1.1节点定义</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">AVLTree&lt;T</span> <span class="keyword">extends</span> <span class="title">Comparable&lt;T&gt;&gt;</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span> <span class="keyword">extends</span> <span class="type">Comparable</span>&lt;<span class="type">T</span>&gt;&gt;&#123;</div><div class="line">        <span class="type">T</span> key;                 <span class="comment">//键值</span></div><div class="line">        int height;            <span class="comment">//高度</span></div><div class="line">        <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; left;   <span class="comment">//左孩子</span></div><div class="line">        <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; right;  <span class="comment">//右孩子</span></div><div class="line">        </div><div class="line">        public <span class="type">AVLTreeNode</span>(<span class="type">T</span> key, <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; left, <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; right)&#123;</div><div class="line">            <span class="keyword">this</span>.key = key;</div><div class="line">            <span class="keyword">this</span>.left = left;</div><div class="line">            <span class="keyword">this</span>.right = right;</div><div class="line">            <span class="keyword">this</span>.height = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/10/23/AVL树的java实现/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/16/Java中的BIO、NIO、AIO/">Java中的BIO、NIO、AIO</a></h1><div class="post-meta">2017-10-16</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/16/Java中的BIO、NIO、AIO/" href="/2017/10/16/Java中的BIO、NIO、AIO/#disqus_thread"></a><div class="post-content"><h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><p>同步和异步关注的是消息通信机制。<br>同步：指在发出一个调用时，在没有得到结果之前，该调用就不返回。一旦返回，说明已经得到返回值了。也就是由调用者主动等待这个调用的结果。<br>异步：指在调用发出之后，这个调用就直接返回了，所以没有返回结果。就是说异步过程调用发出后，调用者不会立刻得到结果，而是在调用发出后，被调用者通过状态、通知来通知调用者，或通过回调函数处理这个调用。  </p></div><p class="readmore"><a href="/2017/10/16/Java中的BIO、NIO、AIO/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/13/常用排序算法总结/">常用排序算法总结</a></h1><div class="post-meta">2017-10-13</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/13/常用排序算法总结/" href="/2017/10/13/常用排序算法总结/#disqus_thread"></a><div class="post-content"><h3 id="各比较排序性能比较"><a href="#各比较排序性能比较" class="headerlink" title="各比较排序性能比较"></a>各比较排序性能比较</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%AF%94%E8%BE%83%E6%8E%92%E5%BA%8F%E6%80%A7%E8%83%BD.jpg" alt="image">  </p></div><p class="readmore"><a href="/2017/10/13/常用排序算法总结/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/13/二叉树的先序、中序、后序遍历/">Java实现二叉树的先序、中序、后序遍历</a></h1><div class="post-meta">2017-10-13</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/13/二叉树的先序、中序、后序遍历/" href="/2017/10/13/二叉树的先序、中序、后序遍历/#disqus_thread"></a><div class="post-content"><h3 id="先序遍历示意图："><a href="#先序遍历示意图：" class="headerlink" title="先序遍历示意图："></a>先序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p></div><p class="readmore"><a href="/2017/10/13/二叉树的先序、中序、后序遍历/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a></h1><div class="post-meta">2017-10-13</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/13/29、数组中出现超过一半的数字/" href="/2017/10/13/29、数组中出现超过一半的数字/#disqus_thread"></a><div class="post-content"><p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>在遍历数组时，保存两个值：一个是数组中的一个数字，还有一个是次数。当我们遍历到下一个数字的时候，如果下一个数字和我们之前保存的相同，则次数加一，不同次数就减一。若次数为0，我们需要保存下一个数字，次数记为1。由于我们要找的数字出现次数比其他所有数字出现的次数之和还多，那么要找的数字肯定是最后一次把次数设为1时对应的数字。  </p></div><p class="readmore"><a href="/2017/10/13/29、数组中出现超过一半的数字/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a></h1><div class="post-meta">2017-10-13</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/13/30、最小的k个数/" href="/2017/10/13/30、最小的k个数/#disqus_thread"></a><div class="post-content"><p>输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>创建一个大小为k的最大堆，先依次放入k个数，找出k个数中的最大值，然后每次拿待插入的数和最大值比较。如果待插入的数比当前已知的最大值小，就用这个数替换最大值；若比最大值大，就抛弃该数。<br>堆满之后，要做三件事：一是找出最大数；二是可能需要删除最大数；三是可能要插入新数字，我们可以在O(logk)时间内完成这三步操作。对N个数字而言，总时间复杂度为O(nlogk)。  </p></div><p class="readmore"><a href="/2017/10/13/30、最小的k个数/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a></h1><div class="post-meta">2017-10-12</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/12/Java实现二叉排序树的插入、查找和删除/" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/#disqus_thread"></a><div class="post-content"><h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p></div><p class="readmore"><a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a></h1><div class="post-meta">2017-10-12</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/#disqus_thread"></a><div class="post-content"><h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>静态代码块：用static声明，jvm加载类时执行，仅执行一次。<br>构造代码块：类中直接用{}定义，每一次创建对象时执行。<br>执行顺序优先级：<strong>静态块-&gt;main()-&gt;构造块-&gt;构造函数</strong>。  </p></div><p class="readmore"><a href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">字符串、基本数据类型等在堆、栈、常量池中的存储</a></h1><div class="post-meta">2017-10-11</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/" href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/#disqus_thread"></a><div class="post-content"><h1 id="一、对于字符串"><a href="#一、对于字符串" class="headerlink" title="一、对于字符串"></a>一、对于字符串</h1><p>字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">String</span> s1=<span class="string">"china"</span>;</div><div class="line"><span class="keyword">String</span> s2=<span class="string">"china"</span>;</div><div class="line"><span class="keyword">String</span> ss1=<span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"china"</span>);</div><div class="line"><span class="keyword">String</span> ss2=<span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"china"</span>);</div></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">Read More</a></p></div><nav class="page-navigator"><a class="extend prev" rel="prev" href="/">Previous</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next</a></nav><script id="dsq-count-scr" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/count.js" async></script></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java基础/">java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式系统/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/剑指offer/">剑指offer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/大型网站技术架构核心原理/">大型网站技术架构核心原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/java虚拟机/" style="font-size: 15px;">java虚拟机</a> <a href="/tags/算法，剑指offer/" style="font-size: 15px;">算法，剑指offer</a> <a href="/tags/数据结构/" style="font-size: 15px;">数据结构</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/java并发/" style="font-size: 15px;">java并发</a> <a href="/tags/java基础/" style="font-size: 15px;">java基础</a> <a href="/tags/java，java基础/" style="font-size: 15px;">java，java基础</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/大型网站技术架构/" style="font-size: 15px;">大型网站技术架构</a> <a href="/tags/分布式系统/" style="font-size: 15px;">分布式系统</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://www.zhihu.com/people/wu-nian-34-58/activities" title="zhihu" target="_blank">zhihu</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Wunian's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Xu Bo" />
+
+
+    
+    
+
+
+<meta name="description" content="Wunian">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wunian&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="Wunian">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wunian&#39;s Blog">
+<meta name="twitter:description" content="Wunian">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Wunian&#39;s Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <style> .article { opacity: 0;} </style>
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Wunian&#39;s Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/xubo.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Xu Bo</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">清风徐来，水波不兴</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Xu Bo</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/xubo.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Xu Bo</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">清风徐来，水波不兴</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap">
+  
+    <article id="post-Linux的五种IO模型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/27/Linux的五种IO模型/" class="article-date">
+      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-AVL树的java实现" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/23/AVL树的java实现/" class="article-date">
+      <time datetime="2017-10-23T12:55:00.000Z" itemprop="datePublished">2017-10-23</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/23/AVL树的java实现/">AVL树的Java实现</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>AVL树，也叫二叉平衡树，是一种二叉排序树，其中每一个节点的左子树和右子树的高度差至多等于1。  </p>
+<h1 id="AVL树的Java实现"><a href="#AVL树的Java实现" class="headerlink" title="AVL树的Java实现"></a>AVL树的Java实现</h1><h2 id="1、节点"><a href="#1、节点" class="headerlink" title="1、节点"></a>1、节点</h2><h3 id="1-1节点定义"><a href="#1-1节点定义" class="headerlink" title="1.1节点定义"></a>1.1节点定义</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">AVLTree&lt;T</span> <span class="keyword">extends</span> <span class="title">Comparable&lt;T&gt;&gt;</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span> <span class="keyword">extends</span> <span class="type">Comparable</span>&lt;<span class="type">T</span>&gt;&gt;&#123;</div><div class="line">        <span class="type">T</span> key;                 <span class="comment">//键值</span></div><div class="line">        int height;            <span class="comment">//高度</span></div><div class="line">        <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; left;   <span class="comment">//左孩子</span></div><div class="line">        <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; right;  <span class="comment">//右孩子</span></div><div class="line">        </div><div class="line">        public <span class="type">AVLTreeNode</span>(<span class="type">T</span> key, <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; left, <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; right)&#123;</div><div class="line">            <span class="keyword">this</span>.key = key;</div><div class="line">            <span class="keyword">this</span>.left = left;</div><div class="line">            <span class="keyword">this</span>.right = right;</div><div class="line">            <span class="keyword">this</span>.height = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-2树的高度"><a href="#1-2树的高度" class="headerlink" title="1.2树的高度"></a>1.2树的高度</h3><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//获取树的高度</span></div><div class="line"><span class="keyword">private</span> <span class="built_in">int</span> <span class="built_in">height</span>(AVLTreeNode&lt;T&gt; tree)&#123;</div><div class="line">    <span class="keyword">if</span>(tree != <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> tree.<span class="built_in">height</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="built_in">int</span> <span class="built_in">height</span>()&#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">height</span>(mRoot);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="1-3比较大小"><a href="#1-3比较大小" class="headerlink" title="1.3比较大小"></a>1.3比较大小</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">比较两个值的大小</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>&#123;</div><div class="line">    <span class="keyword">return</span> a&gt;b ? a: b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、旋转"><a href="#2、旋转" class="headerlink" title="2、旋转"></a>2、旋转</h2><p>如果在AVL树中进行插入或删除节点后，可能导致AVL树失去平衡。这种失去平衡可以概括为4种姿势：LL（左左），LR（左右），RR（右右），RL（右左）。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%97%8B%E8%BD%AC1.jpg" alt="image">  </p>
+<h3 id="2-1-LL的旋转"><a href="#2-1-LL的旋转" class="headerlink" title="2.1 LL的旋转"></a>2.1 LL的旋转</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/LL.jpg" alt="image">  </p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//LL：左左对应的情况</div><div class="line">//返回值：旋转后的根节点</div><div class="line">private AVLTreeNode&lt;T&gt; leftLeftRotation(AVLTreeNode&lt;T&gt; <span class="built_in">k2</span>)&#123;</div><div class="line">    AVLTreeNode&lt;T&gt; <span class="built_in">k1</span><span class="comment">;</span></div><div class="line">    <span class="built_in">k1</span> = <span class="built_in">k2</span>.left<span class="comment">;</span></div><div class="line">    <span class="built_in">k2</span>.left = <span class="built_in">k1</span>.right<span class="comment">;</span></div><div class="line">    <span class="built_in">k1</span>.right = <span class="built_in">k2</span><span class="comment">;</span></div><div class="line">    </div><div class="line">    <span class="built_in">k2</span>.height = max(height(<span class="built_in">k2</span>.left),height(<span class="built_in">k2</span>.right)) + <span class="number">1</span><span class="comment">;</span></div><div class="line">    <span class="built_in">k1</span>.height = max(height(<span class="built_in">k1</span>.left),<span class="built_in">k2</span>.height) + <span class="number">1</span><span class="comment">;</span></div><div class="line">    </div><div class="line">    return <span class="built_in">k1</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-2-RR的旋转"><a href="#2-2-RR的旋转" class="headerlink" title="2.2 RR的旋转"></a>2.2 RR的旋转</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/RR.jpg" alt="image">  </p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//RR：右右对应的情况</div><div class="line">//返回值：旋转后的根节点</div><div class="line">private AVLTreeNode&lt;T&gt; rightRightRotation(AVLTreeNode&lt;T&gt; <span class="built_in">k1</span>)&#123;</div><div class="line">    AVLTreeNode&lt;T&gt; <span class="built_in">k2</span><span class="comment">;</span></div><div class="line">    <span class="built_in">k2</span> = <span class="built_in">k1</span>.right<span class="comment">;</span></div><div class="line">    <span class="built_in">k1</span>.right = <span class="built_in">k2</span>.left<span class="comment">;</span></div><div class="line">    <span class="built_in">k2</span>.left = <span class="built_in">k1</span><span class="comment">;</span></div><div class="line">    </div><div class="line">    <span class="built_in">k1</span>.height = max(height(<span class="built_in">k1</span>.left),height(<span class="built_in">k1</span>.right)) + <span class="number">1</span><span class="comment">;</span></div><div class="line">    <span class="built_in">k2</span>.height = max(height(<span class="built_in">k2</span>.left),<span class="built_in">k1</span>.height) + <span class="number">1</span><span class="comment">;</span></div><div class="line">    </div><div class="line">    return <span class="built_in">k2</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-3-LR的旋转"><a href="#2-3-LR的旋转" class="headerlink" title="2.3 LR的旋转"></a>2.3 LR的旋转</h3><p>LR失去平衡的情况，需要经过两次旋转才能让AVL树恢复平衡。<br><img src="http://osrmzp0jr.bkt.clouddn.com/LR.jpg" alt="image">  </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//LR：左右对应的情况</span></div><div class="line"><span class="comment">//返回值：旋转后的根节点</span></div><div class="line"><span class="keyword">private</span> <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; leftRightRotation(<span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; k3)&#123;</div><div class="line">    k3.<span class="keyword">left</span> = rightRightRotation(k3.<span class="keyword">left</span>);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> leftLeftRotation(k3);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-4-RL的旋转"><a href="#2-4-RL的旋转" class="headerlink" title="2.4 RL的旋转"></a>2.4 RL的旋转</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/RL.jpg" alt="image">  </p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//RL：右左对应的情况</span></div><div class="line"><span class="comment">//返回值：旋转后的根节点</span></div><div class="line"><span class="keyword">private</span> <span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; rightLeftRotation(<span class="type">AVLTreeNode</span>&lt;<span class="type">T</span>&gt; k1)&#123;</div><div class="line">    k1.<span class="keyword">right</span> = leftLeftRotation(k1.<span class="keyword">right</span>);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> rightRightRotation(k1);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、插入"><a href="#3、插入" class="headerlink" title="3、插入"></a>3、插入</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//将结点插入到AVL树中，并返回根节点</span></div><div class="line"><span class="keyword">private</span> AVLTreeNode&lt;T&gt; insert(AVLTreeNode&lt;T&gt; tree, T <span class="built_in">key</span>)&#123;<span class="comment">//tree为根节点，key为待插入的值</span></div><div class="line">    <span class="keyword">if</span>(tree == <span class="keyword">null</span>)&#123;</div><div class="line">        <span class="comment">//新建节点</span></div><div class="line">        tree = <span class="keyword">new</span> AVLTreeNode&lt;T&gt;(<span class="built_in">key</span>,<span class="keyword">null</span>,<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">if</span>(tree==<span class="keyword">null</span>)&#123;</div><div class="line">            System.out.<span class="built_in">println</span>(<span class="string">"创建节点失败！"</span>);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="built_in">int</span> cmp = <span class="built_in">key</span>.compareTo(tree.<span class="built_in">key</span>);</div><div class="line">        </div><div class="line">        <span class="comment">//将key插入到Tree的左子树</span></div><div class="line">        <span class="keyword">if</span>(cmp &lt; <span class="number">0</span>)&#123;</div><div class="line">            tree.left = insert(tree.left, <span class="built_in">key</span>);</div><div class="line">            <span class="comment">//插入节点后，若AVL树失去平衡，做相应的调节</span></div><div class="line">            <span class="keyword">if</span>(<span class="built_in">height</span>(tree.left) - <span class="built_in">height</span>(tree.right) == <span class="number">2</span>)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="built_in">key</span>.compareTo(tree.left.<span class="built_in">key</span>) &lt; <span class="number">0</span>)</div><div class="line">                    tree = leftLeftRotation(tree);</div><div class="line">                <span class="keyword">else</span></div><div class="line">                    tree = leftRightRotation(tree);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//将key插入到Tree的右子树</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(cmp &gt; <span class="number">0</span>)&#123;</div><div class="line">            tree.right = insert(tree.right, <span class="built_in">key</span>);</div><div class="line">            <span class="comment">//插入节点后，若AVL树失去平衡，做相应的调节</span></div><div class="line">            <span class="keyword">if</span>(<span class="built_in">height</span>(tree.right) - <span class="built_in">height</span>(tree.left== <span class="number">2</span>)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="built_in">key</span>.compareTo(tree.left.<span class="built_in">key</span>) &gt; <span class="number">0</span>)</div><div class="line">                    tree = rightRightRotation(tree);</div><div class="line">                <span class="keyword">else</span></div><div class="line">                    tree = rightLeftRotation(tree);</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.<span class="built_in">println</span>(<span class="string">"添加节点失败！"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    tree.<span class="built_in">height</span> = <span class="built_in">max</span>(<span class="built_in">height</span>(tree.left), <span class="built_in">height</span>(tree.right)) + <span class="number">1</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> tree;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4、删除"><a href="#4、删除" class="headerlink" title="4、删除"></a>4、删除</h2><figure class="highlight xl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">private AVLTreeNode&lt;T&gt; remove(AVLTreeNode&lt;T&gt; <span class="keyword">tree</span>, AVLTreeNode&lt;T&gt; z) &#123;<span class="comment">//tree为根节点，z为待删除节点</span></div><div class="line">    <span class="comment">// 根为空 或者 没有要删除的节点，直接返回null。</span></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">tree</span>==null || z==null)</div><div class="line">        return null;</div><div class="line"></div><div class="line">    int cmp = z.key.compareTo(<span class="keyword">tree</span>.key);</div><div class="line">    <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>) &#123;        <span class="comment">// 待删除的节点在"tree的左子树"中</span></div><div class="line">        <span class="keyword">tree</span>.left = remove(<span class="keyword">tree</span>.left, z);</div><div class="line">        <span class="comment">// 删除节点后，若AVL树失去平衡，则进行相应的调节。</span></div><div class="line">        <span class="keyword">if</span> (height(<span class="keyword">tree</span>.right) - height(<span class="keyword">tree</span>.left) == <span class="number">2</span>) &#123;</div><div class="line">            AVLTreeNode&lt;T&gt; r =  <span class="keyword">tree</span>.right;</div><div class="line">            <span class="keyword">if</span> (height(r.left) &gt; height(r.right))</div><div class="line">                <span class="keyword">tree</span> = rightLeftRotation(<span class="keyword">tree</span>);</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">tree</span> = rightRightRotation(<span class="keyword">tree</span>);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>) &#123;    <span class="comment">// 待删除的节点在"tree的右子树"中</span></div><div class="line">        <span class="keyword">tree</span>.right = remove(<span class="keyword">tree</span>.right, z);</div><div class="line">        <span class="comment">// 删除节点后，若AVL树失去平衡，则进行相应的调节。</span></div><div class="line">        <span class="keyword">if</span> (height(<span class="keyword">tree</span>.left) - height(<span class="keyword">tree</span>.right) == <span class="number">2</span>) &#123;</div><div class="line">            AVLTreeNode&lt;T&gt; l =  <span class="keyword">tree</span>.left;</div><div class="line">            <span class="keyword">if</span> (height(l.right) &gt; height(l.left))</div><div class="line">                <span class="keyword">tree</span> = leftRightRotation(<span class="keyword">tree</span>);</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">tree</span> = leftLeftRotation(<span class="keyword">tree</span>);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;    <span class="comment">// tree是对应要删除的节点。</span></div><div class="line">        <span class="comment">// tree的左右孩子都非空</span></div><div class="line">        <span class="keyword">if</span> ((<span class="keyword">tree</span>.left!=null) &amp;&amp; (<span class="keyword">tree</span>.right!=null)) &#123;</div><div class="line">            <span class="keyword">if</span> (height(<span class="keyword">tree</span>.left) &gt; height(<span class="keyword">tree</span>.right)) &#123;</div><div class="line">                <span class="comment">// 如果tree的左子树比右子树高；</span></div><div class="line">                <span class="comment">// 则(01)找出tree的左子树中的最大节点</span></div><div class="line">                <span class="comment">//   (02)将该最大节点的值赋值给tree。</span></div><div class="line">                <span class="comment">//   (03)删除该最大节点。</span></div><div class="line">                <span class="comment">// 这类似于用"tree的左子树中最大节点"做"tree"的替身；</span></div><div class="line">                <span class="comment">// 采用这种方式的好处是：删除"tree的左子树中最大节点"之后，AVL树仍然是平衡的。</span></div><div class="line">                AVLTreeNode&lt;T&gt; max = maximum(<span class="keyword">tree</span>.left);</div><div class="line">                <span class="keyword">tree</span>.key = max.key;</div><div class="line">                <span class="keyword">tree</span>.left = remove(<span class="keyword">tree</span>.left, max);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 如果tree的左子树不比右子树高(即它们相等，或右子树比左子树高1)</span></div><div class="line">                <span class="comment">// 则(01)找出tree的右子树中的最小节点</span></div><div class="line">                <span class="comment">//   (02)将该最小节点的值赋值给tree。</span></div><div class="line">                <span class="comment">//   (03)删除该最小节点。</span></div><div class="line">                <span class="comment">// 这类似于用"tree的右子树中最小节点"做"tree"的替身；</span></div><div class="line">                <span class="comment">// 采用这种方式的好处是：删除"tree的右子树中最小节点"之后，AVL树仍然是平衡的。</span></div><div class="line">                AVLTreeNode&lt;T&gt; min = minimum(<span class="keyword">tree</span>.right);</div><div class="line">                <span class="keyword">tree</span>.key = min.key;</div><div class="line">                <span class="keyword">tree</span>.right = remove(<span class="keyword">tree</span>.right, min);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            AVLTreeNode&lt;T&gt; tmp = <span class="keyword">tree</span>;</div><div class="line">            <span class="keyword">tree</span> = (<span class="keyword">tree</span>.left!=null) ? <span class="keyword">tree</span>.left : <span class="keyword">tree</span>.right;</div><div class="line">            tmp = null;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return <span class="keyword">tree</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Java中的BIO、NIO、AIO" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/16/Java中的BIO、NIO、AIO/" class="article-date">
+      <time datetime="2017-10-16T08:14:00.000Z" itemprop="datePublished">2017-10-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/16/Java中的BIO、NIO、AIO/">Java中的BIO、NIO、AIO</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><p>同步和异步关注的是消息通信机制。<br>同步：指在发出一个调用时，在没有得到结果之前，该调用就不返回。一旦返回，说明已经得到返回值了。也就是由调用者主动等待这个调用的结果。<br>异步：指在调用发出之后，这个调用就直接返回了，所以没有返回结果。就是说异步过程调用发出后，调用者不会立刻得到结果，而是在调用发出后，被调用者通过状态、通知来通知调用者，或通过回调函数处理这个调用。  </p>
+<h2 id="阻塞和非阻塞"><a href="#阻塞和非阻塞" class="headerlink" title="阻塞和非阻塞"></a>阻塞和非阻塞</h2><p>阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态。<br>阻塞：阻塞调用指的是调用结果返回之前，当前线程会被挂起，调用线程只有在得到结果之后才会返回。<br>非阻塞：非阻塞调用指的是不能立刻得到结果之前，该调用不会阻塞当前线程。<br>在处理IO的时候，阻塞和非阻塞都是同步IO。除了特殊的API（AIO），为异步IO。  </p>
+<p>对unix来讲：阻塞式IO，非阻塞式IO，IO复用（select/poll/epoll）都属于同步IO，因为它们在数据由内核空间复制回进程缓冲区时都是阻塞的（不能做其他事），分为两阶段：<br>1、数据准备完成<br>2、数据由内核空间复制回进程缓冲区  </p>
+<h2 id="同步IO和异步IO"><a href="#同步IO和异步IO" class="headerlink" title="同步IO和异步IO"></a>同步IO和异步IO</h2><p><strong>同步IO</strong>：当用户发出IO请求操作后，如果数据没有就绪，需要通过用户线程或者内核不断去轮询数据是否就绪，当数据就绪时，再将数据从内核拷贝到用户线程。<br><strong>异步IO</strong>：只有IO请求操作的发出是用户线程来执行的，IO操作的两个阶段都是由内核自动完成，不需要不断去轮询，会发送通知告知用户线程IO操作已经完成。不会对用户线程产生阻塞。  </p>
+<h2 id="阻塞IO和非阻塞IO"><a href="#阻塞IO和非阻塞IO" class="headerlink" title="阻塞IO和非阻塞IO"></a>阻塞IO和非阻塞IO</h2><p>阻塞IO和非阻塞IO是反映在当用户请求IO操作时，如果数据没有就绪，是用户线程一直等待数据就绪，还是会收到一个标志信息上。  </p>
+<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><p>老张爱喝茶，他要煮开水。<br>出场任务：老张，水壶两把（普通水壶，简称水壶；会响的水壶，简称响水壶）。<br>1、老张把水壶放到火上，立等水开。（同步阻塞）<br>老张觉得自己有点傻<br>2、老张把水壶放到火上，去客厅看电视，时不时去厨房看看水开了没有。（同步非阻塞）<br>老张还是觉得自己有点傻，于是买了把会响笛的水壶。水开之后，能发出声音提醒水开了。<br>3、老张把响水壶放到火上，立等水开。（异步阻塞）<br>老张觉得这样傻等意义不大<br>4、老张把响水壶放到火上，去客厅看电视，水壶响之前不再去看它了，响了再去拿壶。（异步非阻塞）<br>老张觉得自己聪明了<br>&emsp;所谓同步异步，只是针对水壶而言。普通水壶，同步；响水壶，异步。虽然都能干活，但响水壶可以在自己完工之后，提示老张水开了。同步只能让调用者去轮询自己，造成老张效率的低下。<br>&emsp;所谓阻塞非阻塞，仅仅对于老张而言。立等的老张，阻塞；看电视的老张，非阻塞。情况1和3中老张是阻塞的，虽然3中响水壶是异步的，但对于立等的老张没有太大的意义。所以一般异步都是配合非阻塞使用的，这样才能发挥异步的效用。  </p>
+<h2 id="I-O模型"><a href="#I-O模型" class="headerlink" title="I/O模型"></a>I/O模型</h2><p>可分为同步阻塞，同步非阻塞，异步阻塞，异步非阻塞IO。<br><strong>同步阻塞IO</strong>：在这种方式下，用户进程在发起一个IO操作后，必须等待IO操作的完成，只有当真正完成了IO操作以后，用户线程才能运行。<br><strong>同步非阻塞IO</strong>：这种方式下，用户进程在发起一个IO操作后可返回做其它事情，但是用户进程需要时不时的询问IO操作是否就绪，就要求用户进程不停的去询问，从而引入不惜要的CPU资源浪费。JAVA中NIO就属于同步非阻塞IO。<br><strong>异步阻塞IO</strong>：这种方式下，应用发起一个IO操作后，不等待内核IO操作的完成，等内核完成IO操作后会通知应用程序。<br><strong>异步非阻塞IO</strong>：这种方式下，用户进程只需要发起一个IO操作然后立即返回，等IO操作真正完成后，应用程序会得到IO操作完成的通知，此时用户进程只需要对数据进行处理就好了，不需要进行实际的IO读写操作，因为真正的IO读取和写入操作已经由内核完成了。  </p>
+<h2 id="JAVA对BIO、NIO、AIO支持"><a href="#JAVA对BIO、NIO、AIO支持" class="headerlink" title="JAVA对BIO、NIO、AIO支持"></a>JAVA对BIO、NIO、AIO支持</h2><p><strong>BIO</strong>：同步阻塞，服务器实现模式为一个连接一个线程，即客户端有连接请求时服务器就需要启动一个线程进行处理，如果这个连接不做任何事情会造成不必要的线程开销，当然可以通过线程池机制改善。<br><strong>NIO</strong>：同步非阻塞，服务器实现模式为一个请求一个线程，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理。<br><strong>AIO</strong>：异步非阻塞，服务器实现模式为一个有效请求一个线程，客户端的I/O请求都是由OS先完成了再通知服务器应用去启动线程进行处理。  </p>
+<h2 id="JAVA中BIO、NIO、AIO的适用场景"><a href="#JAVA中BIO、NIO、AIO的适用场景" class="headerlink" title="JAVA中BIO、NIO、AIO的适用场景"></a>JAVA中BIO、NIO、AIO的适用场景</h2><p>BIO：适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，jdk1.4前唯一的选择，但程序直观简单易理解。<br>NIO：适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，编程比较复杂，jdk1.4开始支持。<br>AIO：适用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，jdk1.7开始支持。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-常用排序算法总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/常用排序算法总结/" class="article-date">
+      <time datetime="2017-10-13T13:07:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/常用排序算法总结/">常用排序算法总结</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="各比较排序性能比较"><a href="#各比较排序性能比较" class="headerlink" title="各比较排序性能比较"></a>各比较排序性能比较</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%AF%94%E8%BE%83%E6%8E%92%E5%BA%8F%E6%80%A7%E8%83%BD.jpg" alt="image">  </p>
+<h3 id="1、冒泡排序"><a href="#1、冒泡排序" class="headerlink" title="1、冒泡排序"></a>1、冒泡排序</h3><p>1、比较相邻的元素，如果前一个比后一个大，就把他们两个调换位置。<br>2、对每一对相邻的元素作同样的工作，从开始一对到最后一对，完成后，最后的元素会是最大的数。<br>3、针对所有元素重复上面的步骤，除了最后一个元素。<br>4、对剩下越来越少的元素重复上面的步骤。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------加了isSorted标记，在第一趟运行时，发现无需进行下一趟比较，可把时间复杂度降为O(n)</div><div class="line">平均时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;arr.length-<span class="number">1</span>; i++)&#123;<span class="comment">//比较趟数</span></div><div class="line">            <span class="keyword">boolean</span> isSorted = <span class="keyword">true</span>;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;arr.length-<span class="number">1</span>-i; j++)&#123;<span class="comment">//当前趟需要的比较次数</span></div><div class="line">                <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>])&#123;<span class="comment">//将最大元素浮到数组最后</span></div><div class="line">                    isSorted = <span class="keyword">false</span>;</div><div class="line">                    swap(arr,j,j+<span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(isSorted)&#123;<span class="comment">//当前趟比较完后，发现没有元素需要交换位置，表示数组已有序，不必进行下一趟。</span></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123;<span class="comment">//元素交换位置（通用）</span></div><div class="line">        <span class="keyword">int</span> temp=arr[i];</div><div class="line">        arr[i]=arr[j];</div><div class="line">        arr[j]=temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="2、鸡尾酒排序"><a href="#2、鸡尾酒排序" class="headerlink" title="2、鸡尾酒排序"></a>2、鸡尾酒排序</h3><p>也叫定向冒泡排序，是冒泡排序的一种改进。与冒泡排序不同在于先从低到高将最大元素放到后面然后再从高到底将最小元素放到前面。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%B8%A1%E5%B0%BE%E9%85%92%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(<span class="built_in">n</span>^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------如果数组一开始大部分已经排序过的话，接近O(<span class="built_in">n</span>)</div><div class="line">平均时间复杂度---------O(<span class="built_in">n</span>^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line">void CocktailSort(<span class="built_in">int</span>[] A, <span class="built_in">int</span> <span class="built_in">n</span>)&#123;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">left</span>=<span class="number">0</span>;//初始化边界</div><div class="line">    <span class="built_in">int</span> <span class="built_in">right</span>=<span class="built_in">n</span>-<span class="number">1</span>;</div><div class="line">    while(<span class="built_in">left</span> &lt; <span class="built_in">right</span>)&#123;</div><div class="line">    </div><div class="line">        for(<span class="built_in">int</span> i=<span class="built_in">left</span>; i&lt;<span class="built_in">right</span>; i++)&#123;//从左往右，将最大元素放到数组最后</div><div class="line">            <span class="built_in">if</span>(A[i]&gt;A[i+<span class="number">1</span>])</div><div class="line">                swap(A, i, i+<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">right</span>--;</div><div class="line">        </div><div class="line">        for(<span class="built_in">int</span> i=<span class="built_in">right</span>; i&gt;<span class="built_in">left</span>; i--)&#123;//从右往左，将最小元素放到数组最前</div><div class="line">            <span class="built_in">if</span>(A[i]&lt;A[i-<span class="number">1</span>])</div><div class="line">                swap(A, i ,i-<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">left</span>++;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="3、选择排序"><a href="#3、选择排序" class="headerlink" title="3、选择排序"></a>3、选择排序</h3><p>选择排序，第一次遍历找到最小（大）元素，放到序列的起始位置，之后每次遍历继续寻找最小（大）元素，放到已排序序列的后面，直到所有元素都排序完毕。<br>选择排序和冒泡排序的区别：冒泡排序一次交换相邻两个顺序不合法的元素位置，从而将最小（大）元素放到合适的位置；而选择排序没遍历一次都记住当前最小（大）元素的位置，最后仅需一次交换操作就可以放到合适的位置。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">平均时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------不稳定</div><div class="line"></div><div class="line"><span class="keyword">void</span> SelectionSort(<span class="keyword">int</span>[] A, <span class="keyword">int</span> n)&#123;</div><div class="line">    <span class="built_in">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n<span class="number">-1</span>; i++)&#123;<span class="comment">//i为已排序序列的末尾</span></div><div class="line">        <span class="keyword">int</span> <span class="built_in">min</span>=i;</div><div class="line">        <span class="built_in">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j&lt;n; j++)&#123;<span class="comment">//未排序序列</span></div><div class="line">            <span class="built_in">if</span>(A[j]&lt;A[<span class="built_in">min</span>])<span class="comment">//找出未排序序列的最小值</span></div><div class="line">                <span class="built_in">min</span>=j;</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">if</span>(<span class="built_in">min</span> != i)&#123;</div><div class="line">            swap(A,<span class="built_in">min</span>,i);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="4、插入排序"><a href="#4、插入排序" class="headerlink" title="4、插入排序"></a>4、插入排序</h3><p>1、从第一个元素开始，该元素可以认定为已被排序<br>2、取出下一个元素，在已排序的序列中从后向前扫描<br>3、如果扫描到的数比新元素大，则将扫描到的数移到下一位置<br>4、重复步骤3，直到找到扫描的数小于等于新元素，则将新元素插到该元素后面<br>5、重复步骤2~4<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F1.gif" alt="image">  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------输入序列是降序排列，O(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------输入序列是升序排列，O(n)</div><div class="line">平均时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertionSort</span>(<span class="params"><span class="keyword">int</span>[] A, <span class="keyword">int</span> n</span>)</span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;n ;i++)&#123;<span class="comment">//类似抓扑克牌</span></div><div class="line">        <span class="keyword">int</span> <span class="keyword">get</span> = A[i];<span class="comment">//右手抓到的扑克牌</span></div><div class="line">        <span class="keyword">int</span> j=i<span class="number">-1</span>;<span class="comment">//左手上的牌总是排好序的</span></div><div class="line">        <span class="keyword">while</span>(<span class="keyword">get</span>&lt;A[j] &amp;&amp; j&gt;=<span class="number">0</span>)&#123;<span class="comment">//将抓到的牌和手牌从右向左进行比较，若手牌比抓到的牌大，就将其右移 </span></div><div class="line">            A[j+<span class="number">1</span>]=A[j];</div><div class="line">            j--;</div><div class="line">        &#125;</div><div class="line">        A[j+<span class="number">1</span>]=<span class="keyword">get</span>;<span class="comment">//若手牌比抓到的牌小，就将抓到的牌插到该手牌右边</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5、插入排序的改进：二分插入排序"><a href="#5、插入排序的改进：二分插入排序" class="headerlink" title="5、插入排序的改进：二分插入排序"></a>5、插入排序的改进：二分插入排序</h3><p>对于插入排序，如果比较操作的代价比交换操作大的话，可以采用二分查找法来减少比较操作的次数。<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------输入序列是降序排列，O(nlogn)</div><div class="line">最优时间复杂度---------输入序列是升序排列，O(<span class="built_in">n</span>)</div><div class="line">平均时间复杂度---------O(<span class="built_in">n</span>^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line">void InsertionSortDichotomy(<span class="built_in">int</span>[] A,<span class="built_in">int</span> <span class="built_in">n</span>)&#123;</div><div class="line">    for(<span class="built_in">int</span> i=<span class="number">1</span>; i&lt;<span class="built_in">n</span>; i++)&#123;</div><div class="line">        <span class="built_in">int</span> get=A[i];//抓到的牌</div><div class="line">        <span class="built_in">int</span> <span class="built_in">left</span>=<span class="number">0</span>;//<span class="built_in">left</span>,<span class="built_in">right</span>是手牌的边界，手牌是已排序好的</div><div class="line">        <span class="built_in">int</span> <span class="built_in">right</span>=i-<span class="number">1</span>;</div><div class="line">        while(<span class="built_in">left</span>&lt;=<span class="built_in">right</span>)&#123;</div><div class="line">            <span class="built_in">int</span> <span class="built_in">mid</span>=(<span class="built_in">left</span>+<span class="built_in">right</span>)/<span class="number">2</span>;//二分查找，定位新牌的位置</div><div class="line">            <span class="built_in">if</span>(A[<span class="built_in">mid</span>]&gt;get)</div><div class="line">                <span class="built_in">right</span>=<span class="built_in">mid</span>-<span class="number">1</span>;</div><div class="line">            else</div><div class="line">                <span class="built_in">left</span>=<span class="built_in">mid</span>+<span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">        for(<span class="built_in">int</span> j=i-<span class="number">1</span>; j&gt;=<span class="built_in">left</span>; j--)&#123;//将欲插入新牌位置后边的牌向后移一位</div><div class="line">            A[j+<span class="number">1</span>]=A[j];</div><div class="line">        &#125;</div><div class="line">        A[<span class="built_in">left</span>]=get;//将抓到的牌插入手牌</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="6、插入排序的更高效改进：希尔排序"><a href="#6、插入排序的更高效改进：希尔排序" class="headerlink" title="6、插入排序的更高效改进：希尔排序"></a>6、插入排序的更高效改进：希尔排序</h3><p>又叫递减增量排序，是不稳定的排序算法。<br>希尔排序通过将比较的全部元素分为几个区域来提升插入排序的性能。这样可以让一个元素一次性地朝最终位置前进一大步。然后算法再取越来越小的补偿进行排序，算法的最后一步就是普通的插入排序，但到这一步，需排序的数据几乎是已排好的了（此时插入排序较快）。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------O(n^<span class="number">1.3</span>)</div><div class="line">平均时间复杂度---------O(nlogn)~O(n^w)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------不稳定</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShellSort</span>(<span class="params"><span class="keyword">int</span> A[], <span class="keyword">int</span> n</span>)</span>&#123;</div><div class="line">    <span class="keyword">int</span> h=<span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(h&lt;=n)&#123;</div><div class="line">        h = <span class="number">3</span> * h + <span class="number">1</span>;<span class="comment">//生成初始增量</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span>(h&gt;=<span class="number">1</span>)&#123;</div><div class="line">    <span class="comment">//i和j相距距离为h，j在i左侧，A[j]和A[i]比较大小，大的向后移，之后j=j-h按步长向前退</span></div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=h; i&lt;n; i++)&#123;</div><div class="line">            <span class="keyword">int</span> j = i-h;</div><div class="line">            <span class="keyword">int</span> <span class="keyword">get</span> = A[i];</div><div class="line">            <span class="keyword">while</span>(j&gt;=<span class="number">0</span> &amp;&amp; A[j]&gt;<span class="keyword">get</span>)&#123;</div><div class="line">                A[j+h] = A[j];</div><div class="line">                j = j-h;</div><div class="line">            &#125;</div><div class="line">            A[j+h] = <span class="keyword">get</span>;</div><div class="line">        &#125;</div><div class="line">        h=(h<span class="number">-1</span>)/<span class="number">3</span>;<span class="comment">//递减增量</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="7、归并排序"><a href="#7、归并排序" class="headerlink" title="7、归并排序"></a>7、归并排序</h3><p>归并操作如下：<br>1、申请空间，使其大小为两个已经排序的序列之和，该序列用来存放合并后的序列<br>2、设定两个指针，最初位置分别为两个已经排序序列的起始位置<br>3、比较两个指针所指向的元素，选择较小的元素放入到合并空间，并移动指针到下一位置<br>4、重复步骤3直到某一指针达到序列末尾<br>5、将另一序列所剩下的所有元素直接复制到合并序列尾部  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(nlogn)</div><div class="line">最优时间复杂度---------O(nlogn)</div><div class="line">平均时间复杂度---------O(nlogn)</div><div class="line">所需辅助空间-----------O(<span class="built_in">n</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line"></div><div class="line">//合并两个已排好序的数组A[left...mid]和A[<span class="built_in">mid</span>+<span class="number">1</span>...<span class="built_in">right</span>]</div><div class="line">void Merge(<span class="built_in">int</span>[] A, <span class="built_in">int</span> <span class="built_in">left</span>, <span class="built_in">int</span> <span class="built_in">mid</span>, <span class="built_in">int</span> <span class="built_in">right</span>)&#123;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">len</span> = <span class="built_in">right</span>-<span class="built_in">left</span>+<span class="number">1</span>;</div><div class="line">    <span class="built_in">int</span>[] temp = new <span class="built_in">int</span>[<span class="built_in">len</span>];//辅助空间O(<span class="built_in">n</span>)</div><div class="line">    <span class="built_in">int</span> <span class="built_in">index</span>=<span class="number">0</span>;</div><div class="line">    <span class="built_in">int</span> i=<span class="built_in">left</span>;//i,j为两数组的起始位置</div><div class="line">    <span class="built_in">int</span> j=<span class="built_in">mid</span>+<span class="number">1</span>;</div><div class="line">    while(i&lt;=<span class="built_in">mid</span> &amp;&amp; j&lt;=<span class="built_in">right</span>)&#123;</div><div class="line">        temp[<span class="built_in">index</span>++] = A[i]&lt;=A[j] ? A[i++] <span class="symbol">:</span> A[j++];//选择较小元素放入合并空间，并更新指针</div><div class="line">    &#125;</div><div class="line">    while(i&lt;=<span class="built_in">mid</span>)</div><div class="line">        temp[<span class="built_in">index</span>++]=A[i++];</div><div class="line">    while(j&lt;=<span class="built_in">right</span>)</div><div class="line">        temp[<span class="built_in">index</span>++]=A[j++];</div><div class="line">    for(<span class="built_in">int</span> k=<span class="number">0</span>; k&lt;<span class="built_in">len</span>; k++)//将辅助序列复制回原数组</div><div class="line">        A[<span class="built_in">left</span>++]=temp[k];</div><div class="line">&#125;</div><div class="line"></div><div class="line">//递归实现的归并排序（自顶向下）</div><div class="line">void MergeSortRecursion(<span class="built_in">int</span>[] A,<span class="built_in">int</span> <span class="built_in">left</span>, <span class="built_in">int</span> <span class="built_in">right</span>)&#123;</div><div class="line">    <span class="built_in">if</span>(<span class="built_in">left</span>==<span class="built_in">right</span>)//当序列长度为<span class="number">1</span>时，递归开始回溯，进行merge操作</div><div class="line">        return;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">mid</span>=(<span class="built_in">left</span>+<span class="built_in">right</span>)/<span class="number">2</span>;</div><div class="line">    MergeSortRecursion(A,<span class="built_in">left</span>,<span class="built_in">mid</span>);</div><div class="line">    MergeSortRecursion(A,<span class="built_in">mid</span>+<span class="number">1</span>,<span class="built_in">right</span>);</div><div class="line">    Merge(A,<span class="built_in">left</span>,<span class="built_in">mid</span>,<span class="built_in">right</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//非递归（迭代）实现的归并排序（自底向上）</div><div class="line">void MergeSortInteration(<span class="built_in">int</span>[] A, <span class="built_in">int</span> <span class="built_in">len</span>)&#123;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">left</span>,<span class="built_in">mid</span>,<span class="built_in">right</span>;//子数组索引，A[left...mid]和A[<span class="built_in">mid</span>+<span class="number">1</span>...<span class="built_in">right</span>]</div><div class="line">    for(<span class="built_in">int</span> i=<span class="number">1</span>; i&lt;<span class="built_in">len</span>; i*=<span class="number">2</span>)&#123;//子数组大小i初始化为<span class="number">1</span>，每轮翻倍</div><div class="line">        <span class="built_in">left</span>=<span class="number">0</span>;</div><div class="line">        while(<span class="built_in">left</span>+i &lt; <span class="built_in">len</span>)&#123;//后一个数组存在（需要归并）</div><div class="line">            <span class="built_in">mid</span>=<span class="built_in">left</span>+i-<span class="number">1</span>;</div><div class="line">            <span class="built_in">right</span> = <span class="built_in">mid</span>+i&lt;<span class="built_in">len</span> ? <span class="built_in">mid</span>+i <span class="symbol">:</span> <span class="built_in">len</span>-<span class="number">1</span>;//后一个子数组大小可能不够</div><div class="line">            Merge(A,<span class="built_in">left</span>,<span class="built_in">mid</span>,<span class="built_in">right</span>);</div><div class="line">            <span class="built_in">left</span>=<span class="built_in">right</span>+<span class="number">1</span>;//前一个子数组索引向后移动</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="8、堆排序"><a href="#8、堆排序" class="headerlink" title="8、堆排序"></a>8、堆排序</h3><p>堆是一种近乎完全二叉树的结构，最大堆满足父结点的值总是大于它的孩子节点。<br>1、由输入的无序数组构造一个最大堆<br>2、把堆顶元素（最大值）和队尾元素互换<br>3、将堆的尺寸缩小1，从新的堆顶元素开始堆调整<br>4、重复步骤2~3，直到堆的尺寸为1<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(nlogn)</div><div class="line">最优时间复杂度---------O(nlogn)</div><div class="line">平均时间复杂度---------O(nlogn)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------不稳定</div><div class="line"></div><div class="line"><span class="keyword">void</span> HeapSort(<span class="keyword">int</span>[] A, <span class="keyword">int</span> n)&#123;</div><div class="line">    <span class="keyword">int</span> heap_size = BuildHeap(A, n);<span class="comment">//建立一个最大堆</span></div><div class="line">    <span class="built_in">while</span>(heap_size&gt;<span class="number">1</span>)&#123;<span class="comment">//堆元素个数大于1，未完成排序</span></div><div class="line">        swap(A,<span class="number">0</span>,--heap_size);<span class="comment">//将堆顶元素和堆的最后一个元素互换，并从堆中去除最后一个元素</span></div><div class="line">        Heapify(A,<span class="number">0</span>,heap_size);<span class="comment">//从新的堆顶元素开始向下进行堆调整</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建堆</span></div><div class="line"><span class="keyword">int</span> BuildHeap(<span class="keyword">int</span>[] A, <span class="keyword">int</span> n)&#123;</div><div class="line">    <span class="keyword">int</span> heap_size=n;</div><div class="line">    <span class="comment">//从每一个非叶子节点开始向下进行堆排序，以每个非叶子节点为根节点都形成最大堆</span></div><div class="line">    <span class="built_in">for</span>(<span class="keyword">int</span> i=heap_size/<span class="number">2</span> <span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--)</div><div class="line">        Heapify(A, i, heap_size);</div><div class="line">    <span class="built_in">return</span> heap_size;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//堆调整</span></div><div class="line"><span class="keyword">void</span> Heapify(<span class="keyword">int</span>[] A, <span class="keyword">int</span> i, <span class="keyword">int</span> <span class="built_in">size</span>)&#123;<span class="comment">//从A[i]向下进行堆调整</span></div><div class="line">    <span class="keyword">int</span> left_child=i*<span class="number">2</span> + <span class="number">1</span>;<span class="comment">//左孩子索引</span></div><div class="line">    <span class="keyword">int</span> right_child=i*<span class="number">2</span> + <span class="number">2</span>;<span class="comment">//右孩子索引</span></div><div class="line">    <span class="keyword">int</span> <span class="built_in">max</span>=i;<span class="comment">//选出当前节点及左右孩子三者之间中的最大值</span></div><div class="line">    <span class="built_in">if</span>(left_child&lt;<span class="built_in">size</span> &amp;&amp; A[left_child]&gt;A[<span class="built_in">max</span>])</div><div class="line">        <span class="built_in">max</span>=left_child;</div><div class="line">    <span class="built_in">if</span>(right_child&lt;<span class="built_in">size</span> &amp;&amp; A[right_child]&gt;A[<span class="built_in">max</span>])</div><div class="line">        <span class="built_in">max</span>=right_child;</div><div class="line">    <span class="built_in">if</span>(<span class="built_in">max</span> != i)&#123;</div><div class="line">        swap(A, i, <span class="built_in">max</span>);</div><div class="line">        Heapify(A, <span class="built_in">max</span>, <span class="built_in">size</span>);<span class="comment">//递归调用，继续从当前节点向下进行堆调整</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="9、快速排序"><a href="#9、快速排序" class="headerlink" title="9、快速排序"></a>9、快速排序</h3><p>1、从序列中挑出一个元素，作为基准。<br>2、把所有比基准小的元素放在基准前面，所有比基准大的元素放在基准的后面，这个称为分区操作。<br>3.对每个分区递归的调用步骤1~2，递归的结束条件是序列的大小是0或是1，这时整体已经排序好了。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------<span class="type">O</span>(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------<span class="type">O</span>(nlogn)</div><div class="line">平均时间复杂度---------<span class="type">O</span>(nlogn)</div><div class="line">所需辅助空间-----------主要是递归造成的栈空间使用（用来保存<span class="keyword">left</span>和<span class="keyword">right</span>等局部变量），取决于递归树的深度，一般为<span class="type">O</span>(logn)，最差为<span class="type">O</span>(n)</div><div class="line">稳定性-----------------不稳定</div><div class="line"></div><div class="line"></div><div class="line">void <span class="type">QuickSort</span>(int[] <span class="type">A</span>, int <span class="keyword">left</span>, int <span class="keyword">right</span>)&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">left</span>&gt;=<span class="keyword">right</span>)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    int pivot_index = <span class="type">Partition</span>(<span class="type">A</span>, <span class="keyword">left</span>, <span class="keyword">right</span>);<span class="comment">//基准的索引</span></div><div class="line">    <span class="type">QuickSort</span>(<span class="type">A</span>, <span class="keyword">left</span>, pivot_index-<span class="number">1</span>);</div><div class="line">    <span class="type">QuickSort</span>(<span class="type">A</span>, pivot_index+<span class="number">1</span>, <span class="keyword">right</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//划分函数</span></div><div class="line">int <span class="type">Partition</span>(int[] <span class="type">A</span>, int <span class="keyword">left</span>, int <span class="keyword">right</span>)&#123;</div><div class="line">    int pivot=<span class="type">A</span>[<span class="keyword">right</span>];<span class="comment">//每次以最后一个元素为基准</span></div><div class="line">    int tail=<span class="keyword">left</span>-<span class="number">1</span>;<span class="comment">//tail为小于基准的子数组的最后一个元素的索引</span></div><div class="line">    <span class="keyword">for</span>(int i=<span class="keyword">left</span>; i&lt;<span class="keyword">right</span>;i++)&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="type">A</span>[i]&lt;pivot)<span class="comment">//把小于基准的数字放到前一个子数组的末尾</span></div><div class="line">            <span class="built_in">swap</span>(<span class="type">A</span>, ++tail, i);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">swap</span>(<span class="type">A</span>, tail+<span class="number">1</span>, <span class="keyword">right</span>);<span class="comment">//最后把基准放到前一个子数组的后边，剩下的子数组就是大于基准的子数组</span></div><div class="line">    <span class="keyword">return</span> tail+<span class="number">1</span>;<span class="comment">//返回基准索引</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-二叉树的先序、中序、后序遍历" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/二叉树的先序、中序、后序遍历/" class="article-date">
+      <time datetime="2017-10-13T13:06:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/二叉树的先序、中序、后序遍历/">Java实现二叉树的先序、中序、后序遍历</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="先序遍历示意图："><a href="#先序遍历示意图：" class="headerlink" title="先序遍历示意图："></a>先序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
+<h3 id="中序遍历示意图："><a href="#中序遍历示意图：" class="headerlink" title="中序遍历示意图："></a>中序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
+<h3 id="后序遍历示意图："><a href="#后序遍历示意图：" class="headerlink" title="后序遍历示意图："></a>后序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class <span class="keyword">Node</span> <span class="title">&#123;  </span></div><div class="line">    private int data;  </div><div class="line">    private <span class="keyword">Node</span> <span class="title">leftNode</span>;  </div><div class="line">    private <span class="keyword">Node</span> <span class="title">rightNode</span>;  </div><div class="line">    public <span class="keyword">Node</span><span class="title">(int</span> data, <span class="keyword">Node</span> <span class="title">leftNode</span>, <span class="keyword">Node</span> <span class="title">rightNode</span>)&#123;  </div><div class="line">        this.data = data;  </div><div class="line">        this.leftNode = leftNode;  </div><div class="line">        this.rightNode = rightNode;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    public int getData() &#123;  </div><div class="line">        return data;  </div><div class="line">    &#125;  </div><div class="line">    public void setData(int data) &#123;  </div><div class="line">        this.data = data;  </div><div class="line">    &#125;  </div><div class="line">    public <span class="keyword">Node</span> <span class="title">getLeftNode</span>() &#123;  </div><div class="line">        return leftNode;  </div><div class="line">    &#125;  </div><div class="line">    public void setLeftNode(<span class="keyword">Node</span> <span class="title">leftNode</span>) &#123;  </div><div class="line">        this.leftNode = leftNode;  </div><div class="line">    &#125;  </div><div class="line">    public <span class="keyword">Node</span> <span class="title">getRightNode</span>() &#123;  </div><div class="line">        return rightNode;  </div><div class="line">    &#125;  </div><div class="line">    public void setRightNode(<span class="keyword">Node</span> <span class="title">rightNode</span>) &#123;  </div><div class="line">        this.rightNode = rightNode;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="一、递归遍历"><a href="#一、递归遍历" class="headerlink" title="一、递归遍历"></a>一、递归遍历</h2><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//先序遍历</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">theFirstTraversal</span><span class="params">(Node root)</span></span>&#123;</div><div class="line">    printNode(root);</div><div class="line">    <span class="keyword">if</span>(root.getLeftNode() != <span class="keyword">null</span>)&#123;</div><div class="line">        theFirstTraversal(root.getLeftNode());</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(root.getRightNode() != <span class="keyword">null</span>)&#123;</div><div class="line">        theFirstTraversal(root.getRightNode());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//中序遍历</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">theInOrderTraversal</span><span class="params">(Node root)</span> </span>&#123;    </div><div class="line">    <span class="keyword">if</span> (root.getLeftNode() != <span class="keyword">null</span>) &#123;  </div><div class="line">        theInOrderTraversal(root.getLeftNode());  </div><div class="line">    &#125;  </div><div class="line">    printNode(root);  </div><div class="line">    <span class="keyword">if</span> (root.getRightNode() != <span class="keyword">null</span>) &#123;  </div><div class="line">        theInOrderTraversal(root.getRightNode());  </div><div class="line">    &#125;  </div><div class="line">&#125;</div><div class="line">    </div><div class="line"><span class="comment">//后序遍历  </span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">thePostOrderTraversal</span><span class="params">(Node root)</span> </span>&#123;    </div><div class="line">    <span class="keyword">if</span> (root.getLeftNode() != <span class="keyword">null</span>) &#123;  </div><div class="line">        thePostOrderTraversal(root.getLeftNode());  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">if</span>(root.getRightNode() != <span class="keyword">null</span>) &#123;  </div><div class="line">        thePostOrderTraversal(root.getRightNode());  </div><div class="line">    &#125;  </div><div class="line">    printNode(root);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="非递归遍历"><a href="#非递归遍历" class="headerlink" title="非递归遍历"></a>非递归遍历</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">//先序遍历</div><div class="line">public void theFirstTraversal_Stack(<span class="keyword">Node</span> <span class="title">root</span>)&#123;</div><div class="line">    Stack<span class="tag">&lt;Node&gt;</span> stack = new Stack<span class="tag">&lt;Node&gt;</span>();</div><div class="line">    <span class="keyword">Node</span> <span class="title">node</span> = root;</div><div class="line">    while(<span class="keyword">node</span> <span class="title">!= null</span> || stack.size() &gt; <span class="number">0</span>)&#123;</div><div class="line">        if(<span class="keyword">node</span> <span class="title">!= null</span>)&#123;</div><div class="line">            printNode(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            stack.push(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            node = <span class="keyword">node</span>.<span class="title">getLeftNode</span>();</div><div class="line">        &#125;else&#123;</div><div class="line">            <span class="keyword">node</span> <span class="title">= stack</span>.pop();</div><div class="line">            <span class="keyword">node</span> <span class="title">= node</span>.getRightNode();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//中序遍历</div><div class="line">public void theInOrderTraversal_Stack(<span class="keyword">Node</span> <span class="title">root</span>) &#123;</div><div class="line">    Stack<span class="tag">&lt;Node&gt;</span> stack = new Stack<span class="tag">&lt;Node&gt;</span>();</div><div class="line">    <span class="keyword">Node</span> <span class="title">node</span> = root;</div><div class="line">    while(<span class="keyword">node</span> <span class="title">!= null</span> || stack.size() &gt; <span class="number">0</span>)&#123;</div><div class="line">        if(<span class="keyword">node</span> <span class="title">!= null</span>)&#123;</div><div class="line">            stack.push(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            node = <span class="keyword">node</span>.<span class="title">getLeftNode</span>();</div><div class="line">        &#125;else&#123;</div><div class="line">            <span class="keyword">node</span> <span class="title">= stack</span>.pop();</div><div class="line">            printNode(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            node = <span class="keyword">node</span>.<span class="title">getRightNode</span>();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//后序遍历  </div><div class="line">public void thePostOrderTraversal_Stack(<span class="keyword">Node</span> <span class="title">root</span>) &#123;</div><div class="line">    Stack<span class="tag">&lt;Node&gt;</span> stack = new Stack<span class="tag">&lt;Node&gt;</span>();</div><div class="line">    Stack<span class="tag">&lt;Node&gt;</span> output = new Stack<span class="tag">&lt;Node&gt;</span>();//用于存储逆后序遍历的结果</div><div class="line">    <span class="keyword">Node</span> <span class="title">node</span> = root;</div><div class="line">    while(<span class="keyword">node</span> <span class="title">!= null</span> || stack.size() &gt; <span class="number">0</span>)&#123;</div><div class="line">        if(<span class="keyword">node</span> <span class="title">!= null</span>)&#123;</div><div class="line">            stack.push(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            output.push(<span class="keyword">node</span><span class="title">);</span></div><div class="line">            node = <span class="keyword">node</span>.<span class="title">getRightNode</span>();</div><div class="line">        &#125;else&#123;</div><div class="line">            <span class="keyword">node</span> <span class="title">= stack</span>.pop();</div><div class="line">            <span class="keyword">node</span> <span class="title">= node</span>.getLeftNode();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    while(output.size() &gt; <span class="number">0</span>)&#123;</div><div class="line">        printNode(output.pop());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-29、数组中出现超过一半的数字" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/29、数组中出现超过一半的数字/" class="article-date">
+      <time datetime="2017-10-13T13:05:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>在遍历数组时，保存两个值：一个是数组中的一个数字，还有一个是次数。当我们遍历到下一个数字的时候，如果下一个数字和我们之前保存的相同，则次数加一，不同次数就减一。若次数为0，我们需要保存下一个数字，次数记为1。由于我们要找的数字出现次数比其他所有数字出现的次数之和还多，那么要找的数字肯定是最后一次把次数设为1时对应的数字。  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">public class <span class="type">Solution</span> &#123;</div><div class="line">    public <span class="built_in">int</span> <span class="type">MoreThanHalfNum_Solution</span>(<span class="built_in">int</span> [] <span class="built_in">array</span>) &#123;</div><div class="line">        <span class="built_in">int</span> <span class="literal">result</span>=<span class="built_in">array</span>[<span class="number">0</span>];</div><div class="line">        <span class="built_in">int</span> count=<span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">1</span>;i&lt;<span class="built_in">array</span>.length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(count==<span class="number">0</span>)&#123;</div><div class="line">                <span class="literal">result</span>=<span class="built_in">array</span>[i];</div><div class="line">                count=<span class="number">1</span>;</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)&#123;</div><div class="line">                count++;</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                count--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(!<span class="type">CheckMoreThanHalf</span>(<span class="built_in">array</span>,<span class="built_in">array</span>.length,<span class="literal">result</span>))</div><div class="line">            <span class="literal">result</span>=<span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">result</span>;</div><div class="line">    &#125;</div><div class="line">    //检验最后一次把次数设为<span class="number">1</span>时对应的数字出现的次数是够满足超过一半的数字。</div><div class="line">    boolean <span class="type">CheckMoreThanHalf</span>(<span class="built_in">int</span>[] <span class="built_in">array</span>,<span class="built_in">int</span> length,<span class="built_in">int</span> <span class="literal">result</span>)&#123;</div><div class="line">        boolean a=<span class="literal">true</span>;</div><div class="line">        <span class="built_in">int</span> times=<span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)</div><div class="line">                times++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(times*<span class="number">2</span>&lt;=length)</div><div class="line">            a=<span class="literal">false</span>;</div><div class="line">        <span class="keyword">return</span> a;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-30、最小的k个数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/30、最小的k个数/" class="article-date">
+      <time datetime="2017-10-13T12:08:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>创建一个大小为k的最大堆，先依次放入k个数，找出k个数中的最大值，然后每次拿待插入的数和最大值比较。如果待插入的数比当前已知的最大值小，就用这个数替换最大值；若比最大值大，就抛弃该数。<br>堆满之后，要做三件事：一是找出最大数；二是可能需要删除最大数；三是可能要插入新数字，我们可以在O(logk)时间内完成这三步操作。对N个数字而言，总时间复杂度为O(nlogk)。  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.PriorityQueue;</div><div class="line"><span class="keyword">import</span> java.util.Comparator;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="keyword">public</span> ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(<span class="keyword">int</span> [] input, <span class="keyword">int</span> k) &#123;</div><div class="line">        ArrayList&lt;Integer&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">        <span class="keyword">int</span> length=input.length;</div><div class="line">        <span class="keyword">if</span>(k&gt;length || k&lt;=<span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">        </div><div class="line">        PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(k , <span class="keyword">new</span> Comparator&lt;Integer&gt;()&#123;<span class="comment">//PriorityQueue是基于最小堆的</span></div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(Integer o1,Integer o2)&#123;</div><div class="line">                <span class="keyword">return</span> o2.compareTo(o1);<span class="comment">//变为按逆序排的最大堆，原为按自然顺序的最小堆</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(maxHeap.size() != k)&#123;<span class="comment">//先填满大小为k的最大堆</span></div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(maxHeap.peek() &gt; input[i])&#123;<span class="comment">//如果比最大堆中最大的数小，则替换之。</span></div><div class="line">                maxHeap.poll();</div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(Integer integer : maxHeap)&#123;</div><div class="line">            <span class="built_in">list</span>.add(integer);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Java实现二叉排序树的插入、查找和删除" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/" class="article-date">
+      <time datetime="2017-10-12T07:39:00.000Z" itemprop="datePublished">2017-10-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p><strong>查找性能</strong>：含有n个节点的二叉排序树的平均查找长度和树的形态有关。<br>（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)<br>（最好情况）二叉排序的形态和折半查找的判定树相同，平均查找长度和log2(n)成正比  </p>
+<p><strong>插入、删除性能</strong>：插入、删除操作的时间复杂度都是O(logn)级的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//二叉树节点定义</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</div><div class="line">    <span class="keyword">private</span> Node left;</div><div class="line">    <span class="keyword">private</span> Node right;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params">Node left, Node right, <span class="keyword">int</span> <span class="keyword">value</span></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.left = left;</div><div class="line">        <span class="keyword">this</span>.right=right;</div><div class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">set</span>,<span class="keyword">get</span>...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BinarySortTree</span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> Node root=<span class="literal">null</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//查找二叉排序树中是否有key值</span></div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">searchBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node current = root;</div><div class="line">        <span class="keyword">while</span>(current != <span class="literal">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(key == current.getValue())</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            <span class="keyword">else</span>(key &lt; current.getValue())</div><div class="line">                current=current.getLeft();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                current=current.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//向二叉排序树中插入节点</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node p = root;</div><div class="line">        <span class="comment">//记录查找节点的父节点</span></div><div class="line">        Node prev = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//一直查找下去，一直到满足条件的叶子节点</span></div><div class="line">        <span class="keyword">while</span>(p != <span class="literal">null</span>)&#123;</div><div class="line">            prev=p;</div><div class="line">            <span class="keyword">if</span>(key &lt; p.getValue())</div><div class="line">                p = p.getLeft();</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(key &gt; p.getValue())</div><div class="line">                p = p.getRight();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span>;<span class="comment">//找到了相同节点就返回</span></div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">//prev为要安放节点的父结点，根据key的大小，判断放入prev的左右节点</span></div><div class="line">        <span class="keyword">if</span>(root == <span class="literal">null</span>)</div><div class="line">            root = <span class="keyword">new</span> Node(key);</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(key &lt; prev.getValue())</div><div class="line">            prev.setLeft(<span class="keyword">new</span> Node(key));</div><div class="line">        <span class="keyword">else</span></div><div class="line">            prev.setRight(<span class="keyword">new</span> Node(key));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//删除二叉排序树中的节点</span></div><div class="line">    分为三种情况：</div><div class="line">    (<span class="number">1</span>)要删除的节点p是叶子节点，删除置空即可</div><div class="line">    (<span class="number">2</span>)p只有左子树或右子树，直接让左子树/右子树代替p</div><div class="line">    (<span class="number">3</span>)p既有左子树又有右子树，用p左子树中最大的那个值（最右端s）代替p，删除s，重接其左子树</div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">delete</span>(<span class="params">Node node</span>)</span>&#123;</div><div class="line">        Node temp = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//右子树为空，重接它的左子树；如果是叶子节点，在这也被置为空</span></div><div class="line">        <span class="keyword">if</span>(node.getRight()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getLeft();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左子树为空，重接它的右子树</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(node.getLeft()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左右子树都不为空</span></div><div class="line">        <span class="keyword">else</span>&#123;</div><div class="line">            temp = node;</div><div class="line">            Node s = node;</div><div class="line">            <span class="comment">//转向左子树，然后向右走到尽头</span></div><div class="line">            s=s.getLeft();<span class="comment">//temp是s的父结点</span></div><div class="line">            <span class="keyword">while</span>(s.getRight() != <span class="literal">null</span>)&#123;</div><div class="line">                temp = s;</div><div class="line">                s = s.getRight();</div><div class="line">            &#125;</div><div class="line">            node.setValue(s.getValue());<span class="comment">//将node的值设为左子树最右侧s的值</span></div><div class="line">            <span class="keyword">if</span>(temp != node)&#123;</div><div class="line">                temp.setRight(s.getLeft());<span class="comment">//见书p326</span></div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span>&#123;</div><div class="line">                temp.setLeft(s.getLeft());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-静态代码块、构造代码块、构造函数及类初始化顺序" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/" class="article-date">
+      <time datetime="2017-10-12T07:35:00.000Z" itemprop="datePublished">2017-10-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>静态代码块：用static声明，jvm加载类时执行，仅执行一次。<br>构造代码块：类中直接用{}定义，每一次创建对象时执行。<br>执行顺序优先级：<strong>静态块-&gt;main()-&gt;构造块-&gt;构造函数</strong>。  </p>
+<h2 id="二、详解"><a href="#二、详解" class="headerlink" title="二、详解"></a>二、详解</h2><h3 id="1、构造函数"><a href="#1、构造函数" class="headerlink" title="1、构造函数"></a>1、构造函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Hello</span><span class="params">()</span></span>&#123;<span class="comment">//构造函数</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。<br>2.构造函数的作用是用于给对象初始化。<br>3.一个对象建立，构造函数只运行一次。  </p>
+<h3 id="2、构造代码块"><a href="#2、构造代码块" class="headerlink" title="2、构造代码块"></a>2、构造代码块</h3><figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="comment">//构造代码块</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.构造代码块的作用是给对象进行初始化。<br>2.对象一建立就运行构造代码块了，而且优先于构造函数。有对象建立，才会运行构造代码块，类是不能调用构造代码块的。<br>3.构造代码块和构造函数的区别：<strong>构造代码块是给所有对象进行统一初始化，而构造函数是给对应的对象初始化。</strong>因为构造函数可以有多个，运行哪个构造函数就会建立什么样的对象，但无论建立哪个对象，都会执行相同的构造代码块。也就是说，构造代码块中定义的是不同对象共性的初始化内容。  </p>
+<h3 id="3、静态代码块"><a href="#3、静态代码块" class="headerlink" title="3、静态代码块"></a>3、静态代码块</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span>&#123;<span class="comment">//静态代码块</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.<strong>它随着类的加载而执行，只执行一次，并且优先于主函数</strong>。具体说，静态代码块是由类调用的，类调用时，先执行静态代码块，然后再执行主函数。<br>2.静态代码块其实是给类初始化的，而构造代码块是给对象初始化的。<br>3.静态代码块中的变量是局部变量，与普通函数中的局部变量没有区别。<br>4.一个类中可以有多个静态代码块。  </p>
+<h2 id="三、类初始化顺序"><a href="#三、类初始化顺序" class="headerlink" title="三、类初始化顺序"></a>三、类初始化顺序</h2><p>&emsp;其中，<strong>静态变量、静态初始化块，变量、初始化块（构造代码块）的初始化顺序取决于它们在类中出现的先后顺序。</strong><br>首先，访问SubClass.main()，这是一个static方法，于是装载器会寻找已经编译的SubClass.class文件。在装载过程中，如果注意到有基类（extends），会装载基类。不管创不创建基类对象，这个过程都会发生。之后是正常的初始化顺序：  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png" alt="image"><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="title">Parent</span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String p_StaticField=<span class="string">"父类--静态变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> String p_Field=<span class="string">"父类--变量"</span>;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> i=<span class="number">9</span>;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> j=<span class="number">0</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(p_StaticField);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--静态初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(p_Field);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Parent</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--构造器"</span>);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"i="</span> + i+ <span class="string">",j="</span> + j);</div><div class="line">        j=<span class="number">20</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SubClass</span> <span class="title">extends</span> <span class="title">Parent</span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String s_StaticField=<span class="string">"子类--静态变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> String s_Field=<span class="string">"子类--变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(s_StaticField);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--静态初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(s_Field);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubClass</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--构造器"</span>);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"i="</span> + i+ <span class="string">",j="</span> + j);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类main方法"</span>);</div><div class="line">        <span class="keyword">new</span> SubClass();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">运行结果：  </div><div class="line">父类--静态变量  </div><div class="line">父类--静态初始化块  </div><div class="line">子类--静态变量  </div><div class="line">子类--静态初始化块  </div><div class="line">子类main方法  </div><div class="line">父类--变量  </div><div class="line">父类--初始化块  </div><div class="line">父类--构造器  </div><div class="line">i=<span class="number">9</span>, j=<span class="number">0</span>  </div><div class="line">子类--变量  </div><div class="line">子类--初始化块  </div><div class="line">子类--构造器  </div><div class="line">i=<span class="number">9</span>,j=<span class="number">20</span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-字符串、基本数据类型等在堆、栈、常量池中的存储" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/" class="article-date">
+      <time datetime="2017-10-11T12:56:00.000Z" itemprop="datePublished">2017-10-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">字符串、基本数据类型等在堆、栈、常量池中的存储</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、对于字符串"><a href="#一、对于字符串" class="headerlink" title="一、对于字符串"></a>一、对于字符串</h1><p>字符串的对象引用都是存储在栈中的。如果是编译期已经创建好的（直接用双引号定义的），对象存储在常量池中；如果是运行期才能确定的（new出来的），对象存储在堆中。对于equals相等的字符串，常量池中只有一份，堆中可以有多份。<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">String</span> s1=<span class="string">"china"</span>;</div><div class="line"><span class="keyword">String</span> s2=<span class="string">"china"</span>;</div><div class="line"><span class="keyword">String</span> ss1=<span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"china"</span>);</div><div class="line"><span class="keyword">String</span> ss2=<span class="keyword">new</span> <span class="keyword">String</span>(<span class="string">"china"</span>);</div></pre></td></tr></table></figure></p>
+<p>通过new产生一个字符串“china”时，会先去常量池中查找是否已经有了“china”，如果没有，就在常量池中创建一个此字符串对象，然后在堆中再创建一个常量池中此“china”对象的拷贝对象。  </p>
+<h1 id="二、对于基础类型的变量和常量"><a href="#二、对于基础类型的变量和常量" class="headerlink" title="二、对于基础类型的变量和常量"></a>二、对于基础类型的变量和常量</h1><p>局部变量（包括形式参数）：数据存在于栈内存中，栈内存中的局部变量随着方法的消失而消失。<br>成员变量：存储在堆中的对象里面，由垃圾收集器负责回收。<br>常量、静态变量：存储在方法区中（常量池）。  </p>
+<h1 id="三、Java中的两种数据类型"><a href="#三、Java中的两种数据类型" class="headerlink" title="三、Java中的两种数据类型"></a>三、Java中的两种数据类型</h1><h2 id="1、八种基本类型"><a href="#1、八种基本类型" class="headerlink" title="1、八种基本类型"></a>1、八种基本类型</h2><p>byte,short,int,long,char,double,float,boolean。如函数中的int a=3，a是一个指向3这个字面值的引用。存在于栈中，数据可以共享。同时定义int a=3和int b=3，a和b会同时指向3。<br>字面值的引用和类对象引用不同。两类对象引用同时指向一个对象，若一个对象引用变量修改了这个对象的内部状态，那么对另一个对象引用也即刻反映出变化，但字面值引用不会。  </p>
+<h2 id="2、包装类数据"><a href="#2、包装类数据" class="headerlink" title="2、包装类数据"></a>2、包装类数据</h2><p>Integer,Double等。这些数据全部存在于堆中，Java中用new语句显式的告诉编译器运行时根据需要动态创建，灵活但更占用时间。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public static void main(String[] args)&#123;</div><div class="line">    int <span class="attribute">a1</span>=1;</div><div class="line">    int <span class="attribute">b1</span>=1;</div><div class="line">    int <span class="attribute">c1</span>=2;</div><div class="line">    int <span class="attribute">d1</span>=a1+b1;</div><div class="line">    </div><div class="line">    Integer <span class="attribute">a</span>=1;</div><div class="line">    Integer <span class="attribute">b</span>=2;</div><div class="line">    Integer <span class="attribute">c</span>=3;</div><div class="line">    Integer <span class="attribute">d</span>=3</div><div class="line">    </div><div class="line">    Integer <span class="attribute">e</span>=321;</div><div class="line">    Integer <span class="attribute">f</span>=321;</div><div class="line">    </div><div class="line">    System.out.println(<span class="attribute">a1</span>==b1);//true</div><div class="line">    System.out.println(<span class="attribute">c1</span>==d1);//true</div><div class="line">    System.out.println(<span class="attribute">c</span>==(a+b));//true</div><div class="line">    System.out.println(<span class="attribute">c</span>==d);//true</div><div class="line">    System.out.println(<span class="attribute">c</span>==d);//false</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在自动装箱时（int-&gt;Integer时），当int值在-128~127时，返回的不是一个新New出来的Integer对象，而是一个已经缓存在堆中的Integer对象；若不在范围，则返回一个新new出来的Integer对象。<br>System.out.println(c1==d1);//true：先创建一个c1的引用，查找有没有字面值为2的地址，没找到，就开辟一个存放2这个字面值的地址，将c1指向2的地址。d1为两个字面值相加也为2，由于在栈中已经有2这个字面量的地址，因此将d1直接指向2的地址，所以c1和d1的指向相同。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    </nav>
+  
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Xu Bo
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

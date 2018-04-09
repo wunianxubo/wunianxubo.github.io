@@ -1,4 +1,1173 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Wunian"><title>Wunian's Blog | 清风徐来，水波不兴</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Wunian's Blog</h1><a id="logo" href="/.">Wunian's Blog</a><p class="description">清风徐来，水波不兴</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></h1><div class="post-meta">2018-04-09</div><a class="disqus-comment-count" data-disqus-identifier="2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/#disqus_thread"></a><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>分布式系统由独立的服务器通过网络松散耦合组成。在这个系统中，每个服务器都是一个独立的主机，服务器之间通过内部网络连接。分布式系统有以下几个特点：  </p>
-<ul></div><p class="readmore"><a href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></h1><div class="post-meta">2018-01-04</div><a class="disqus-comment-count" data-disqus-identifier="2018/01/04/大型网站的架构模式/" href="/2018/01/04/大型网站的架构模式/#disqus_thread"></a><div class="post-content"><p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：  </p>
-<h3 id="1、分层"><a href="#1、分层" class="headerlink" title="1、分层"></a>1、分层</h3><p>&nbsp;<strong>分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调用组成一个完整的系统。</strong> 网络的七层通信协议也是一种分层结构。<br>&nbsp;通过分层，可以将一个庞大的系统切分成多个不同的部分，便于分工合作开发和维护；各层之间具有一定的独立性，只要维持调用接口不变，各层可以根据具体的问题独立演化发展而不需要其他层必须作出相应的调整。  </p></div><p class="readmore"><a href="/2018/01/04/大型网站的架构模式/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></h1><div class="post-meta">2017-12-08</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/08/（转）Java内存溢出和内存泄漏/" href="/2017/12/08/（转）Java内存溢出和内存泄漏/#disqus_thread"></a><div class="post-content"><h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。  </p></div><p class="readmore"><a href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></h1><div class="post-meta">2017-12-05</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/05/如何保证线程的顺序执行？/" href="/2017/12/05/如何保证线程的顺序执行？/#disqus_thread"></a><div class="post-content"><p>&nbsp;&nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  </p>
-<h2 id="1、使用join关键字实现"><a href="#1、使用join关键字实现" class="headerlink" title="1、使用join关键字实现"></a>1、使用join关键字实现</h2><p>join关键字用于让当前线程等待join线程执行完毕后再执行，否则会处于等待阻塞状态。有两种方法：<br>方法一：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="keyword">Task</span> <span class="keyword">implements</span> Runnable&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> taskId;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">Task</span>(<span class="keyword">int</span> taskId)&#123;</div><div class="line">        <span class="keyword">this</span>.taskId = taskId; </div><div class="line">    &#125;    </div><div class="line">    </div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> run()&#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"线程"</span>+taskId+<span class="string">"运行！"</span>)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> method1() <span class="keyword">throws</span> InterruptedException&#123;</div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">1</span>));</div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">2</span>));</div><div class="line">    Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">3</span>));</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t1.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程1执行完</span></div><div class="line">    t2.start();</div><div class="line">    t2.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程2执行完</span></div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2017/12/05/如何保证线程的顺序执行？/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></h1><div class="post-meta">2017-12-01</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/01/抽象工厂模式/" href="/2017/12/01/抽象工厂模式/#disqus_thread"></a><div class="post-content"><p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public<span class="built_in"> interface </span>Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2017/12/01/抽象工厂模式/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/01/工厂方法模式/">工厂方法模式</a></h1><div class="post-meta">2017-12-01</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/01/工厂方法模式/" href="/2017/12/01/工厂方法模式/#disqus_thread"></a><div class="post-content"><h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者的共同接口</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//创建实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">(String type)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="string">"mail"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"sms"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.println(<span class="string">"请输入正确的类型！"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produce(<span class="string">"mail"</span>);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2017/12/01/工厂方法模式/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/01/单例模式/">单例模式</a></h1><div class="post-meta">2017-12-01</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/01/单例模式/" href="/2017/12/01/单例模式/#disqus_thread"></a><div class="post-content"><h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p></div><p class="readmore"><a href="/2017/12/01/单例模式/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></h1><div class="post-meta">2017-12-01</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/01/HashMap的四种遍历方式/" href="/2017/12/01/HashMap的四种遍历方式/#disqus_thread"></a><div class="post-content"><h1 id="一、Map的四种遍历方式"><a href="#一、Map的四种遍历方式" class="headerlink" title="一、Map的四种遍历方式"></a>一、Map的四种遍历方式</h1><h2 id="1、foreach-map-entrySet"><a href="#1、foreach-map-entrySet" class="headerlink" title="1、foreach map.entrySet()"></a>1、foreach map.entrySet()</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="built_in">for</span>(Entry&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; entry : <span class="built_in">map</span>.entrySet())&#123;</div><div class="line">    entry.<span class="built_in">getKey</span>();</div><div class="line">    entry.getValue();</div><div class="line">    </div><div class="line">    <span class="comment">//在遍历过程中删除元素，会抛出异常java.util.ConcurrentModificationException</span></div><div class="line">    <span class="comment">//entry.remove(entry.getKey());</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></div><p class="readmore"><a href="/2017/12/01/HashMap的四种遍历方式/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></h1><div class="post-meta">2017-12-01</div><a class="disqus-comment-count" data-disqus-identifier="2017/12/01/Java三大特性之多态/" href="/2017/12/01/Java三大特性之多态/#disqus_thread"></a><div class="post-content"><h1 id="一、多态的定义"><a href="#一、多态的定义" class="headerlink" title="一、多态的定义"></a>一、多态的定义</h1><p>&nbsp;&nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量到底会指向哪个类的实例对象，该引用变量发出的方法到底是哪个类中实现的方法，必须由程序运行期间才能决定。这样，不需要修改源程序，就可以让引用变量绑定到各种不同的类实现上，从而导致该引用调用的具体方法随之改变，即不修改程序代码就可以改变程序运行时所绑定的具体代码，让程序选择多个运行状态，这就是多态性。  </p></div><p class="readmore"><a href="/2017/12/01/Java三大特性之多态/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></h1><div class="post-meta">2017-10-27</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/#disqus_thread"></a><div class="post-content"><h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p></div><p class="readmore"><a href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">Read More</a></p></div><nav class="page-navigator"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next</a></nav><script id="dsq-count-scr" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/count.js" async></script></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java基础/">java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式系统/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/剑指offer/">剑指offer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/大型网站技术架构核心原理/">大型网站技术架构核心原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/java虚拟机/" style="font-size: 15px;">java虚拟机</a> <a href="/tags/算法，剑指offer/" style="font-size: 15px;">算法，剑指offer</a> <a href="/tags/数据结构/" style="font-size: 15px;">数据结构</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/java并发/" style="font-size: 15px;">java并发</a> <a href="/tags/java基础/" style="font-size: 15px;">java基础</a> <a href="/tags/java，java基础/" style="font-size: 15px;">java，java基础</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/大型网站技术架构/" style="font-size: 15px;">大型网站技术架构</a> <a href="/tags/分布式系统/" style="font-size: 15px;">分布式系统</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://www.zhihu.com/people/wu-nian-34-58/activities" title="zhihu" target="_blank">zhihu</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Wunian's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Xu Bo" />
+
+
+    
+    
+
+
+<meta name="description" content="Wunian">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wunian&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="Wunian">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wunian&#39;s Blog">
+<meta name="twitter:description" content="Wunian">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Wunian&#39;s Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <style> .article { opacity: 0;} </style>
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Wunian&#39;s Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/xubo.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Xu Bo</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">清风徐来，水波不兴</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Xu Bo</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/xubo.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Xu Bo</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">清风徐来，水波不兴</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap">
+  
+    <article id="post-分布式系统互斥性与幂等性问题的分析和解决" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/" class="article-date">
+      <time datetime="2018-04-09T01:26:00.000Z" itemprop="datePublished">2018-04-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>分布式系统由独立的服务器通过网络松散耦合组成。在这个系统中，每个服务器都是一个独立的主机，服务器之间通过内部网络连接。分布式系统有以下几个特点：  </p>
+<ul>
+<li>可扩展性：可通过横向水平扩展来提高系统的性能和吞吐量。  </li>
+<li>高可靠性：高容错，即使系统中一台或几台故障，系统通过失效转移仍然可以提供服务。  </li>
+<li>高并发性：各机器并行独立处理和计算。</li>
+<li>廉价高效：多台小型机而非单台高性能机。  </li>
+</ul>
+<p>在分布式系统中，环境复杂、网络不稳定性会造成诸如时钟不一致的问题，存在于集中式系统中机器宕机、消息丢失等问题也会在分布式环境中变得更加复杂。有两个问题是分布式环境中需要重点关注和解决的典型问题：  </p>
+<ul>
+<li>互斥性问题</li>
+<li>幂等性问题<h2 id="一、互斥性问题"><a href="#一、互斥性问题" class="headerlink" title="一、互斥性问题"></a>一、互斥性问题</h2>看个例子：<br>某服务器提供一组任务，A请求随机从任务组中获取一个任务；B请求随机从任务组中获取一个任务。在理想情况下，A从任务组中挑选一个任务，任务组删除该任务，B从剩下的任务组中再挑一个，之后任务组再删除。<br>但在真实情况下，如不做任何处理，可能出现A和B挑中了同一个任务的情况。  </li>
+</ul>
+<p>上面这个例子，存在操作互斥性的问题，其实就是对共享资源的抢占问题。如果不同的请求对同一个或者同一组资源读取并修改时，无法保证其按序执行，无法保证一个操作的原子性，那么就很有可能会出现预期外的情况。所以操作的互斥性问题可以理解为一个需要保证时序性、原子性的问题。  </p>
+<p>在传统的基于数据库的架构中，对于数据的抢占问题往往是通过数据库事务（ACID）来保证的。在分布式环境中，<strong>分布式锁</strong>是一种比较常见和高效的解决方案。在传统的多线程、多进程情况下，已有比较好的解决方案，我们先来看看传统情况下是怎么解决的。  </p>
+<h3 id="多线程环境下的解决方案"><a href="#多线程环境下的解决方案" class="headerlink" title="多线程环境下的解决方案"></a>多线程环境下的解决方案</h3><p><strong>基本上所有的并发模式在解决线程冲突的问题上，都是采用序列化访问共享资源的方式。</strong><br>在多线程环境下，最普遍的方式就是用互斥锁把该资源或对资源的操作保护起来。Java中提供两种互斥锁Lock和synchronized。不同线程之间对同一资源进行抢占，该资源通常表现为某个类的普通成员变量，使用Lock和synchronized将共享的变量及其操作锁住，就可以解决资源抢占的问题。  </p>
+<h3 id="多进程的解决方案"><a href="#多进程的解决方案" class="headerlink" title="多进程的解决方案"></a>多进程的解决方案</h3><p>在多道程序系统中存在许多进程，它们共享各种资源，然而有很多资源一次只能供一个进程使用，这便是临界资源。多进程中的临界资源大致可以分为两类，一类是物理上的真实资源，如打印机；一类是硬盘或内存中的共享数据，如共享内存等。进程内互斥访问临界资源的代码称为<strong>临界区</strong>。<br>对于临界资源的互斥访问，JVM层面的锁已经失去作用了。在多进程情况下，主要还是利用操作系统层面的进程间通信原理来解决临界资源的抢占问题。比较常见的一种方法是使用信号量（Semaphores）<br>信号量分为有名信号量和无名信号量。无名信号量通常保存在共享内存中，而有名信号量是于一个特定的文件夹名称相关联。对信号量的操作主要是P操作（wait）和V操作（signal）。  </p>
+<ul>
+<li>P操作：先检查信号量的大小，若值大于零，则将信号量减1，同时进程获得共享资源的访问权限，继续执行；若小于或者等于零，则该进程被阻塞后，进入等待队列。  </li>
+<li>V操作：该操作将信号量的值加1，如果有进程阻塞着等待该信号量，那么其中一个进程被唤醒。  </li>
+</ul>
+<p>对共享资源的操作前后（进入和退出临界区）进行加锁和解锁，保证不同线程或进程可以互斥有序的操作资源。  </p>
+<h3 id="分布式环境下的解决方案——分布式锁"><a href="#分布式环境下的解决方案——分布式锁" class="headerlink" title="分布式环境下的解决方案——分布式锁"></a>分布式环境下的解决方案——分布式锁</h3><p>不管是多线程还是多进程环境下的锁都有很多共通之处，他们满足一些最基本的条件：  </p>
+<ol>
+<li>需要有存储锁的空间，并且锁的空间是可以访问到的。  </li>
+<li>锁需要被唯一标识（全局唯一）。  </li>
+<li>锁至少要有两种状态，如ReetrantLock中的status，0表示没有线程竞争，大于0表示有线程竞争；或者是有锁、没锁这样分类。  </li>
+</ol>
+<p>有了这三个条件，就可以基本上实现一个简单的分布式锁了。以数据库为例，实现一个简单的分布式锁：数据库表，字段为锁的ID（唯一标识），还有锁的状态（0表示没锁，1表示被锁）。<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">lock</span> = mysql.<span class="keyword">get</span>(id);</div><div class="line"><span class="keyword">while</span>(<span class="keyword">lock</span>.status == <span class="number">1</span>)  <span class="comment">//已被锁，继续等待获取</span></div><div class="line">    sleep(<span class="number">100</span>);</div><div class="line">mysql.update(<span class="keyword">lock</span>.status = <span class="number">1</span>);  <span class="comment">//获取到锁，更新锁状态为被锁 </span></div><div class="line">doSomthing();  <span class="comment">//执行逻辑</span></div><div class="line">mysql.update(<span class="keyword">lock</span>.status = <span class="number">0</span>);  <span class="comment">//释放锁，更新锁状态</span></div></pre></td></tr></table></figure></p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>上面简单的实现了一个分布式锁，但是存在一些问题：  </p>
+<ul>
+<li>问题1：锁状态判断的原子性无法保证<br>从读取锁的状态，到判断该状态是否为被锁，这两个操作如果不能保证是原子性的，就可能导致不止一个请求获取到了锁，这显然是不行的。  </li>
+<li>问题2：网络断开或主机宕机，锁状态无法清除<br>假设主机在获取到锁的情况下，突然出现了网络断开或者主机宕机，如果不做任何处理该锁将仍然处于被锁定的状态。那么之后的所有请求都无法再成功抢占到这个锁。因此，我们需要在持有锁的主机遇到网络断开或者主机宕机时，及时的释放掉这把锁。  </li>
+<li>问题3：无法保证释放的是自己上锁的那把锁<br>如果持有锁的主机A在临界区遇到网络抖动而导致网络断开，分布式锁及时的被释放了。之后，另一个主机B占用了这把锁，但是此时主机A网络恢复，退出临界区并解锁。由于都是一把锁，所以数据库中锁的状态会变为无占用状态；如果此时第三个主机C尝试抢占这把锁，也将会成功获得。因此，我们需要在解锁时，确定自己解的这个锁是否还是当前主机还依旧占用的这把锁（因为可能在这之前这把锁已经被释放过了）。  </li>
+</ul>
+<h4 id="进阶条件"><a href="#进阶条件" class="headerlink" title="进阶条件"></a>进阶条件</h4><p>分布式锁的实现，如果可以解决上面三个问题，可以算是一个相对完整的分布式锁了。在实际情况中，可能有更高级的要求。  </p>
+<ol>
+<li>可重入：线程中的可重入，指的是外层函数获得锁之后，内层也可以获得锁，Lock和synchronized都是可重入锁；在分布式环境中，一般还是指的线程的可重入。  </li>
+<li>惊群效应（Herd Effect）：在分布式锁中，惊群效应指的是，在有多个请求等待获取锁的时候，一旦占有锁的线程释放之后，如果所有等待方都被同时唤醒，尝试抢占锁。但是这样的情况会造成比较大的开销，应避免惊群效应的产生。  </li>
+<li>公平锁于非公平锁：不同需求下可能需要不同分布式锁。非公平锁开销较小，但如果业务需求竞争者按顺序获得锁，那么就需要实现公平锁。  </li>
+<li>阻塞锁和自旋锁：阻塞锁需要上下文的切换，或并发量高且临界区的操作耗时比较短，那么性能开销会比较大。如果临界区操作耗时比较长，一直保持自旋，也会对CPU造成更大的负荷。  </li>
+</ol>
+<h4 id="典型实现"><a href="#典型实现" class="headerlink" title="典型实现"></a>典型实现</h4><h5 id="Zookeeper的实现"><a href="#Zookeeper的实现" class="headerlink" title="Zookeeper的实现"></a>Zookeeper的实现</h5><p>Zookeeper中有一种节点叫做顺序节点，假如我们在/lock/目录下创建三个节点，zk集群会按照发起创建的顺序来创建节点，节点分别为/lock/00000001、/lock/00000002、/lock/00000003。<br>zk中还有一种名为临时节点的节点，临时节点由某个客户端创建，当客户端于zk集群断开连接，则该节点自动被删除。  </p>
+<p>根据zk中节点是否存在，可以作为分布式锁的锁状态，以此来实现一个分布式锁，下面是分布式锁的基本逻辑：  </p>
+<ol>
+<li>客户端调用create()方法创建名为”/dlm-locks/lockname/lock-“的临时顺序节点。  </li>
+<li>客户端调用getChildren(“lockname”)方法来获取所有已经创建的子节点。</li>
+<li>客户端获取到所有子节点path之后，如果发现自己在步骤1中创建的节点是所有节点中序号最小的，那么久认为这个客户端获得了锁。  </li>
+<li>如果创建的节点不是所有节点中最小的，那么则监视比自己创建节点的序列号小的最大的节点，进入等待。直到下次监视的子节点变更的时候，再进行子节点的获取，判断是否获取锁。  </li>
+</ol>
+<p>释放锁的过程相对比较简单，就是删除自己创建的那个子节点即可。  </p>
+<h5 id="Redis的实现"><a href="#Redis的实现" class="headerlink" title="Redis的实现"></a>Redis的实现</h5><p>Redis的分布式缓存特性使其成为了分布式锁的一种基础实现。通过Redis中是否存在某个锁ID，则可以判断是否已经上锁。为了保证判断锁是否存在的原子性，保证只有一个县城获取同一把锁，Redis有SETNX(set if not exist)和GETSET（先写新值，返回旧值，原子性操作，用于分辨是不是首次操作）。  </p>
+<p>为了防止主机宕机和网络断开之后的死锁，Redis没有zk那种天然的实现方式，只能依赖设置超时时间来规避。  </p>
+<p>下面是一种比较普遍但不太完善的Redis分布式锁的实现步骤：  </p>
+<ol>
+<li>线程A发送SETNX lock.orderid尝试获得锁，如果锁不存在，则set并获得锁。  </li>
+<li>如果锁存在，则再判断锁的值（时间戳）是否大于当前时间，如果没有超时，则等待下再重试。  </li>
+<li>如果已经超时，再用GETSET lock.orderid来尝试获取锁，如果这时候拿到的时间戳仍然超时，那么说明已经获得锁了。  </li>
+<li>如果在此之前，另一个线程C快一步执行了上面的操作，那么A拿到的时间戳是个未超时的值，这是A没有如期获得锁，需要再次等待或重试。</li>
+</ol>
+<h5 id="Tair的实现"><a href="#Tair的实现" class="headerlink" title="Tair的实现"></a>Tair的实现</h5><p>实现与Redis类似，Tair客户端封装了一个expireLock的方法：通过锁状态和过期时间戳来共同判断锁是否存在，只有锁已经存在且没有过期的状态才判定为有锁状态。在有锁的情况下，不能加锁，能通过大于或等于过期时间的时间戳进行解锁。  </p>
+<p>采用这种方式，可以不用再Value中存储时间戳，并且保证了判断是否有锁的原子性。并且，由于超时时间由Tair判断，所以避免了不同主机时钟不一致的情况。  </p>
+<h5 id="分布式锁的弊端"><a href="#分布式锁的弊端" class="headerlink" title="分布式锁的弊端"></a>分布式锁的弊端</h5><ul>
+<li>强依赖于外部组件：分布式锁的实现都依赖于外部数据存储如zk、Redis等，因此一旦这些外部组件出现故障，那么分布式锁就不可用了。  </li>
+<li>无法完全满足需求：不同分布式锁的实现，都有相应的特点，对于一些需求并不能很好的满足，如实现公平锁、给等待锁加超时时间等等。  </li>
+</ul>
+<p>基于以上的问题，结合多种的实现方式，美团开发了Cerberus，提供更灵活可靠的分布式锁。Cerberus有以下特点：  </p>
+<ol>
+<li>一套接口多种引擎。使用了多种引擎实现方式（Tair、ZK、未来支持Redis），可自主选择所需的一种或多种引擎。</li>
+<li>使用灵活，学习成本低。提供一套API，方便使用。  </li>
+<li>支持一键降级。可以实时切换引擎的接口，用于应对所依赖主引擎的故障发生。</li>
+</ol>
+<h2 id="二、幂等性问题"><a href="#二、幂等性问题" class="headerlink" title="二、幂等性问题"></a>二、幂等性问题</h2><p>幂等，就是对接口的多次调用所产生的结果和调用一次是一致的。这里的接口，可以是对外发布的HTTP接口或者Thrift接口，也可以是接收消息的内部接口，或者是一个内部方法或操作。<br>比如以下例子：  </p>
+<ul>
+<li>在App下单的时候，点击确认之后没反应，就又点击几次。在这种情况下，如果无法保证该接口的幂等性，那么将会出现重复下单问题。  </li>
+</ul>
+<p>在分布式环境中，网络环境更加复杂，因前端操作抖动、网络故障、消息重复、响应速度慢等原因，对接口重复调用概率会比集中式环境下更大，尤其是重复消息在分布式环境中很难避免。  </p>
+<p>分布式环境中，有些接口是天然保证幂等性的，如查询操作。有些对数据的修改是一个常量，并且无其他记录和操作，那么夜可以说是具有幂等性的。其他情况下，会涉及对数据的修改、状态的变更就有必要防止重复性操作的发生，我们需要通过实现接口的幂等性来防止重复操作所带来的影响。 </p>
+<h3 id="GTIS"><a href="#GTIS" class="headerlink" title="GTIS"></a>GTIS</h3><p>是分布式环境下幂等性的一个解决方案，能确保在分布式环境下操作的唯一性。  </p>
+<h4 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h4><p>GTIS实现思路是将每一个不同的业务操作赋予其唯一性。这个唯一性通过对不同操作所对应的唯一的内容特性生成一个唯一的全局ID来实现的。基本原则是：相同的操作生成相同的全局ID；不同的操作生成不同的全局ID。  </p>
+<p>生成的全局ID需要存储在外部存储引擎中，数据库、Redis或者是Tair均可以实现。考虑到Tair天生分布式和持久化的优势，目前GTIS存储在Tair中。其对应的key和value如下：  </p>
+<ul>
+<li>key：将对于不同的业务，采用APP_KEY + 业务操作内容特性生成一个唯一标识trans_contents。然后对唯一标识进行加密生成全局ID作为Key。  </li>
+<li>value：current_timestamp + trans_contents，current_timestamp用于标识当前的操作线程。  </li>
+</ul>
+<p>判断是否重复，主要采用Tair的SETNX方法，如果原来没有值则set且返回成功，如果已经有值则返回失败。  </p>
+<h4 id="内部流程"><a href="#内部流程" class="headerlink" title="内部流程"></a>内部流程</h4><p>GTIS内部的实现流程为：  </p>
+<ol>
+<li>业务方在业务操作之前，生成一个能够唯一标识该操作的transContents，传入GTIS；</li>
+<li>GTIS根据传入的transContents，用MD5生成全局ID；</li>
+<li>GTIS将全局ID作为key，current_timestamp + trans_contents作为value放入Tair进行setNx，将结果返回给业务方；</li>
+<li>业务方根据返回结果确定能否开始进行业务操作；</li>
+<li>若能，开始进行操作；若不能，则结束当前操作；</li>
+<li>业务方将操作结果和请求结果传入GTIS，系统进行一次请求结果的检验；</li>
+<li>若盖茨操作成功，GTIS根据Key取出value值，跟传入的返回结果进行对比，如果两者相同，则将全局ID的过期时间改为较长时间；</li>
+<li>GTIS返回最终结果。  </li>
+</ol>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/gtis_principle.jpg" alt="image"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/分布式系统/">分布式系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-大型网站的架构模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/04/大型网站的架构模式/" class="article-date">
+      <time datetime="2018-01-04T03:24:00.000Z" itemprop="datePublished">2018-01-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&nbsp;为了解决大型网站面临的高并发访问、海量数据的处理、高可靠运行等问题，提出了许多解决方案，来使网站达到高性能、高可用、易伸缩、可扩展、安全。这些大公司的解决方案，被更多网站重复使用，形成了大型网站的架构模式。主要通过以下几种方式来实现：  </p>
+<h3 id="1、分层"><a href="#1、分层" class="headerlink" title="1、分层"></a>1、分层</h3><p>&nbsp;<strong>分层是最常见的一种架构模式，将系统在横向维度上切分成几个部分，每个部分负责一部分相对比较单一的职责，然后通过上层对下层的依赖和调用组成一个完整的系统。</strong> 网络的七层通信协议也是一种分层结构。<br>&nbsp;通过分层，可以将一个庞大的系统切分成多个不同的部分，便于分工合作开发和维护；各层之间具有一定的独立性，只要维持调用接口不变，各层可以根据具体的问题独立演化发展而不需要其他层必须作出相应的调整。  </p>
+<h3 id="2、分割"><a href="#2、分割" class="headerlink" title="2、分割"></a>2、分割</h3><p>&nbsp;<strong>分层是横向的切分，而分割是在纵向进行切分。网站越大，其功能越复杂，服务和数据处理的种类也越多，通过分割，将这些不同的服务和功能切分开来，不仅有利于软件的开发和维护，也便于不同模块的分布式部署，来提高网站的并发处理能力和功能扩展能力。</strong><br>&nbsp;比如购物业务，可分割成机票酒店业务、3C业务、小商品业务等更小的粒度。在这个粒度上，还可以继续分割成首页、搜索列表、商品详情等模块，这些模式不管是物理上还是逻辑上都可以是独立的。  </p>
+<h3 id="3、分布式"><a href="#3、分布式" class="headerlink" title="3、分布式"></a>3、分布式</h3><p>&nbsp;<strong>分层和分割可以更好的便于分布式部署，将不同模块部署在不同的服务器上，通过远程调用协同工作。</strong> 分布式意味着可以使用更多的计算机完成同样的功能，计算机越多，CPU、内存、存储资源也越多，能够处理的并发访问和数据量就越大，可以为更多的用户服务。  </p>
+<h3 id="4、集群"><a href="#4、集群" class="headerlink" title="4、集群"></a>4、集群</h3><p>&nbsp;使用分布式将分层和分割后的模块进行独立部署，但是<strong>对于用户访问集中的模块（比如首页），还需要将独立部署的服务器集群化，即多台服务器部署相同应用构成一个集群，通过负载均衡设备共同对外提供服务</strong> 。当某台服务器发生故障时，负载均衡设备或者系统的失效转移机制会将请求转发到集群中其他服务器上，使服务器故障不影响用户使用。  </p>
+<h3 id="5、缓存"><a href="#5、缓存" class="headerlink" title="5、缓存"></a>5、缓存</h3><p>&nbsp;<strong>缓存就是将数据存放在距离计算最近的位置以加快处理速度</strong>，是改善软件性能的第一手段。<br><strong>CDN：</strong> 即内容分发网络，部署在距离终端用户最近的网络服务商，用户的网络请求总是先到达他的网络服务商哪里，在这里缓存网站的一些静态资源，可以就近以最快速度返回给用户，如将用户访问量很大的热点内容缓存在CDN。<br><strong>反向代理：</strong> 反向代理部署在网站的前端，当用户请求到达网站的数据中心时，最先访问的就是反向代理服务器，这里缓存网站的静态资源，无需将请求转发给应用服务器就可以返回给用户。<br><strong>本地缓存：</strong> 在应用服务器本地缓存着热点数据，应用程序可以在本机内存中直接访问数据，而不需要访问数据库。<br><strong>分布式缓存：</strong> 单机无法承受大量的缓存，需要将数据缓存在一个专门的分布式缓存集群中，应用程序通过网络通信访问缓存数据。<br>使用缓存的两个前提：一个是数据访问热点不均衡，某些数据会被更频繁的访问，将这部分数据进行缓存；还有一个是数据在某个时间段内是有效的，不会很快过期，否则会产生脏读，影响结果的正确性。  </p>
+<h3 id="6、异步"><a href="#6、异步" class="headerlink" title="6、异步"></a>6、异步</h3><p>&nbsp;<strong>异步架构是典型的生产者-消费者模式，处在业务操作前面的线程将输出写入到队列，后面的线程从队列中读取数据进行处理，两者不存在直接调用，彼此功能可以随意变化而互不影响。</strong> 异步还有其他几点优势：<br><strong>1.提供系统可用性：</strong> 消费者服务器发生故障，数据会在消息队列器中存储的堆积，生产者服务器可以继续处理业务请求，等消费者服务器恢复后可以继续从队列中取数据进行处理。<br><strong>2.加快网站的响应速度：</strong> 处在业务前端的生产者服务器在处理完业务请求后，将数据写入消息队列，不需要等待消费者服务器处理就可以返回，响应延迟小。<br><strong>3.消除并发访问高峰：</strong> 使用消息队列将突然增加的访问请求数据放入消息队列，等待消费者服务器依次处理，就不会对整个网站负载造成太大压力。  </p>
+<h3 id="7、冗余"><a href="#7、冗余" class="headerlink" title="7、冗余"></a>7、冗余</h3><p>&nbsp;网站需要24小时的运行，但是服务器可能随时都会出现故障，<strong>要想保证在服务器宕机的情况下网站依然可以继续服务，不丢失数据，就需要一定程度的服务器冗余运行，数据冗余备份，这样在某台服务器宕机时，可以将其上的服务和数据访问转移到其他机器上。</strong> 数据库除了要定期备份，存档保存，实现冷备份外，为了保证在线业务高可用，还需要对数据库进行主从分离，实时同步实现热备份。为抵御自然灾害，还需要对整个数据中心进行备份，全球范围内部署灾备数据中心，网站程序和数据实时同步到多个灾备数据中心。  </p>
+<h3 id="8、自动化"><a href="#8、自动化" class="headerlink" title="8、自动化"></a>8、自动化</h3><p>&nbsp;通过减少认为的干预，使发布过程自动化可以有效减少故障。自动化的代码管理，自动化的测试，自动化的安全检测，及最后自动化的部署。此外，还需要，对生产环境进行自动化监控，出现异常、超出预设阈值，会自动化报警，故障发生时自动化的失效转移，故障消除时自动化的失效恢复等等等。  </p>
+<h3 id="9、安全"><a href="#9、安全" class="headerlink" title="9、安全"></a>9、安全</h3><p>&nbsp;通过密码和手机验证码进行身份认证；登录交易等操作对网络通信进行加密；为防止机器人程序滥用网络资源攻击网站，使用验证码进行识别；对于常用的攻击网络的XSS攻击，SQL注入进行编码转换等处理；对垃圾信息、敏感信息进行过滤；对交易转账等重要操作根据交易模式和交易信息进行风险控制。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/大型网站技术架构核心原理/">大型网站技术架构核心原理</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-（转）Java内存溢出和内存泄漏" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/08/（转）Java内存溢出和内存泄漏/" class="article-date">
+      <time datetime="2017-12-08T02:23:00.000Z" itemprop="datePublished">2017-12-08</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="一、为什么要了解内存泄露和内存溢出？"><a href="#一、为什么要了解内存泄露和内存溢出？" class="headerlink" title="一、为什么要了解内存泄露和内存溢出？"></a>一、为什么要了解内存泄露和内存溢出？</h2><p>1、内存泄露一般是代码设计存在缺陷导致的，通过了解内存泄露的场景，可以避免不必要的内存溢出和提高自己的代码编写水平；<br>2、通过了解内存溢出的几种常见情况，可以在出现内存溢出的时候快速的定位问题的位置，缩短解决故障的时间。  </p>
+<h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><p><strong>内存泄露</strong>：无用对象持续占有内存或无用对象的内存得不到及时释放，从而造成的内存空间的浪费称为内存泄漏。<br><strong>内存溢出</strong>：指程序运行过程中无法申请到足够的内存而导致的一种错误。内存溢出通常发生于OLD段（老年代）或Perm段（永久代）垃圾回收后，仍然无内存空间容纳新的Java对象的情况。<br>从定义上可以看出内存泄露是内存溢出的一种诱因，不是唯一因素。  </p>
+<h2 id="三、Java中主要的内存泄漏场景"><a href="#三、Java中主要的内存泄漏场景" class="headerlink" title="三、Java中主要的内存泄漏场景"></a>三、Java中主要的内存泄漏场景</h2><ul>
+<li><p>静态集合类，容器中的对象在程序结束之前都不会释放。这些静态变量的生命周期和应用程序一致，他们所引用的对象Object也不能被释放，因为他们也将一直被Vector引用。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> Vector v = <span class="keyword">new</span> Vector();</div><div class="line"><span class="keyword">for</span>(<span class="built_in">int</span> i = <span class="number">1</span>; i&lt;<span class="number">100</span>; i++)&#123;</div><div class="line">    <span class="keyword">Object</span> o = <span class="keyword">new</span> <span class="keyword">Object</span>();</div><div class="line">    v.<span class="built_in">add</span>(o);</div><div class="line">    o = <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改hashset中对象的参数值，且参数是计算哈希值的字段。<br>  当一个对象被存储进HashSet集合中以后，就不能修改这个对象中的那些参与计算哈希值的字段，否则对象修改后的哈希值与最初存储进HashSet集合中时的哈希值就不同了，在这种情况下，即使在contains方法使用该对象的当前引用作为参数去HashSet集合中检索对象，也将返回找不到对象的结果，这也会导致无法从HashSet集合中删除当前对象，造成内存泄露。</p>
+</li>
+<li>数据库连接、网络连接、IO连接，不再使用时需要close方法释放</li>
+<li>监听器，用到的监听器在释放的时候没有去删除，从而增加了内存泄漏的可能性</li>
+<li>变量不合理的作用域，成员变量在使用后依然存在（结局：将变量设为局部变量）</li>
+<li>单例造成内存泄漏，单例对象在初始化后将在JVM的整个生命周期内存在，如果外部对象（生命周期比较短）持有该引用，那么该外部对象就不能被回收，从而导致内存泄漏</li>
+</ul>
+<h2 id="四、内存溢出的几种情况："><a href="#四、内存溢出的几种情况：" class="headerlink" title="四、内存溢出的几种情况："></a>四、内存溢出的几种情况：</h2><h3 id="1、堆内存溢出（outOfMemoryError：java-heap-space）"><a href="#1、堆内存溢出（outOfMemoryError：java-heap-space）" class="headerlink" title="1、堆内存溢出（outOfMemoryError：java heap space）"></a>1、堆内存溢出（outOfMemoryError：java heap space）</h3><p>&nbsp;&nbsp;分为两种情况：一种是堆内存确实不够，还有一种是由于内存的泄漏而造成的内存溢出。<br>&nbsp;&nbsp;在jvm规范中，堆中的内存是用来生成对象实例和数组的。我们只要不断的创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，当对象数量达到最大堆容量限制后产生内存溢出异常。    如果细分，堆内存还可以分为年轻代和年老代，年轻代包括一个eden区和两个survivor区。<br><img src="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png" alt="image"><br>当生成新对象时，内存的申请过程如下：<br>a、jvm先尝试在eden区分配新建对象所需的内存；<br>b、如果内存大小足够，申请结束，否则下一步；<br>c、jvm启动Minor GC，试图将eden区中不活跃的对象释放掉，释放后若Eden空间仍然不足以放入新对象，则试图将部分Eden中活跃对象放入Survivor区；如果整个新生代都放不下对象时，可以直接在老年代分配内存；<br>d、Survivor区被用来作为Eden及old的中间交换区域，当OLD区空间足够时，Survivor区的对象会被移到Old区，否则会被保留在Survivor区；<br>e、当OLD区空间不够时，JVM会在OLD区进行full GC；<br>f、full GC后，若Survivor及OLD区仍然无法存放从Eden复制过来的部分对象，导致JVM无法在Eden区为新对象创建内存区域，则出现”out of memory错误”。<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> class MemoryLeak &#123;</div><div class="line">   </div><div class="line">    <span class="keyword">private</span> <span class="keyword">String</span>[] s = <span class="keyword">new</span> <span class="keyword">String</span>[<span class="number">1000</span>];</div><div class="line"> </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) <span class="keyword">throws</span> InterruptedException &#123;</div><div class="line">        Map&lt;<span class="keyword">String</span>,<span class="keyword">Object</span>&gt; m =<span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">Object</span>&gt;();</div><div class="line">        <span class="built_in">int</span> i =<span class="number">0</span>;</div><div class="line">        <span class="built_in">int</span> j=<span class="number">10000</span>;</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</div><div class="line">            <span class="keyword">for</span>(;i&lt;j;i++)&#123;</div><div class="line">                MemoryLeak memoryLeak = <span class="keyword">new</span> MemoryLeak();</div><div class="line">                m.put(<span class="keyword">String</span>.valueOf(i), memoryLeak);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><p>&nbsp;&nbsp;出现这种异常，一般手段是先通过内存映像分析工具(如Eclipse Memory Analyzer)对dump出来的堆转存快照进行分析，重点是确认内存中的对象是否是必要的，先分清是因为内存泄漏(Memory Leak)还是内存溢出(Memory Overflow)。<br>&nbsp;&nbsp;如果是内存泄漏，可进一步通过工具（如Jrockit等工具）查看泄漏对象到GC Roots的引用链。于是就能找到泄漏对象时通过怎样的路径与GC Roots相关联并导致垃圾收集器无法自动回收。<br>如果不存在泄漏，那就应该检查虚拟机的参数(-Xmx与-Xms)的设置是否适当。</p>
+<h3 id="2、方法区内存溢出（outOfMemoryError：permgem-space）"><a href="#2、方法区内存溢出（outOfMemoryError：permgem-space）" class="headerlink" title="2、方法区内存溢出（outOfMemoryError：permgem space）"></a>2、方法区内存溢出（outOfMemoryError：permgem space）</h3><p>在jvm规范中，方法区主要存放的是类相关信息（如类名、访问修饰符、常量池、字段描述、方法描述等），静态变量，常量，即时编译器编译后的代码等。<br>所以<strong>如果程序加载的类过多，或者使用反射、gclib等这种动态代理生成类的技术，就可能导致该区发生内存溢出。</strong>  在经常动态生成大量Class的应用中，要注意这点。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jvm参数：-XX:<span class="attribute">PermSize</span>=2m -XX:<span class="attribute">MaxPermSize</span>=2m</div><div class="line">将方法区的大小设置很低即可，在启动加载类库时就会出现内存不足的情况</div></pre></td></tr></table></figure></p>
+<h3 id="3、线程栈溢出（java-lang-StackOverflowError）"><a href="#3、线程栈溢出（java-lang-StackOverflowError）" class="headerlink" title="3、线程栈溢出（java.lang.StackOverflowError）"></a>3、线程栈溢出（java.lang.StackOverflowError）</h3><p>线程栈时线程独有的一块内存结构，所以线程栈发生问题必定是某个线程运行时产生的错误。<br><strong>一般线程栈溢出是由于递归太深或方法调用层级过多导致的。</strong><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">StackOverflowTest</span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</div><div class="line">    <span class="keyword">int</span> i =<span class="number">0</span>;</div><div class="line">    digui(i);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">digui</span>(<span class="params"><span class="keyword">int</span> i</span>)</span>&#123;</div><div class="line">    System.<span class="keyword">out</span>.println(i++);</div><div class="line">    String[] s = <span class="keyword">new</span> String[<span class="number">50</span>];</div><div class="line">    digui(i);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议："><a href="#五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议：" class="headerlink" title="五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议："></a>五、为了避免内存泄露，在编写代码的过程中可以参考下面的建议：</h2><p>1、尽早释放无用对象的引用<br>2、使用字符串处理，避免使用String，应大量使用StringBuffer，每一个String对象都得独立占用内存一块区域<br>3、尽量少用静态变量，因为静态变量存放在永久代（方法区），永久代基本不参与垃圾回收<br>4、避免在循环中创建对象<br>5、开启大型文件或从数据库一次拿了太多的数据很容易造成内存溢出，所以在这些地方要大概计算一下数据量的最大值是多少，并且设定所需最小及最大的内存空间值。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-如何保证线程的顺序执行？" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/05/如何保证线程的顺序执行？/" class="article-date">
+      <time datetime="2017-12-05T08:43:00.000Z" itemprop="datePublished">2017-12-05</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&nbsp;&nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  </p>
+<h2 id="1、使用join关键字实现"><a href="#1、使用join关键字实现" class="headerlink" title="1、使用join关键字实现"></a>1、使用join关键字实现</h2><p>join关键字用于让当前线程等待join线程执行完毕后再执行，否则会处于等待阻塞状态。有两种方法：<br>方法一：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="keyword">Task</span> <span class="keyword">implements</span> Runnable&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> taskId;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">Task</span>(<span class="keyword">int</span> taskId)&#123;</div><div class="line">        <span class="keyword">this</span>.taskId = taskId; </div><div class="line">    &#125;    </div><div class="line">    </div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> run()&#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"线程"</span>+taskId+<span class="string">"运行！"</span>)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> method1() <span class="keyword">throws</span> InterruptedException&#123;</div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">1</span>));</div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">2</span>));</div><div class="line">    Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">3</span>));</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t1.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程1执行完</span></div><div class="line">    t2.start();</div><div class="line">    t2.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程2执行完</span></div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法二：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"线程1运行！"</span>)；</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                t1.<span class="keyword">join</span>();</div><div class="line">                System.<span class="keyword">out</span>.println(<span class="string">"线程2运行！"</span>);</div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                t2.<span class="keyword">join</span>();</div><div class="line">                System.<span class="keyword">out</span>.println(<span class="string">"线程3运行！"</span>);</div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t2.start();</div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="2、使用队列"><a href="#2、使用队列" class="headerlink" title="2、使用队列"></a>2、使用队列</h2><p>把线程依次加入到队列里，按顺序执行即可。newSingleThreadExecutor是一个只有一个消费线程的线程池，这个消费线程会按队列FIFO的顺序去任务队列里取任务，只要保证三个线程按顺序放入就可以了。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="keyword">Task</span> <span class="keyword">implements</span> Runnable&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> taskId;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">Task</span>(<span class="keyword">int</span> taskId)&#123;</div><div class="line">        <span class="keyword">this</span>.taskId = taskId;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> run()&#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"线程"</span>+taskId+<span class="string">"执行！"</span>)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> method3()&#123;</div><div class="line">    ExecutorService threadPool = Executors.newSingleThreadExecutor();</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">1</span>));</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">2</span>));</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">3</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="3、使用CountDownLatch关键字实现"><a href="#3、使用CountDownLatch关键字实现" class="headerlink" title="3、使用CountDownLatch关键字实现"></a>3、使用CountDownLatch关键字实现</h2><p>执行它的latch.await()方法，如果计数器不为0，那么当前线程就会被阻塞；每完成一个任务，就执行latch.countDown()，计数器减一，当计数器为0时，阻塞的线程恢复执行状态。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">method4</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">final</span> CountDownLatch latch1 = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</div><div class="line">    <span class="keyword">final</span> CountDownLatch latch1 = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</div><div class="line">    </div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"线程1执行！"</span>);</div><div class="line">            lacth1.countDown();<span class="comment">//执行完任务后，计数器减一</span></div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">    </div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                latch1.await();<span class="comment">//直到t1中countDown后计数器为0时，t2才继续执行</span></div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">            System.out.println(<span class="string">"线程2执行！"</span>);</div><div class="line">            lacth2.countDown();</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">    </div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                latch2.await();<span class="comment">//直到t2中countDown后计数器为0时，t3才继续执行</span></div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">            System.out.println(<span class="string">"线程3执行！"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public<span class="built_in"> interface </span>Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个实现类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两个工厂类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendMailFactory</span> <span class="keyword">implements</span> <span class="title">Provider</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendSmsFactory</span> <span class="keyword">implements</span> <span class="title">Provider</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>提供一个接口：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public<span class="built_in"> interface </span>Provider&#123;</div><div class="line">    public Sender produce();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-工厂方法模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/工厂方法模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/工厂方法模式/">工厂方法模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者的共同接口</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//创建实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">(String type)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="string">"mail"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"sms"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.println(<span class="string">"请输入正确的类型！"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produce(<span class="string">"mail"</span>);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只需工厂方法进行修改</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-单例模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/单例模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/单例模式/">单例模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。  </p>
+<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
+<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-HashMap的四种遍历方式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/HashMap的四种遍历方式/" class="article-date">
+      <time datetime="2017-12-01T12:39:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、Map的四种遍历方式"><a href="#一、Map的四种遍历方式" class="headerlink" title="一、Map的四种遍历方式"></a>一、Map的四种遍历方式</h1><h2 id="1、foreach-map-entrySet"><a href="#1、foreach-map-entrySet" class="headerlink" title="1、foreach map.entrySet()"></a>1、foreach map.entrySet()</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="built_in">for</span>(Entry&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; entry : <span class="built_in">map</span>.entrySet())&#123;</div><div class="line">    entry.<span class="built_in">getKey</span>();</div><div class="line">    entry.getValue();</div><div class="line">    </div><div class="line">    <span class="comment">//在遍历过程中删除元素，会抛出异常java.util.ConcurrentModificationException</span></div><div class="line">    <span class="comment">//entry.remove(entry.getKey());</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、调用map-entrySet-的集合迭代器"><a href="#2、调用map-entrySet-的集合迭代器" class="headerlink" title="2、调用map.entrySet()的集合迭代器"></a>2、调用map.entrySet()的集合迭代器</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Iterator&lt;Map.Entry&lt;String,String&gt;&gt; </span><span class="keyword">it </span>= <span class="meta">map</span>.entrySet().<span class="keyword">iterator();</span></div><div class="line"><span class="symbol">while</span>(<span class="keyword">it.hasNext())&#123;</span></div><div class="line">    <span class="meta">Map</span>.Entry&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> = <span class="keyword">it.next();</span></div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、foreach-map-keySet"><a href="#3、foreach-map-keySet" class="headerlink" title="3、foreach map.keySet()"></a>3、foreach map.keySet()</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="keyword">for</span>(<span class="keyword">String</span> <span class="built_in">key</span> : <span class="built_in">map</span>.keySet())&#123;</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">get</span>(<span class="built_in">key</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4、foreach-map-entrySet-，用临时变量保存map-entrySet"><a href="#4、foreach-map-entrySet-，用临时变量保存map-entrySet" class="headerlink" title="4、foreach map.entrySet()，用临时变量保存map.entrySet()"></a>4、foreach map.entrySet()，用临时变量保存map.entrySet()</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">Set</span>&lt;<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt;&gt; </span>entrySet = <span class="meta">map</span>.entrySet()<span class="comment">;</span></div><div class="line"><span class="symbol">for</span>(<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> : entrySet())&#123;</div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="二、结论"><a href="#二、结论" class="headerlink" title="二、结论"></a>二、结论</h1><p>1、在foreach map.entrySet()这种遍历方法的遍历过程中，不能删除元素，由于在遍历HashMap中删除了当前元素，下一个待访问的元素的指针也丢失了，所以会抛出java.util.ConcurrentModificationException。<br>2、如果需要在遍历过程中进行删除元素，可以使用调用map.entrySet()的集合迭代器来进行遍历。<br>3、如果只需要遍历key而不需要value的话，可以使用foreach map.keySet()的方式进行遍历。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Java三大特性之多态" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/Java三大特性之多态/" class="article-date">
+      <time datetime="2017-12-01T12:38:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、多态的定义"><a href="#一、多态的定义" class="headerlink" title="一、多态的定义"></a>一、多态的定义</h1><p>&nbsp;&nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量到底会指向哪个类的实例对象，该引用变量发出的方法到底是哪个类中实现的方法，必须由程序运行期间才能决定。这样，不需要修改源程序，就可以让引用变量绑定到各种不同的类实现上，从而导致该引用调用的具体方法随之改变，即不修改程序代码就可以改变程序运行时所绑定的具体代码，让程序选择多个运行状态，这就是多态性。  </p>
+<h1 id="二、多态的实现条件"><a href="#二、多态的实现条件" class="headerlink" title="二、多态的实现条件"></a>二、多态的实现条件</h1><p>Java实现多态有三个必要条件：<strong>继承、重写、向上转型</strong>。<br>继承：在多台中必须存在有继承关系的子类和父类。<br>重写：子类对父类中的某些方法进行重新定义，在调用这些方法时就会调用子类的方法。<br>向上转型：在多态中需要把父类型的引用变量指向子类对象。<br>&nbsp;&nbsp;多态的实现机制遵循一个原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。  </p>
+<h1 id="三、经典实例"><a href="#三、经典实例" class="headerlink" title="三、经典实例"></a>三、经典实例</h1><p>&nbsp;&nbsp;<strong>原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。如果不符合前面的条件，它仍然需要根据继承链中方法调用的优先级来确认方法，优先级为：</strong><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这类this指的是引用变量的类型</span></div><div class="line"><span class="keyword">this</span>.show(o)---&gt;<span class="keyword">super</span>.show(o)---&gt;<span class="keyword">this</span>.show((<span class="keyword">super</span>)o)---&gt;<span class="keyword">super</span>.show((<span class="keyword">super</span>)o)</div></pre></td></tr></table></figure></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">D</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and D"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and A"</span>);</div><div class="line">    &#125; </div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">B</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and B"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and A"</span>);</div><div class="line">    &#125; </div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">D</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    public static void main(<span class="type">String</span>[] args) &#123;</div><div class="line">        <span class="type">A</span> a1 = <span class="keyword">new</span> <span class="type">A</span>();</div><div class="line">        <span class="type">A</span> a2 = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">B</span> b = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">C</span> c = <span class="keyword">new</span> <span class="type">C</span>();</div><div class="line">        <span class="type">D</span> d = <span class="keyword">new</span> <span class="type">D</span>();</div><div class="line">        </div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"1--"</span> + a1.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"2--"</span> + a1.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"3--"</span> + a1.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"4--"</span> + a2.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"5--"</span> + a2.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"6--"</span> + a2.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"7--"</span> + b.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"8--"</span> + b.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"9--"</span> + b.show(d));      </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//运行结果</span></div><div class="line"><span class="number">1</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">2</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">3</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">4</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">5</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">6</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">7</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">8</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">9</span>--<span class="type">A</span> and <span class="type">D</span></div></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;比如分析4，a2.show(b)，按照上面原则的意思，是由B来决定调用谁的方法，所有a2.show(b)应该要调用B中的show(B obj)，产生的结果应该是“B and B”，但是这样是错误的，因为我们忽略了后面那句话：被调用的方法必须要在父类中定义过的，不符合要求，不能直接这么做！所以仍然要按照继承链的调用方法的优先级来确认。由于this(A)没有父类，跳到第三级this((super)o)，找到了A中的show(A obj)方法，同时由于B重写了该方法，所以最终会调用B类中的show(A obj)方法，最后输出“B and A”。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux系统——IO多路复用select、poll、epoll的区别与使用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/" class="article-date">
+      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p>
+<h2 id="一、select-的使用"><a href="#一、select-的使用" class="headerlink" title="一、select()的使用"></a>一、select()的使用</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int <span class="keyword">select</span>(<span class="built_in">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *<span class="keyword">timeout</span>);</div><div class="line">nfds:要监视的文件描述符的范围，一般取描述符数的最大值+1</div><div class="line">readfds：监视的可读描述符集合，只要有文件描述符即将进行读操作，这个文件描述符就存储到这。</div><div class="line">writefds：监视的可写描述符集合。</div><div class="line">exceptfds：监视的错误异常描述符集合。</div></pre></td></tr></table></figure>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化（可读、可写或错误异常）。select()函数监视的文件描述符分为三类，分别是readfds，writefds，exceptfds。调用select()函数会阻塞，直到有描述符就绪（有数据可读、可写或者有错误异常，或者超时），函数才会返回。当select()函数返回后，可以通过遍历fdset来找到就绪的描述符。</p>
+<h3 id="select-的优缺点"><a href="#select-的优缺点" class="headerlink" title="select()的优缺点"></a>select()的优缺点</h3><p><strong>优点：</strong> 几乎在所有平台是都支持，具有良好的跨平台支持。<br><strong>缺点：</strong><br>1、每次调用select()，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大；同时每次调用select()，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。<br>2、单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但是这样也会造成效率的降低。  </p>
+<h2 id="二、poll-的使用"><a href="#二、poll-的使用" class="headerlink" title="二、poll()的使用"></a>二、poll()的使用</h2><p>select()和poll()系统调用的本质一样，管理多个描述符也是进行轮询，根据描述符的状态进行处理，但是poll()没有最大文件描述符数量的限制（但数量过大后性能也会下降）。poll()和select()同样存在一个缺点是，包含大量文件描述符的集合被整体复制于用户态和内核态之间，而不论这些文件描述符是否就绪，随文件描述符数量的增加而线性增大。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span><span class="params">(struct pollfd *fds, <span class="keyword">nfds_t</span> nfds, <span class="keyword">int</span> timeout)</span></span></div></pre></td></tr></table></figure></p>
+<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化。<br>&emsp;poll()的实现和select()非常相似，只是描述fd集合的方式不同，poll()使用pollfd结构而不是select()的fd_set结构，还有就是poll()没有最大文件描述符数量的限制，其他的都差不多。  </p>
+<h2 id="三、epoll-的使用"><a href="#三、epoll-的使用" class="headerlink" title="三、epoll()的使用"></a>三、epoll()的使用</h2><p>epoll()是select()和poll()的增强版本。但epoll更加灵活，没有描述符限制。epoll()使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。<br>epoll操作过程需要三个接口：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create</span>(<span class="params"><span class="keyword">int</span> size</span>)</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_ctl</span>(<span class="params"><span class="keyword">int</span> epfd, <span class="keyword">int</span> op, <span class="keyword">int</span> fd, <span class="keyword">struct</span> epoll_event *<span class="keyword">event</span></span>)</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span>(<span class="params"><span class="keyword">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout</span>)</span>;</div></pre></td></tr></table></figure></p>
+<h3 id="1、int-epoll-create-int-size"><a href="#1、int-epoll-create-int-size" class="headerlink" title="1、int epoll_create(int size)"></a>1、int epoll_create(int size)</h3><p><strong>功能：</strong> 该函数生成一个epoll专用的文件描述符（创建一个epoll的句柄）。在创建好epoll句柄后，它就是会占用一个fd值，在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。  </p>
+<h3 id="2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event"><a href="#2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event" class="headerlink" title="2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)"></a>2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</h3><p><strong>功能：</strong> epoll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，epoll需要先注册要监听的事件类型。  </p>
+<h3 id="3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout"><a href="#3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout" class="headerlink" title="3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)"></a>3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)</h3><p><strong>功能：</strong> 等待事件的发生，收集在epoll监控的事件中已经发送的事件，类似于select()调用。  </p>
+<p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
+<p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
+<h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
+  
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Xu Bo
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

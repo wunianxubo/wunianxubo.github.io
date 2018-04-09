@@ -1,5 +1,1086 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Wunian"><title>Wunian's Blog | 清风徐来，水波不兴</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Wunian's Blog</h1><a id="logo" href="/.">Wunian's Blog</a><p class="description">清风徐来，水波不兴</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"><a href="/2017/10/11/Java对象的创建过程/">Java对象的创建过程</a></h1><div class="post-meta">2017-10-11</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/11/Java对象的创建过程/" href="/2017/10/11/Java对象的创建过程/#disqus_thread"></a><div class="post-content"><h1 id="一、对象的创建"><a href="#一、对象的创建" class="headerlink" title="一、对象的创建"></a>一、对象的创建</h1><h2 id="对象创建有以下几个步骤："><a href="#对象创建有以下几个步骤：" class="headerlink" title="对象创建有以下几个步骤："></a>对象创建有以下几个步骤：</h2><p>1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。<br>2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。<br>3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。<br>4.执行<init>方法，把对象按照程序员的意愿进行初始化。<br>5.将对象在堆上分配的内存地址赋给实例变量。  </init></p></div><p class="readmore"><a href="/2017/10/11/Java对象的创建过程/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/11/JVM之垃圾收集器/">深入java虚拟机之垃圾收集器</a></h1><div class="post-meta">2017-10-11</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/11/JVM之垃圾收集器/" href="/2017/10/11/JVM之垃圾收集器/#disqus_thread"></a><div class="post-content"><h3 id="七种垃圾收集器"><a href="#七种垃圾收集器" class="headerlink" title="七种垃圾收集器"></a>七种垃圾收集器</h3><p>1、Serial（串行GC）-复制<br>2、ParNew（并行GC）-复制<br>3、Parallel Scavenge（并行回收GC）-复制<br>4、Serial Old(MSC)（串行GC）-标记-整理<br>5、CMS（并发GC）-标记-清除<br>6、Parallel Old（并行GC）-标记-整理<br>7、G1（jdk1.7才正式商用）<br>其中，1~3用于年轻代垃圾回收（minor GC），4~6用于老年代垃圾回收（full GC），G1独立完成“分代垃圾回收”。  </p></div><p class="readmore"><a href="/2017/10/11/JVM之垃圾收集器/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/10/JVM之垃圾回收算法/">深入java虚拟机之垃圾回收算法</a></h1><div class="post-meta">2017-10-10</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/10/JVM之垃圾回收算法/" href="/2017/10/10/JVM之垃圾回收算法/#disqus_thread"></a><div class="post-content"><h1 id="一、判断对象是否已死"><a href="#一、判断对象是否已死" class="headerlink" title="一、判断对象是否已死"></a>一、判断对象是否已死</h1><h2 id="1、引用计数算法"><a href="#1、引用计数算法" class="headerlink" title="1、引用计数算法"></a>1、引用计数算法</h2><p>给对象添加一个引用计数器，每当有一个地方引用它时，计数器就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。<br>缺点：难以解决循环引用的问题。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ReferenceCountingGC objA = new ReferenceCountingGC();</div><div class="line">ReferenceCountingGC objB = new ReferenceCountingGC();</div><div class="line">objA.<span class="attribute">instance</span>=objB;</div><div class="line">objB.<span class="attribute">instance</span>=objA;</div><div class="line"></div><div class="line"><span class="attribute">objA</span>=<span class="literal">null</span>;</div><div class="line"><span class="attribute">objB</span>=<span class="literal">null</span>;</div></pre></td></tr></table></figure></p></div><p class="readmore"><a href="/2017/10/10/JVM之垃圾回收算法/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/10/09/Java中的异常和处理/">Java中的异常和处理</a></h1><div class="post-meta">2017-10-09</div><a class="disqus-comment-count" data-disqus-identifier="2017/10/09/Java中的异常和处理/" href="/2017/10/09/Java中的异常和处理/#disqus_thread"></a><div class="post-content"><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为<strong>异常处理机制</strong>。<br>异常处理机制能让程序在异常发生时，按照代码预先设定的异常处理逻辑，针对性的处理异常，让程序尽最大可能恢复正常并继续执行，且保持代码的清晰。<br>java中的异常可以是函数中的语句执行时引发的，也可以是程序员通过throw关键字手动抛出的，只要程序中产生了异常，就会用一个对应类型的异常对象来封装异常，jre就会试图寻找异常处理程序来处理异常。<br>Throwable类是Java异常类型的顶层父类，一个对象只有是Throwable类的实例，他才是一个异常对象，才能被异常处理机制识别。jdk中内置了一些常用的异常类，同时程序员自己也可以自定义异常。  </p></div><p class="readmore"><a href="/2017/10/09/Java中的异常和处理/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/09/30/（转）Java中锁概念总结/">（转）Java中锁概念总结</a></h1><div class="post-meta">2017-09-30</div><a class="disqus-comment-count" data-disqus-identifier="2017/09/30/（转）Java中锁概念总结/" href="/2017/09/30/（转）Java中锁概念总结/#disqus_thread"></a><div class="post-content"><p>原文链接：<a href="http://www.jianshu.com/p/4a8415140406" target="_blank" rel="external">http://www.jianshu.com/p/4a8415140406</a></p>
-<h2 id="公平锁和非公平锁"><a href="#公平锁和非公平锁" class="headerlink" title="公平锁和非公平锁"></a>公平锁和非公平锁</h2><p><strong>公平锁</strong>：多个线程申请获取同一个锁，按照线程的申请顺序，排队获取锁。公平锁的好处是等待的线程不会被饿死，相应的缺陷就是整体吞吐量很低、效率很低。使用new ReentrantLock(true)可以构造一个公平锁。<br><strong>非公平锁</strong>：多个线程申请获取同一个锁，获取锁的顺序不按照申请顺序，抢占式的获取。非公平锁的好处是整体效率很高，但是可能会使有些线程一致在等待，造成饿死。使用Synchronized、new ReentrantLock()和new ReentrantLock(false)可以构建一个非公平锁。  </p></div><p class="readmore"><a href="/2017/09/30/（转）Java中锁概念总结/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a></h1><div class="post-meta">2017-09-30</div><a class="disqus-comment-count" data-disqus-identifier="2017/09/30/Java多线程之锁优化策略/" href="/2017/09/30/Java多线程之锁优化策略/#disqus_thread"></a><div class="post-content"><h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p></div><p class="readmore"><a href="/2017/09/30/Java多线程之锁优化策略/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a></h1><div class="post-meta">2017-09-29</div><a class="disqus-comment-count" data-disqus-identifier="2017/09/29/26、复杂链表的复制/" href="/2017/09/29/26、复杂链表的复制/#disqus_thread"></a><div class="post-content"><p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p></div><p class="readmore"><a href="/2017/09/29/26、复杂链表的复制/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a></h1><div class="post-meta">2017-09-29</div><a class="disqus-comment-count" data-disqus-identifier="2017/09/29/27、二叉搜索树转双向链表/" href="/2017/09/29/27、二叉搜索树转双向链表/#disqus_thread"></a><div class="post-content"><p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p></div><p class="readmore"><a href="/2017/09/29/27、二叉搜索树转双向链表/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a></h1><div class="post-meta">2017-09-29</div><a class="disqus-comment-count" data-disqus-identifier="2017/09/29/28、字符串的排列/" href="/2017/09/29/28、字符串的排列/#disqus_thread"></a><div class="post-content"><p>&emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、将第一个字符与后面每个字符交换<br>2、固定第一个字符<br>3、将固定后，后面字符的第一位字符分别与后面每个字符交换<br>以此类推。。。  </p></div><p class="readmore"><a href="/2017/09/29/28、字符串的排列/">Read More</a></p></div><div class="post"><h1 class="post-title"><a href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a></h1><div class="post-meta">2017-08-31</div><a class="disqus-comment-count" data-disqus-identifier="2017/08/31/深入java虚拟机之类加载机制/" href="/2017/08/31/深入java虚拟机之类加载机制/#disqus_thread"></a><div class="post-content"><h1 id="一、类加载过程"><a href="#一、类加载过程" class="headerlink" title="一、类加载过程"></a>一、类加载过程</h1><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了<strong>加载、验证、准备、解析和初始化</strong>五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会互相交叉的进行，通常在一个阶段的执行过程中调用或激活另一个阶段。  </p></div><p class="readmore"><a href="/2017/08/31/深入java虚拟机之类加载机制/">Read More</a></p></div><nav class="page-navigator"><a class="extend prev" rel="prev" href="/page/2/">Previous</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next</a></nav><script id="dsq-count-scr" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/count.js" async></script></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java基础/">java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式系统/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/剑指offer/">剑指offer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/大型网站技术架构核心原理/">大型网站技术架构核心原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/java虚拟机/" style="font-size: 15px;">java虚拟机</a> <a href="/tags/算法，剑指offer/" style="font-size: 15px;">算法，剑指offer</a> <a href="/tags/数据结构/" style="font-size: 15px;">数据结构</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/java并发/" style="font-size: 15px;">java并发</a> <a href="/tags/java基础/" style="font-size: 15px;">java基础</a> <a href="/tags/java，java基础/" style="font-size: 15px;">java，java基础</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/大型网站技术架构/" style="font-size: 15px;">大型网站技术架构</a> <a href="/tags/分布式系统/" style="font-size: 15px;">分布式系统</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://www.zhihu.com/people/wu-nian-34-58/activities" title="zhihu" target="_blank">zhihu</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Wunian's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Xu Bo" />
+
+
+    
+    
+
+
+<meta name="description" content="Wunian">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wunian&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="Wunian">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wunian&#39;s Blog">
+<meta name="twitter:description" content="Wunian">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Wunian&#39;s Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <style> .article { opacity: 0;} </style>
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Wunian&#39;s Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/xubo.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Xu Bo</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">清风徐来，水波不兴</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Xu Bo</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/xubo.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Xu Bo</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">清风徐来，水波不兴</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap">
+  
+    <article id="post-Java对象的创建过程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/11/Java对象的创建过程/" class="article-date">
+      <time datetime="2017-10-11T09:35:00.000Z" itemprop="datePublished">2017-10-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/Java对象的创建过程/">Java对象的创建过程</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、对象的创建"><a href="#一、对象的创建" class="headerlink" title="一、对象的创建"></a>一、对象的创建</h1><h2 id="对象创建有以下几个步骤："><a href="#对象创建有以下几个步骤：" class="headerlink" title="对象创建有以下几个步骤："></a>对象创建有以下几个步骤：</h2><p>1.虚拟机遇到一条new指令时，首先将去检查这个指令的参数是否能在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已被加载、解析和初始化过。如果没有，必须先执行相应的类加载过程。<br>2.在类加载检查通过后，接下来虚拟机为新生对象分配内存。<br>3.内存分配后，虚拟机将分配到的内存空间都初始化为零值（不包括对象头）。<br>4.执行<init>方法，把对象按照程序员的意愿进行初始化。<br>5.将对象在堆上分配的内存地址赋给实例变量。  </init></p>
+<h2 id="初始化顺序："><a href="#初始化顺序：" class="headerlink" title="初始化顺序："></a>初始化顺序：</h2><p>1、先父类，后子类<br>2、先属性，再构造代码块，最后构造函数<br>3、先静态，后非静态<br>4、同一类型，按代码顺序先后执行  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B.png" alt="image">  </p>
+<h1 id="二、对象的内存布局"><a href="#二、对象的内存布局" class="headerlink" title="二、对象的内存布局"></a>二、对象的内存布局</h1><p>对象在内存中存储的布局可以分为三块区域：<strong>对象头、实例数据和对齐填充</strong>。  </p>
+<h2 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h2><p>包括两部分，第一部分用于存储对象自身的运行时数据，如哈希码、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID等。另一部分是类型指针，即对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。  </p>
+<h2 id="实例数据"><a href="#实例数据" class="headerlink" title="实例数据"></a>实例数据</h2><p>实例数据部分是对象真正存储的有效信息，也是在程序代码中所定义的各种类型的字段内容。无论是从父类继承下来的，还是子类中定义的，都需要记录下来（包括private的）。  </p>
+<h2 id="对齐填充"><a href="#对齐填充" class="headerlink" title="对齐填充"></a>对齐填充</h2><p>非必要存在，仅仅起着占位符的作用。  </p>
+<h1 id="三、对象的访问定位"><a href="#三、对象的访问定位" class="headerlink" title="三、对象的访问定位"></a>三、对象的访问定位</h1><p>建立对象是为了使用对象，java程序通过栈上的reference数据来操作堆上的具体对象。主流的访问方式主要有<strong>使用句柄</strong>和<strong>直接指针</strong>两种。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%AF%B9%E8%B1%A1%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D.jpg" alt="image"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-JVM之垃圾收集器" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/11/JVM之垃圾收集器/" class="article-date">
+      <time datetime="2017-10-11T02:33:00.000Z" itemprop="datePublished">2017-10-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/11/JVM之垃圾收集器/">深入java虚拟机之垃圾收集器</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="七种垃圾收集器"><a href="#七种垃圾收集器" class="headerlink" title="七种垃圾收集器"></a>七种垃圾收集器</h3><p>1、Serial（串行GC）-复制<br>2、ParNew（并行GC）-复制<br>3、Parallel Scavenge（并行回收GC）-复制<br>4、Serial Old(MSC)（串行GC）-标记-整理<br>5、CMS（并发GC）-标记-清除<br>6、Parallel Old（并行GC）-标记-整理<br>7、G1（jdk1.7才正式商用）<br>其中，1~3用于年轻代垃圾回收（minor GC），4~6用于老年代垃圾回收（full GC），G1独立完成“分代垃圾回收”。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.jpg" alt="image">  </p>
+<h3 id="并行与并发"><a href="#并行与并发" class="headerlink" title="并行与并发"></a>并行与并发</h3><p><strong>并行</strong>：多条垃圾回收线程同时操作<br><strong>并发</strong>：垃圾回收线程和用户线程一起操作，但不一定是并行的，可能交替执行。  </p>
+<h3 id="常用的五种组合"><a href="#常用的五种组合" class="headerlink" title="常用的五种组合"></a>常用的五种组合</h3><p>1、Serial/Serial Old<br>2、ParNew/Serial Old，与上面相比，只是比年轻代多了多线程垃圾回收而已<br>3、ParNew/CMS，当下比较高校的组合<br>4、Parallel Scavenge/Parallel Old，自动管理的组合<br>5、G1，最先进的收集器，需要jdk1.7update14以上  </p>
+<h2 id="一、新生代垃圾收集器"><a href="#一、新生代垃圾收集器" class="headerlink" title="一、新生代垃圾收集器"></a>一、新生代垃圾收集器</h2><h3 id="1、Serial收集器"><a href="#1、Serial收集器" class="headerlink" title="1、Serial收集器"></a>1、Serial收集器</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/Serial%E6%94%B6%E9%9B%86%E5%99%A8.png" alt="image">  </p>
+<p>是最基础、最古老的收集器，是一个单线程的收集器，是Client模式下的默认收集器。<br><strong>优点</strong>：简单高效（与其他收集器的单线程比），对于限定单个CPU的环境下，Serial收集器由于没有线程交互的开销，专心做垃圾收集可以获得最高的单线程收集效率。<br><strong>缺点</strong>：是单线程处理，并且会stop the world，即在它进行垃圾收集时，必须暂停其他所有的工作线程，这对很多应用来说难以接受的。<br><strong>应用</strong>：Serial收集器对于运行在Client模式下的虚拟机来说是一个很好的选择。  </p>
+<h3 id="2、ParNew收集器"><a href="#2、ParNew收集器" class="headerlink" title="2、ParNew收集器"></a>2、ParNew收集器</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/parnew.png" alt="image">  </p>
+<p>其实就是Serial收集器的多线程版本，除了使用多条线程进行垃圾收集之外，其他都与Serial完全一样。<br><strong>特点</strong>：<br>1.是并行收集器<br>2.是server模式下的首选收集器<br>3.可以和CMS收集器相配合，但是Parallel Scavenge与CMS是无法配合的<br>4.使用复制算法进行垃圾回收  </p>
+<h3 id="3、Parallel-Scavenge收集器"><a href="#3、Parallel-Scavenge收集器" class="headerlink" title="3、Parallel Scavenge收集器"></a>3、Parallel Scavenge收集器</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/Parallel%20Scavenge.png" alt="image">  </p>
+<p>&emsp;Parallel Scavenge的关注点和其他收集器不同，<strong>CMS等收集器的关注点是尽可能的缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge的目的是达到一个可控制的吞吐量</strong>。<br>吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)<br>&emsp;停顿时间越短就越适合需要与用户交互的程序，良好的响应速度可以提升用户体验；而<strong>高吞吐量则可以高效率的利用CPU时间，尽快完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。</strong>  </p>
+<h2 id="二、老年代垃圾收集器"><a href="#二、老年代垃圾收集器" class="headerlink" title="二、老年代垃圾收集器"></a>二、老年代垃圾收集器</h2><h3 id="1、Serial-Old收集器"><a href="#1、Serial-Old收集器" class="headerlink" title="1、Serial Old收集器"></a>1、Serial Old收集器</h3><p>是Serial收集器的老年代版本。<br><strong>特点</strong>：<br>1.是一个单线程收集器<br>2.使用标记-整理算法<br>3.主要在Client模式下使用<br>&emsp;在Server模式下，主要有两个用途：一个是在jdk1.5前与Parallel Scavenge配合使用，还有一个是作为CMS的后备预案，在发生Concurrent Mode Failure时使用。  </p>
+<h3 id="2、Parallel-Old收集器"><a href="#2、Parallel-Old收集器" class="headerlink" title="2、Parallel Old收集器"></a>2、Parallel Old收集器</h3><p>是Parallel Scavenge老年代版本。<br><strong>特点</strong>：<br>1.多线程<br>2.标记-整理算法<br>3.jdk1.6之后提供<br><strong>作用</strong>：在Parallel Old之前，如果新生代选择了Parallel Scavenge，那么老年代只能选择Serial Old，由于Serial Old的拖累，使用整体性能不一定比ParNew/CMS高。直到有了Parallel Old，“吞吐量优先”菜真正有了名副其实的组合。  </p>
+<h3 id="3、CMS（Concurrent-Mark-Sweep）收集器"><a href="#3、CMS（Concurrent-Mark-Sweep）收集器" class="headerlink" title="3、CMS（Concurrent Mark Sweep）收集器"></a>3、CMS（Concurrent Mark Sweep）收集器</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/CMS.png" alt="image">  </p>
+<p><strong>是一种追求回收停顿时间最短的收集器。</strong>  是基于“标记-清除”算法实现的。<br><strong>分为四个步骤</strong>：<br><strong>1.初始标记</strong>：仅仅是标记一下GC Roots能直接关联到的对象，速度很快<br><strong>2.并发标记</strong>：进行GC Roots的追踪过程<br><strong>3.重新标记</strong>：为了修正并发标记期间由于用户程序继续运作而导致标记产生变动的那一部分对象的标示记录<br><strong>4.标记清除</strong><br>&emsp;其中，初始标记和重新标记仍然需要“Stop the world”，但是由于整个过程中最耗时的并发标记和并发清除过程是可以与用户线程一起工作的，所以从总体上来说，CMS收集器的内存回收过程是与用户线程一起并发执行的。<br><strong>优点</strong>：并发收集，低停顿<br><strong>缺点</strong>：<br>1.对cpu资源非常敏感<br>2.无法处理浮动垃圾，当CMS运行期间预留的内存无法满足程序需要，会出现“Concurrent Mode Failure”<br>3.标记-清除算法，会产生大量的空间碎片<br>&emsp;默认条件下，当老年代使用68%即触发GC，1.6中已提高为92%。  </p>
+<h2 id="三、通用收集器G1（Garbage-First）"><a href="#三、通用收集器G1（Garbage-First）" class="headerlink" title="三、通用收集器G1（Garbage-First）"></a>三、通用收集器G1（Garbage-First）</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/G1.png" alt="image">  </p>
+<p>1.7u14后正式提供商用G1，以前都是测试用的。G1是一款面向服务端应用的垃圾收集器。<br><strong>特点</strong>：<br>1.并行与并发<br>2.分代收集<br>3.空间整合：基于“标记-整理”，不会产生内存空间碎片<br>4.可预测的停顿：能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。<br>&emsp;G1将整个Java堆划分为多个大小相等的独立区域（Region），虽然还保留了新生代和老年代的概念，但是他们并不是物理隔离的了，他们都是一部分Region（不需要连续）的集合。G1跟踪各个Region里面垃圾堆积的价值大小，在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region，这也就是Garbage-First的由来。<br><strong>难题</strong>：对象可能在不同的Region中引用。<br><strong>解决方法</strong>：G1通过Remember Set来避免进行全堆扫描。G1中每个Region都有一个对应的Remember Set，一旦发现一个对象引用了另一个Region的对象，就通过CardTable把相关引用信息记录到被引用对象所属的Region的Remember Set中。当进行GC时，在GC根节点的枚举范围中加入Remember Set，就可以保证不对全堆扫描也不会有遗漏。<br><strong>主要有以下几个步骤</strong>：<br><strong>1.初始标记</strong>：标记一下GC Roots能直接关联到的对象，并修改TAMS的值，让下一阶段用户程序并发运行时，能在正确可用的Region中创建新对象<br><strong>2.并发标记</strong>：从GC Roots进行可达性分析，找出存活对象<br><strong>3.最终标记</strong>：为了修正并发标记期间由于用户程序继续运作而导致标记产生变动的那一部分对象的标示记录<br><strong>4.筛选回收</strong>  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-JVM之垃圾回收算法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/10/JVM之垃圾回收算法/" class="article-date">
+      <time datetime="2017-10-10T13:06:00.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/10/JVM之垃圾回收算法/">深入java虚拟机之垃圾回收算法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、判断对象是否已死"><a href="#一、判断对象是否已死" class="headerlink" title="一、判断对象是否已死"></a>一、判断对象是否已死</h1><h2 id="1、引用计数算法"><a href="#1、引用计数算法" class="headerlink" title="1、引用计数算法"></a>1、引用计数算法</h2><p>给对象添加一个引用计数器，每当有一个地方引用它时，计数器就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。<br>缺点：难以解决循环引用的问题。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ReferenceCountingGC objA = new ReferenceCountingGC();</div><div class="line">ReferenceCountingGC objB = new ReferenceCountingGC();</div><div class="line">objA.<span class="attribute">instance</span>=objB;</div><div class="line">objB.<span class="attribute">instance</span>=objA;</div><div class="line"></div><div class="line"><span class="attribute">objA</span>=<span class="literal">null</span>;</div><div class="line"><span class="attribute">objB</span>=<span class="literal">null</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="2、可达性分析算法"><a href="#2、可达性分析算法" class="headerlink" title="2、可达性分析算法"></a>2、可达性分析算法</h2><p>通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到GC Roots没有任何引用链相连时，说明该对象是不可用的。<br><strong>可作为GC Roots的对象为：</strong><br>①虚拟机栈中引用的对象<br>②方法区中类静态属性引用的对象<br>③方法区中常量引用的对象<br>④本地方法栈中Native方法引用的对象  </p>
+<h2 id="3、引用"><a href="#3、引用" class="headerlink" title="3、引用"></a>3、引用</h2><p><strong>强引用（Strong Reference）</strong>：指在程序代码中普遍存在的，类似A a = new A()这样的引用，只要强引用还存在，垃圾回收器永远不会回收掉被引用的对象。<br><strong>软引用（Soft Reference）</strong>：用来描述一些还有用但并非必需的对象。对于软引用关联的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。<br><strong>弱引用（Weak Reference）</strong>：用来描述非必需对象的，但是它的强度比软引用更弱一些，被软引用关联的对象只能生存到下一次垃圾收集之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被软引用关联的对象。<br><strong>虚引用（Phantom Reference）</strong>：称为幽灵引用，是最弱的一种引用关系。一个对象是否有虚引用的存在，不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。对一个对象设置虚引用关联的唯一目的是用来跟踪对象被垃圾回收的状态。  </p>
+<h2 id="4、finalize自救"><a href="#4、finalize自救" class="headerlink" title="4、finalize自救"></a>4、finalize自救</h2><p>即使在可达性分析算法中不可达的对象，也并非是“非死不可”的，要真正宣告一个对象死亡，需要经历两次标记过程：<br>1、如果对象在进行可达性分析后发现没有与GC Roots相连接的引用链，那它将会被第一次标记并且进行一次筛选，筛选条件是此对象是否有必要执行finalize方法。当对象没有覆盖finalize方法，或者finalize方法已经被虚拟机调用过，虚拟机将这两种情况视为“没有必要执行”，这时对象宣告死亡。<br>2、如果对象被判定有必要执行finalize，那么该对象会放置在一个F-Queue的队列中，并在稍后由一个虚拟机自动建立的、低优先级的Finalizer线程去执行。finalize方法是对象逃脱死亡命运的最后一次机会，稍后GC会对F-Queue中的对象进行第二次小规模的标记，如果对象在finalize()中成功拯救自己——只要重新与引用链的任何一个对象建立连接即可，譬如把自己（this）赋值给某个类变量或者对象的成员变量，那么第二次标记时它将被移除“即将回收”的集合；否则，它就会被真的回收了。<br>注意：任何一个对象的finalize方法都只会被系统自动调用一次。  </p>
+<h1 id="二、垃圾回收算法"><a href="#二、垃圾回收算法" class="headerlink" title="二、垃圾回收算法"></a>二、垃圾回收算法</h1><h2 id="1、标记-清除算法"><a href="#1、标记-清除算法" class="headerlink" title="1、标记-清除算法"></a>1、标记-清除算法</h2><p>分为“标记”和“清除”两个阶段：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。<br>有两点不足之处：<br>①一个是效率问题，标记和清除两个过程的效率都不高；<br>②另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。  </p>
+<h2 id="2、复制算法"><a href="#2、复制算法" class="headerlink" title="2、复制算法"></a>2、复制算法</h2><h3 id="①普通的复制算法"><a href="#①普通的复制算法" class="headerlink" title="①普通的复制算法"></a>①普通的复制算法</h3><p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这块内存用完了，就将还存活着的对象复制到另一块上面，然后再把已使用过的内存一次清理掉。<br>这样每次都是对整个半区进行内存回收，不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。<br>代价：内存使用率只有原来的一半。  </p>
+<h3 id="②改进的复制算法"><a href="#②改进的复制算法" class="headerlink" title="②改进的复制算法"></a>②改进的复制算法</h3><p>不是按照1:1的比例来划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间。在回收时，会把Eden和其中一个Survivor中还存活的对象一次性放到另一个空的Survivor中，然后清除之前的Eden和第一个Survivor。为了区分，一般称第一个为From Survivor，第二个为To Survivor。他们的比例为8:1:1，只会浪费10%的空间。<br>内存担保：有可能存活的对象大于10%，一个Survivor放不下，这时需要有其他内存来作担保，这里会以老年代作为担保。如果放不下，那么通过分配担保机制直接进入老年代。  </p>
+<h2 id="3、标记-整理算法"><a href="#3、标记-整理算法" class="headerlink" title="3、标记-整理算法"></a>3、标记-整理算法</h2><p>老年代没有其他内存给它做担保，所以不能使用复制算法。先标记需要回收的对象，然后把活着的对象向一端进行移动，使他们在物理上连续，然后把边界右侧的内存直接清理掉。<br>没有内存碎片，但是效率会稍微低一点，因为要移动对象。  </p>
+<h2 id="4、分代收集算法"><a href="#4、分代收集算法" class="headerlink" title="4、分代收集算法"></a>4、分代收集算法</h2><p>根据对象存活周期的不同将内存划分为几块，一般把Java堆分为<strong>新生代</strong>和<strong>老年代</strong>，根据年代的特点采用最适当的收集算法。<br>在<strong>新生代</strong>中，每次垃圾收集时都有大批对象死去，只有少量存活，选用“复制算法”，只需要付出少量存活对象的复制成本就可以完成收集。<br>而在<strong>老年代</strong>中，对象存活率高、没有额外空间对它进行分配担保，就使用“标记-清除”或者“标记-整理”算法来进行回收。  </p>
+<h1 id="三、新生代、老年代和永久代"><a href="#三、新生代、老年代和永久代" class="headerlink" title="三、新生代、老年代和永久代"></a>三、新生代、老年代和永久代</h1><p>java虚拟机垃圾收集器关注的内存结构如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/20141107224401036.png" alt="image"><br>堆大小=新生代+老年代，新生代与老年代的比例为1：2，新生代细分为一块较大的Eden空间和两块较小的Survivor空间，分别被命名为from和to。  </p>
+<h2 id="1、新生代"><a href="#1、新生代" class="headerlink" title="1、新生代"></a>1、新生代</h2><p>新创建的对象一般都在新生代中分配内存空间，新生代采用“复制算法”进行垃圾回收，可见上面改进的复制算法。<br>java虚拟机对新生代的垃圾回收称为<strong>Minor GC</strong>，次数比较频繁，每次的回收时间较短。使用虚拟机的-Xmn参数可以指定新生代内存大小。  </p>
+<h2 id="2、老年代"><a href="#2、老年代" class="headerlink" title="2、老年代"></a>2、老年代</h2><p>老年代中的对象一般都是长生命周期对象，对象的存活率比较高。当新生代垃圾收集器回收几次之后仍然存活的对象会被移动到老年代内存中（默认是15岁），当大对象无法在新生代找到足够的连续内存时也会直接在老年代中创建。<br>老年代中使用“标记-清除”或者“标记-整理”算法进行垃圾回收。java虚拟机对老年代的回收称为<strong>MajorGC/Full GC</strong>，次数相对比较少，每次回收的时间也比较长。<br>在新生代中没有足够空间为对象创建分配内存，老年代中内存回收也无法回收到足够的内存空间，并且新生代和老年代都无法扩展时，堆就会产生OutOfMemoryError异常。虚拟机-Xms参数指定最小内存大小，-Xmx参数指定最大内存大小，与新生代大小参数-Xmn之差可计算出老年代最小和最大容量。  </p>
+<h2 id="3、永久代"><a href="#3、永久代" class="headerlink" title="3、永久代"></a>3、永久代</h2><p>永久代指的是虚拟机内存中的方法区，被各个线程共享的内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。永久代垃圾回收比较少，效率也比较低，但也必须进行垃圾回收，否则永久代内存不够用时仍然会抛出OutOfMemoryError异常。永久代也使用“标记-清除”或者“标记-整理”算法进行垃圾回收。虚拟机参数-XX：PermSize和-XX：MaxPermSize可以设置永久代的初始大小和最大容量。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Java中的异常和处理" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/09/Java中的异常和处理/" class="article-date">
+      <time datetime="2017-10-09T08:49:00.000Z" itemprop="datePublished">2017-10-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/09/Java中的异常和处理/">Java中的异常和处理</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>程序运行时，发生超出预期的事件，阻止了程序按照程序员的预期正常执行，这就是异常。Java中的解决方法为<strong>异常处理机制</strong>。<br>异常处理机制能让程序在异常发生时，按照代码预先设定的异常处理逻辑，针对性的处理异常，让程序尽最大可能恢复正常并继续执行，且保持代码的清晰。<br>java中的异常可以是函数中的语句执行时引发的，也可以是程序员通过throw关键字手动抛出的，只要程序中产生了异常，就会用一个对应类型的异常对象来封装异常，jre就会试图寻找异常处理程序来处理异常。<br>Throwable类是Java异常类型的顶层父类，一个对象只有是Throwable类的实例，他才是一个异常对象，才能被异常处理机制识别。jdk中内置了一些常用的异常类，同时程序员自己也可以自定义异常。  </p>
+<h1 id="java异常的分类和类结构图"><a href="#java异常的分类和类结构图" class="headerlink" title="java异常的分类和类结构图"></a>java异常的分类和类结构图</h1><p>Throwable类是顶层父类，Throwable类派生出Error类和Exception类。<br><strong>错误</strong>：Error类以及他的子类的实例，代表了JVM本身的错误。错误不能被程序员通过代码处理，Error很少出现。<br><strong>异常</strong>：Exception以及它的子类，代表程序运行时发送的各种不期望发生的事件。<strong>可以被java异常处理机制使用，是异常处理的核心</strong>。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.jpg" alt="image"><br>根据javac对异常的处理要求，将异常类分为2类：<br><strong>非检查异常（unchecked exception）</strong>：Error和RuntimeException以及他们的子类。javac在编译时，不会提示和发现这样的异常，不要求在程序中处理这些异常。对于这样的异常，我们可以编写代码处理（try…catch…finally），也可以不处理。对于这些异常，我们要做的应该是修正代码，而不是去通过异常处理器处理。这样的异常多半是代码编写的问题。如除0错误ArithmeticException，错误的类型强转错误ClassCastException，数组越界错误ArrayIndexOutOfBoundsException，空指针错误NullPointerException等等。<br><strong>检查异常（checked exception）</strong>：除了Error和RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（try…catch…finally）。在方法中，<strong>要么通过try-catch语句捕获异常并处理，要么用throws子句声明交给函数调用者去解决</strong>，否则编译不会通过。这种异常一般由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，但是程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着，如SQLException，IOException，ClassNotFoundException，FileNotFoundException等等。<br>这里的检查与非检查是针对javac而言的。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-（转）Java中锁概念总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/30/（转）Java中锁概念总结/" class="article-date">
+      <time datetime="2017-09-30T02:41:04.000Z" itemprop="datePublished">2017-09-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/30/（转）Java中锁概念总结/">（转）Java中锁概念总结</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>原文链接：<a href="http://www.jianshu.com/p/4a8415140406" target="_blank" rel="external">http://www.jianshu.com/p/4a8415140406</a></p>
+<h2 id="公平锁和非公平锁"><a href="#公平锁和非公平锁" class="headerlink" title="公平锁和非公平锁"></a>公平锁和非公平锁</h2><p><strong>公平锁</strong>：多个线程申请获取同一个锁，按照线程的申请顺序，排队获取锁。公平锁的好处是等待的线程不会被饿死，相应的缺陷就是整体吞吐量很低、效率很低。使用new ReentrantLock(true)可以构造一个公平锁。<br><strong>非公平锁</strong>：多个线程申请获取同一个锁，获取锁的顺序不按照申请顺序，抢占式的获取。非公平锁的好处是整体效率很高，但是可能会使有些线程一致在等待，造成饿死。使用Synchronized、new ReentrantLock()和new ReentrantLock(false)可以构建一个非公平锁。  </p>
+<h2 id="共享锁和独占锁"><a href="#共享锁和独占锁" class="headerlink" title="共享锁和独占锁"></a>共享锁和独占锁</h2><p><strong>共享锁</strong>：简单的理解就是锁可以被多个线程持有。在实际使用过程中，线程A获取到了共享资源D的共享锁，其它线程只能获取D的共享锁，不能获取独占锁。<br><strong>独占锁</strong>：一次只能有一个线程获得锁，即只能被一个线程持有。在实际使用过程中，线程A获取到了共享资源D的独占锁，其它线程不能获取D的任何类型锁。  </p>
+<h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p><strong>读写锁</strong>一次只有一个线程（writer线程）可以修改共享数据，但在许多情况下，任何数量的线程可以同时读取共享数据（reader线程）。Java中的读写锁通过ReentrantReadWriteLock实现。ReentrantReadWriteLock.ReadLock是读锁，它是共享锁。ReentrantReadWriteLock.WriteLock是写锁，它是独占锁。  </p>
+<h2 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h2><p><strong>互斥锁</strong>即一次只能有一个线程持有的锁。ReentrantLock和synchronized都是互斥锁。  </p>
+<h2 id="悲观锁和乐观锁"><a href="#悲观锁和乐观锁" class="headerlink" title="悲观锁和乐观锁"></a>悲观锁和乐观锁</h2><p><strong>悲观锁</strong>认为对同一数据的并发操作一定会出现冲突问题，所以，在对数据操作之前一定要加锁。Java编码中悲观锁的实现有很多种，for update就是一种。<br><strong>乐观锁</strong>认为对同一数据的并发操作不会出现冲突问题，数据操作不加锁，会在操作提交时检查数据的完整性。Java中常用的乐观锁方式有版本号、时间戳。  </p>
+<h2 id="偏向锁、轻量级锁、重量级锁"><a href="#偏向锁、轻量级锁、重量级锁" class="headerlink" title="偏向锁、轻量级锁、重量级锁"></a>偏向锁、轻量级锁、重量级锁</h2><p><strong>偏向锁</strong>：对于一段同步代码来说，锁偏向于第一次获取它的线程，如果继续执行的过程中，锁没有被其它线程持有，则持有偏向锁的线程将不需要同步，自动获取锁。<br><strong>轻量级锁</strong>：当偏向锁被另一个线程持有的时候，偏向锁升级为轻量级锁，其它线程通过自旋转的方式尝试获取锁。<br><strong>重量级锁</strong>：当轻量级锁被另一个线程持有的时候，轻量级锁升级为重量级锁。  </p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>Java线程在得不到锁时不会立即阻塞，而是执行一个循环，不断的去尝试获取锁，这种技术就是<strong>自旋锁</strong>。它可以减少在获取锁的过程中，因为线程上下文的切换而导致的额外消耗。  </p>
+<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><p><strong>可重入锁</strong>，也称为递归锁，即线程在获取到某方法的锁之后，如果在该方法内部调用其它方法，这个方法也需要获取锁，那么进入这个方法将自动获取锁，它可以在一定程度上避免死锁。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Java多线程之锁优化策略" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/30/Java多线程之锁优化策略/" class="article-date">
+      <time datetime="2017-09-30T02:26:04.000Z" itemprop="datePublished">2017-09-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p>
+<h2 id="2、减小锁粒度"><a href="#2、减小锁粒度" class="headerlink" title="2、减小锁粒度"></a>2、减小锁粒度</h2><p>如：jdk1.6中，  ConcurrentHashMap中采取对segement加锁而不是整个map加锁，提高并发性。类似数据库中的行锁对表锁的优势。  </p>
+<h2 id="3、锁分离"><a href="#3、锁分离" class="headerlink" title="3、锁分离"></a>3、锁分离</h2><p>根据同步操作的性质，把锁划分为读锁和写锁，读锁之间不互斥，提高了并发性。  </p>
+<h2 id="4、锁粗化"><a href="#4、锁粗化" class="headerlink" title="4、锁粗化"></a>4、锁粗化</h2><p>在一个间隔性需要执行同步语句的线程中，如果在不连续的同步块间频繁加锁解锁是很耗性能的，因此把加锁范围扩大，把这些不连续的同步语句进行一次性加锁解锁。虽然线程持有锁的时间增加了，但是总体还是优化了的。  </p>
+<h2 id="5、锁消除"><a href="#5、锁消除" class="headerlink" title="5、锁消除"></a>5、锁消除</h2><p>锁消除是编译器做的事：根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸当前线程（即不会影响线程外的数据），那么可以认为这段代码是线程安全的，不需要加锁。  </p>
+<h1 id="二、Java虚拟机中采用的锁优化策略："><a href="#二、Java虚拟机中采用的锁优化策略：" class="headerlink" title="二、Java虚拟机中采用的锁优化策略："></a>二、Java虚拟机中采用的锁优化策略：</h1><p>主要包括偏向锁、轻量级锁和自旋锁。其中，<a href="http://xiaonanbobo.com/2017/08/13/synchronized的实现原理及锁的升级/" target="_blank" rel="external">偏向锁、轻量级锁及重量锁及其膨胀过程在之前博客中有了详细描述，</a>在这篇文章，我主要介绍下自旋锁。  </p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>如果当线程申请锁时，发现锁被占用，就让当前线程执行忙循环（自旋），观察持有锁的线程是否会很快释放锁。如果自旋后还没获得锁，才进入同步阻塞状态。  </p>
+<h3 id="自适应自旋"><a href="#自适应自旋" class="headerlink" title="自适应自旋"></a>自适应自旋</h3><p>自旋的线程的自旋时间为在同一个锁上，上一次线程自旋并获得锁的耗时。如果对于这个锁，自旋很少成功，就不自旋了，避免浪费CPU资源。 </p>
+<p>&emsp;<strong>为了尽量避免使用重量级锁，JVM首先会尝试轻量级锁，轻量级锁尝试使用CAS操作来获取锁，如果轻量级锁获取失败，说明存在竞争，但是可能很快就能获得锁，就会尝试自旋锁，将线程做几个空循环，每一次循环都不断尝试获得锁。如果自旋锁也失败，那么只能升级为重量级锁。</strong></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-26、复杂链表的复制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/29/26、复杂链表的复制/" class="article-date">
+      <time datetime="2017-09-29T12:08:00.000Z" itemprop="datePublished">2017-09-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    <span class="keyword">public</span> RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        <span class="keyword">if</span>(pHead==<span class="keyword">null</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        <span class="comment">//第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A'-&gt;B-&gt;B'-&gt;C-&gt;C'</span></div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            RandomListNode node=<span class="keyword">new</span> RandomListNode(pCur.label);</div><div class="line">            node.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>;</div><div class="line">            pCur.<span class="keyword">next</span>=node;</div><div class="line">            pCur=node.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第二步，复制random</span></div><div class="line">        pCur=pHead;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(pCur.random!=<span class="keyword">null</span>)</div><div class="line">                pCur.<span class="keyword">next</span>.random=pCur.random.<span class="keyword">next</span>;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第三步，拆分链表</span></div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.<span class="keyword">next</span>;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            pCur.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            <span class="keyword">if</span>(cur.<span class="keyword">next</span>!=<span class="keyword">null</span>)&#123;</div><div class="line">                cur.<span class="keyword">next</span>=cur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>;</div><div class="line">            cur=cur.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">    	<span class="keyword">return</span> pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-27、二叉搜索树转双向链表" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/29/27、二叉搜索树转双向链表/" class="article-date">
+      <time datetime="2017-09-29T10:35:00.000Z" itemprop="datePublished">2017-09-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> TreeNode &#123;</div><div class="line">    <span class="built_in">int</span> val = <span class="number">0</span>;</div><div class="line">    TreeNode <span class="built_in">left</span> = <span class="literal">null</span>;</div><div class="line">    TreeNode <span class="built_in">right</span> = <span class="literal">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> TreeNode(<span class="built_in">int</span> val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    TreeNode leftHead=<span class="literal">null</span>;</div><div class="line">    TreeNode rightHead=<span class="literal">null</span>;</div><div class="line">    <span class="keyword">public</span> TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        <span class="keyword">if</span>(pRootOfTree==<span class="literal">null</span>)</div><div class="line">            return <span class="literal">null</span>;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">left</span>);</div><div class="line">        <span class="keyword">if</span>(leftHead==<span class="literal">null</span>)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            rightHead.<span class="built_in">right</span>=pRootOfTree;</div><div class="line">            pRootOfTree.<span class="built_in">left</span>=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">right</span>);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-28、字符串的排列" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/29/28、字符串的排列/" class="article-date">
+      <time datetime="2017-09-29T08:34:00.000Z" itemprop="datePublished">2017-09-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、将第一个字符与后面每个字符交换<br>2、固定第一个字符<br>3、将固定后，后面字符的第一位字符分别与后面每个字符交换<br>以此类推。。。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9B%9E%E6%BA%AF.png" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">import java.util.*;</div><div class="line">public <span class="keyword">class</span> Solution &#123;</div><div class="line">    public ArrayList&lt;String&gt; Permutation(String str) &#123;</div><div class="line">       ArrayList <span class="keyword">list</span> =new ArrayList();</div><div class="line">        <span class="keyword">if</span>(str!=null &amp;&amp; str.<span class="built_in">length</span>()&gt;0)&#123;</div><div class="line">            PermutationHelper(str.toCharArray(),0,<span class="keyword">list</span>);</div><div class="line">            Collections.<span class="keyword">sort</span>(<span class="keyword">list</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">list</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    void PermutationHelper(<span class="keyword">char</span>[] <span class="keyword">cs</span>,int i,ArrayList <span class="keyword">list</span>)&#123;</div><div class="line">        <span class="comment">//结束条件，排到最后一位元素</span></div><div class="line">        <span class="keyword">if</span>(i==<span class="keyword">cs</span>.length-1)&#123;</div><div class="line">            String val=String.valueOf(<span class="keyword">cs</span>);</div><div class="line">            <span class="keyword">if</span>(!<span class="keyword">list</span>.contains(val))</div><div class="line">            	<span class="keyword">list</span>.add(val);</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="keyword">for</span>(int j=i;j&lt;<span class="keyword">cs</span>.length;j++)&#123;</div><div class="line">                swap(<span class="keyword">cs</span>,i,j);<span class="comment">//将第一个字符与后面每个字符交换</span></div><div class="line">                PermutationHelper(<span class="keyword">cs</span>,i+1,<span class="keyword">list</span>);<span class="comment">//将第一位字符固定</span></div><div class="line">                swap(<span class="keyword">cs</span>,i,j);<span class="comment">//第一个字符固定后，之后第一个字符与后面每个字符交换，直至固定后的第一个字符就是最后一个字符</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//两元素的交换</span></div><div class="line">    void swap(<span class="keyword">char</span>[] <span class="keyword">cs</span>,int i,int j)&#123;</div><div class="line">        <span class="keyword">char</span> temp=<span class="keyword">cs</span>[i];</div><div class="line">        <span class="keyword">cs</span>[i]=<span class="keyword">cs</span>[j];</div><div class="line">        <span class="keyword">cs</span>[j]=temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-深入java虚拟机之类加载机制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/31/深入java虚拟机之类加载机制/" class="article-date">
+      <time datetime="2017-08-31T07:51:00.000Z" itemprop="datePublished">2017-08-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、类加载过程"><a href="#一、类加载过程" class="headerlink" title="一、类加载过程"></a>一、类加载过程</h1><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用和卸载。其中类加载的过程包括了<strong>加载、验证、准备、解析和初始化</strong>五个阶段。加载、验证、准备、初始化这四个阶段发生的顺序是确定的，但解析阶段不一定，在某些情况下，解析阶段在初始化之后进行，这时为了支持Java的动态绑定。这几个阶段是按顺序开始，而不是按顺序进行或完成，因为这些阶段通常会互相交叉的进行，通常在一个阶段的执行过程中调用或激活另一个阶段。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD1.png" alt="image">  </p>
+<h2 id="静态绑定和动态绑定"><a href="#静态绑定和动态绑定" class="headerlink" title="静态绑定和动态绑定"></a>静态绑定和动态绑定</h2><p><strong>绑定是指把一个方法的调用与方法所在的类关联起来</strong>，分来静态绑定和动态绑定。<br>1、静态绑定<br>即前期绑定。在程序执行前方法已经被绑定，此时由编译器或其它连接程序实现。对java来说，可以理解为程序编译期的绑定。<strong>Java方法中只有final、static、private和构造方法是前期绑定的。</strong><br>2、动态绑定<br>即晚期绑定，也叫运行时绑定。在运行时根据具体对象的类型进行绑定，在java中，几乎所有的方法都是后期绑定的。  </p>
+<h2 id="1、加载"><a href="#1、加载" class="headerlink" title="1、加载"></a>1、加载</h2><p>加载是类加载过程的第一个阶段，在这个阶段，虚拟机完成以下3件事情：<br>1、通过一个类的全限定名来获取定义此类的二进制字节流。<br>2、将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。<br>3、在内存中生成一个代表这个类的java.lang.Class对象，作为方法区中各种数据的访问入口。<br>在加载阶段，可控性强，因为开发人员既可以使用系统提供的类加载器来完成加载，也可以自定义自己的类加载器来完成加载。  </p>
+<h2 id="2、验证"><a href="#2、验证" class="headerlink" title="2、验证"></a>2、验证</h2><p>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。大致分为四个阶段的验证：<br><strong>1、文件格式的验证</strong>：验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理，该验证的主要目的是保证输入的字节流能正确地解析并存储于方法区之内。经过这个阶段的验证后，字节流才会进入内存的方法区进行存储，后面三个验证都是基于方法区的存储结构进行的。<br><strong>2、元数据验证</strong>：对类中的各数据类型进行语法校验，保证不存在不符合Java语言规范的元数据信息。<br><strong>3、字节码验证</strong>：主要目的是通过数据流和控制流分析，对类的方法体进行校验分析，保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。<br><strong>4、符号引用验证</strong>：发生在虚拟机将符号引用转化为直接引用的时候（解析阶段发生该转化），主要是对类自身以外（常量池中的各种符号引用）的信息进行匹配性校验。  </p>
+<h2 id="3、准备"><a href="#3、准备" class="headerlink" title="3、准备"></a>3、准备</h2><p>准备阶段正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。<br>注意几点：<br>1、仅包括类变量（static修饰），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配到Java堆中。<br>2、这里设置的初始值通常是数据类型默认的零值（如0、0L、null、false等），而不是在java代码中被显式地赋予的值。<br>3、如果变量同时被final和static修饰（常量），类字段的字段属性表中存在ConstantValue属性，那么在准备阶段变量的值就会被初始化为ConstantValue属性所指定的值。可以理解为static final常量在编译期就将其结果放入了调用它的类的常量池中。  </p>
+<h2 id="4、解析"><a href="#4、解析" class="headerlink" title="4、解析"></a>4、解析</h2><p>解析阶段是虚拟机将常量池中的符号引用转化为直接引用的过程。  </p>
+<h3 id="符号引用和直接引用"><a href="#符号引用和直接引用" class="headerlink" title="符号引用和直接引用"></a>符号引用和直接引用</h3><p><strong>符号引用</strong>：以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。符合引用和虚拟机的内存布局无关，引用的目标并不一定已经加载到内存中。<br><strong>直接引用</strong>：可以是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄。直接引用和虚拟机的内存布局相关。<br>解析动作主要针对类或接口、字段、类方法、接口方法四类符号引用进行。</p>
+<h2 id="5、初始化"><a href="#5、初始化" class="headerlink" title="5、初始化"></a>5、初始化</h2><p>初始化阶段是类加载过程的最后一步，到这个阶段，才真正去执行类中定义的java代码。在准备阶段，类变量（static变量）已经被赋过一次系统要求的初始化值，而在初始化阶段，回去初始化类变量在java代码中定义的值以及其他资源。初始化阶段可理解为执行类构造器&lt;clinit&gt;()方法的过程。  </p>
+<h3 id="lt-clinit-gt-方法的执行规则："><a href="#lt-clinit-gt-方法的执行规则：" class="headerlink" title="&lt;clinit&gt;()方法的执行规则："></a>&lt;clinit&gt;()方法的执行规则：</h3><p><strong>1、&lt;clinit&gt;()方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块中的语句合并产生的，编译器收集的顺序是由语句在源文件中出现的顺序所决定的。静态语句块中只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句块中可以赋值，但是不能访问。</strong><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Test</span>&#123;</div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        i = <span class="number">0</span>;                 <span class="comment">//给变量赋值可以正常编译通过</span></div><div class="line">        System.<span class="keyword">out</span>.println(i); <span class="comment">//编译器会提示“非法向前引用”，不可访问定义在静态语句块之后的变量       </span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>2、&lt;clinit&gt;()方法和类的构造函数（实例构造器&lt;init&gt;()方法）不同，它不需要显式地调用父类构造器，虚拟机会保证在子类的&lt;clinit&gt;()方法执行之前，父类的&lt;clinit&gt;()方法已经执行完毕。因此在虚拟机中第一个被执行的&lt;clinit&gt;()方法的类肯定是Object。<br>3、由于父类的&lt;clinit&gt;()方法会先执行，意味着父类中定义的静态语句块要优先于子类的变量赋值操作。<br>4、&lt;clinit&gt;()方法对于类或接口来说并不是必需的，如果一个类中没有静态语句块，也没有对变量的赋值操作，那么这个类可以不用生成&lt;clinit&gt;()方法。<br>5、接口中不能使用静态语句块，但仍然有变量初始化的赋值操作，接口和类一样都会生成&lt;clinit&gt;()方法。但接口和类不同的是，执行接口的&lt;clinit&gt;()方法不需要执行父接口的&lt;clinit&gt;()方法。只有当父接口中定义的变量使用时，父接口才会初始化。<br>6、虚拟机会保证一个类的&lt;clinit&gt;()方法在多线程环境中能被正确地加锁和同步，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的&lt;clinit&gt;()方法，其他线程都需要阻塞等待，直到活动现场执行&lt;clinit&gt;()方法完毕。</strong>  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span></span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> A = <span class="number">1</span>;</div><div class="line">    sttatic&#123;</div><div class="line">        A = <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Sub</span> <span class="keyword">extends</span> <span class="title">Parent</span></span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> B = A;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">    System.out.println(Sub.B);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;&emsp;首先在准备阶段为类变量分配内存并设置类变量的初始值，此时A、B的值被赋为默认值0，之后在初始化阶段调用&lt;clinit&gt;()方法给他们赋予程序中指定的值。当我们调用Sub.B时会触发Sub的&lt;clinit&gt;()方法，根据规则2，在此之前，要先执行完其父类Parent的&lt;clinit&gt;()方法；又根据规则1，在执行&lt;clinit&gt;()方法时，需要按static语句或static变量赋值操作在代码中出现的顺序来执行相关的static语句，因此当触发执行Parent的&lt;clinit&gt;()方法时，会先将A赋值为1，再执行static语句块中语句，将A赋值为2；之后执行Sub的&lt;clinit&gt;()方法，这样会将B的赋值为2。  </p>
+<h1 id="二、类加载器"><a href="#二、类加载器" class="headerlink" title="二、类加载器"></a>二、类加载器</h1><p>类加载器用于实现类的加载动作。对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机中的唯一性。也就是说，比较两个类是否相等，只有在这两个类是由同一个类加载器加载的前提下才有意义。即使两个类来源于同一个Class文件，只要加载她们的类加载器i不同，那这两个类肯定是不同的。  </p>
+<h2 id="1、类加载器的分类"><a href="#1、类加载器的分类" class="headerlink" title="1、类加载器的分类"></a>1、类加载器的分类</h2><p>1、<strong>启动类加载器</strong>：负责加载存放在JDK\jre\lib下（JDK代表jdk安装目录），或是被-Xbootclasspath参数指定的路径中的，并且被虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。<br>2、<strong>扩展类加载器</strong>：负责加载JDK\jre\lib\ext目录下的或是被java.ext.dirs系统变量指定的路径中的所有类库。开发者可以直接使用扩展类加载器。<br>3、<strong>应用程序类加载器</strong>：负责加载用户类路径（ClassPath）上指定的类库。开发者可直接使用这个加载器，<strong>应用程序类加载器也是程序中默认的类加载器</strong>。<br>如果有必要，还可以加入自定义的类加载器。  </p>
+<h2 id="2、双亲委派模型"><a href="#2、双亲委派模型" class="headerlink" title="2、双亲委派模型"></a>2、双亲委派模型</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E7%B1%BB%E5%8A%A0%E8%BD%BD2.png" alt="image"><br>这种层次关系称为类加载器的双亲委派模型。我们把每一层上面的类加载器叫做当前层类加载器的父加载器，它们之间的父子关系不是通过继承而来的，而是使用组合关系来复用父加载器中的代码。  </p>
+<h3 id="①双亲委派模型的工作流程"><a href="#①双亲委派模型的工作流程" class="headerlink" title="①双亲委派模型的工作流程"></a>①双亲委派模型的工作流程</h3><p>&emsp;&emsp;<strong>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是这样，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父类加载器反馈自己无法完成这个加载请求时，子加载器才会尝试自己去加载。</strong>  </p>
+<h3 id="②双亲委派模型的好处"><a href="#②双亲委派模型的好处" class="headerlink" title="②双亲委派模型的好处"></a>②双亲委派模型的好处</h3><p>&emsp;&emsp;<strong>Java类随着它的类加载器一起具备了一种带有优先级的层次关系。</strong> 例如，java.lang.Object类，无论哪个类加载器要加载这个类，最终都是委派给处于模型最顶端的启动类加载器进行加载，因此Object类在程序的各个类加载器环境中都是同一个类。如果没有双亲委派模型，由各个类加载器自行去加载的话，若用户自己编写了一个java.lang.Object类，那系统中将会出现多个不同的Object类，那么Java类型体系中最基本的行为也无法保证。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+    </nav>
+  
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Xu Bo
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

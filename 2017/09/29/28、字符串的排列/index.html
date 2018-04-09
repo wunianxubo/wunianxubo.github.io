@@ -1,30 +1,534 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Wunian"><title>28、字符串的排列 | Wunian's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">28、字符串的排列</h1><a id="logo" href="/.">Wunian's Blog</a><p class="description">清风徐来，水波不兴</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">28、字符串的排列</h1><div class="post-meta">Sep 29, 2017<span> | </span><span class="category"><a href="/categories/剑指offer/">剑指offer</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2017/09/29/28、字符串的排列/" href="/2017/09/29/28、字符串的排列/#disqus_thread"></a><div class="post-content"><p>&emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Xu Bo" />
+
+
+
+<meta name="description" content="&amp;emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。   一、思路1、将第一个字符与后面每个字符交换2、固定第一个字符3、将固定后，后面字符的第一位字符分别与后面每个字符交换以此类推。。。      二、代码实现123456789101112131415161718">
+<meta name="keywords" content="算法，剑指offer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="28、字符串的排列">
+<meta property="og:url" content="http://yoursite.com/2017/09/29/28、字符串的排列/index.html">
+<meta property="og:site_name" content="Wunian&#39;s Blog">
+<meta property="og:description" content="&amp;emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。   一、思路1、将第一个字符与后面每个字符交换2、固定第一个字符3、将固定后，后面字符的第一位字符分别与后面每个字符交换以此类推。。。      二、代码实现123456789101112131415161718">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%9B%9E%E6%BA%AF.png">
+<meta property="og:updated_time" content="2018-04-09T01:06:17.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="28、字符串的排列">
+<meta name="twitter:description" content="&amp;emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。   一、思路1、将第一个字符与后面每个字符交换2、固定第一个字符3、将固定后，后面字符的第一位字符分别与后面每个字符交换以此类推。。。      二、代码实现123456789101112131415161718">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/%E5%9B%9E%E6%BA%AF.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Wunian&#39;s Blog" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>28、字符串的排列 | Wunian&#39;s Blog</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/xubo.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Xu Bo</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">清风徐来，水波不兴</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Xu Bo</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/xubo.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Xu Bo</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">清风徐来，水波不兴</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-28、字符串的排列" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/29/28、字符串的排列/" class="article-date">
+      <time datetime="2017-09-29T08:34:00.000Z" itemprop="datePublished">2017-09-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      28、字符串的排列
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。  </p>
 <h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、将第一个字符与后面每个字符交换<br>2、固定第一个字符<br>3、将固定后，后面字符的第一位字符分别与后面每个字符交换<br>以此类推。。。  </p>
 <p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9B%9E%E6%BA%AF.png" alt="image">  </p>
 <h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">import java.util.*;</div><div class="line">public <span class="keyword">class</span> Solution &#123;</div><div class="line">    public ArrayList&lt;String&gt; Permutation(String str) &#123;</div><div class="line">       ArrayList <span class="keyword">list</span> =new ArrayList();</div><div class="line">        <span class="keyword">if</span>(str!=null &amp;&amp; str.<span class="built_in">length</span>()&gt;0)&#123;</div><div class="line">            PermutationHelper(str.toCharArray(),0,<span class="keyword">list</span>);</div><div class="line">            Collections.<span class="keyword">sort</span>(<span class="keyword">list</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">list</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    void PermutationHelper(<span class="keyword">char</span>[] <span class="keyword">cs</span>,int i,ArrayList <span class="keyword">list</span>)&#123;</div><div class="line">        <span class="comment">//结束条件，排到最后一位元素</span></div><div class="line">        <span class="keyword">if</span>(i==<span class="keyword">cs</span>.length-1)&#123;</div><div class="line">            String val=String.valueOf(<span class="keyword">cs</span>);</div><div class="line">            <span class="keyword">if</span>(!<span class="keyword">list</span>.contains(val))</div><div class="line">            	<span class="keyword">list</span>.add(val);</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="keyword">for</span>(int j=i;j&lt;<span class="keyword">cs</span>.length;j++)&#123;</div><div class="line">                swap(<span class="keyword">cs</span>,i,j);<span class="comment">//将第一个字符与后面每个字符交换</span></div><div class="line">                PermutationHelper(<span class="keyword">cs</span>,i+1,<span class="keyword">list</span>);<span class="comment">//将第一位字符固定</span></div><div class="line">                swap(<span class="keyword">cs</span>,i,j);<span class="comment">//第一个字符固定后，之后第一个字符与后面每个字符交换，直至固定后的第一个字符就是最后一个字符</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//两元素的交换</span></div><div class="line">    void swap(<span class="keyword">char</span>[] <span class="keyword">cs</span>,int i,int j)&#123;</div><div class="line">        <span class="keyword">char</span> temp=<span class="keyword">cs</span>[i];</div><div class="line">        <span class="keyword">cs</span>[i]=<span class="keyword">cs</span>[j];</div><div class="line">        <span class="keyword">cs</span>[j]=temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</div><div class="tags"><a href="/tags/算法，剑指offer/">算法，剑指offer</a></div><div class="post-nav"><a class="pre" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a><a class="next" href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论 「请确保 disqus.com 可以正常加载」</button></div><script>var disqus_shortname = 'wunianxubo## Your disqus_shortname, e.g. username';
-var disqus_identifier = '2017/09/29/28、字符串的排列/';
-var disqus_title = '28、字符串的排列';
-var disqus_url = 'http://yoursite.com/2017/09/29/28、字符串的排列/';
-$('.btn_click_load').click(function() {
-  (function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-  $('.btn_click_load').css('display','none');
-});
-$.ajax({
-  url: 'https://disqus.com/next/config.json',
-  timeout: 3000,
-  type: 'GET',
-  success: (function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    $('.btn_click_load').css('display','none');
-  })(),
-  error: function() {
-    $('.btn_click_load').css('display','block');
-  }
-});</script><script id="dsq-count-scr" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/count.js" async></script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java基础/">java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式系统/">分布式系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/剑指offer/">剑指offer</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/大型网站技术架构核心原理/">大型网站技术架构核心原理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构与算法/">数据结构与算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/深入理解Java虚拟机/">深入理解Java虚拟机</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/java虚拟机/" style="font-size: 15px;">java虚拟机</a> <a href="/tags/算法，剑指offer/" style="font-size: 15px;">算法，剑指offer</a> <a href="/tags/数据结构/" style="font-size: 15px;">数据结构</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/java并发/" style="font-size: 15px;">java并发</a> <a href="/tags/java基础/" style="font-size: 15px;">java基础</a> <a href="/tags/java，java基础/" style="font-size: 15px;">java，java基础</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/Java/" style="font-size: 15px;">Java</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/大型网站技术架构/" style="font-size: 15px;">大型网站技术架构</a> <a href="/tags/分布式系统/" style="font-size: 15px;">分布式系统</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> Recent Comments</i></div><script type="text/javascript" src="//wunianxubo## Your disqus_shortname, e.g. username.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="https://www.zhihu.com/people/wu-nian-34-58/activities" title="zhihu" target="_blank">zhihu</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Wunian's Blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">Xu Bo</a></p>
+        <p><span>Created:</span>2017-09-29, 16:34:00</p>
+        <p><span>Updated:</span>2018-04-09, 09:06:17</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2017/09/29/28、字符串的排列/" title="28、字符串的排列">http://yoursite.com/2017/09/29/28、字符串的排列/</a>
+            <span class="copy-path" data-clipboard-text="From http://yoursite.com/2017/09/29/28、字符串的排列/　　By Xu Bo" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/09/29/27、二叉搜索树转双向链表/">
+                    27、二叉搜索树转双向链表
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/31/深入java虚拟机之类加载机制/">
+                    深入java虚拟机之类加载机制
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、思路"><span class="toc-number">1.</span> <span class="toc-text">一、思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、代码实现"><span class="toc-number">2.</span> <span class="toc-text">二、代码实现</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"28、字符串的排列　| Wunian's Blog　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/09/29/27、二叉搜索树转双向链表/" title="Pre: 27、二叉搜索树转双向链表">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/31/深入java虚拟机之类加载机制/" title="Next: 深入java虚拟机之类加载机制">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/AVL树的java实现/">AVL树的Java实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/16/Java中的BIO、NIO、AIO/">Java中的BIO、NIO、AIO</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/常用排序算法总结/">常用排序算法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/二叉树的先序、中序、后序遍历/">Java实现二叉树的先序、中序、后序遍历</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">字符串、基本数据类型等在堆、栈、常量池中的存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/Java对象的创建过程/">Java对象的创建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/JVM之垃圾收集器/">深入java虚拟机之垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/10/JVM之垃圾回收算法/">深入java虚拟机之垃圾回收算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/09/Java中的异常和处理/">Java中的异常和处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/（转）Java中锁概念总结/">（转）Java中锁概念总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/Java中的线程池/">Java中的线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/cglib动态代理/">cglib动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/JDK动态代理/">JDK动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/24/Java反射机制/">Java反射机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/23/ThreadLocal/">ThreadLocal</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/深入ReetrantLock/">深入ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/17/Semaphore/">Semaphore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/CyclicBarrier/">CyclicBarrier</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/CountDownLatch/">CountDownLatch</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/java队列同步器AQS/">Java队列同步器AQS</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/14/Java内存模型/">Java内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/13/synchronized的实现原理及锁的升级/">synchronized的实现原理及锁的升级</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/12/原子操作及CAS算法/">原子操作及CAS算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/深入剖析volatile/">深入剖析volatile</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/08/Java基础---深入浅出多线程/">深入浅出多线程</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Xu Bo
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
