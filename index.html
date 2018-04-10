@@ -244,6 +244,95 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-深入剖析volatile" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/10/深入剖析volatile/" class="article-date">
+      <time datetime="2018-04-10T02:54:00.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/10/深入剖析volatile/">深入剖析volatile</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、volatile的性质"><a href="#一、volatile的性质" class="headerlink" title="一、volatile的性质"></a>一、volatile的性质</h1><h2 id="1、volatile保证可见性"><a href="#1、volatile保证可见性" class="headerlink" title="1、volatile保证可见性"></a>1、volatile保证可见性</h2><ol>
+<li>volatile关键字保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这个新值对于其他线程来说是立即可见的。  <figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//线程1</span></div><div class="line"><span class="keyword">boolean</span> <span class="built_in">stop</span> =false;</div><div class="line"><span class="built_in">while</span>(!<span class="built_in">stop</span>)</div><div class="line">  doSomething();</div><div class="line"></div><div class="line"><span class="comment">//线程2</span></div><div class="line"><span class="built_in">stop</span>=true;  </div><div class="line">```  </div><div class="line">上面的代码，可能导致无法中断线程。当线程<span class="number">2</span>更改了<span class="built_in">stop</span>变量的值后，还没来得及写入内存中，线程<span class="number">2</span>就转去做其他事情了，线程<span class="number">1</span>由于不知道线程<span class="number">2</span>对<span class="built_in">stop</span>变量的修改，会一直循环下去。  </div><div class="line">&amp;emsp;&amp;emsp;使用<span class="keyword">volatile</span>修饰后，发生变化：  </div><div class="line">第一：使用<span class="keyword">volatile</span>会强制将修改的值写入主内存。  </div><div class="line">第二：使用<span class="keyword">volatile</span>的话，当线程<span class="number">2</span>进行修改时，会导致线程<span class="number">1</span>的工作内存中缓存变量<span class="built_in">stop</span>的缓存行无效。  </div><div class="line">第三：由于线程<span class="number">1</span>的工作内存中的缓存变量<span class="built_in">stop</span>的缓存行无效，所以线程<span class="number">1</span>再次读取变量<span class="built_in">stop</span>的值时会去主内存读取。  </div><div class="line">## <span class="number">2</span>、<span class="keyword">volatile</span>保证有序性</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>//x、y不是volatile变量<br>//flag为volatile变量<br>x=2;            //语句1<br>y=0;            //语句2<br>flag=true;      //语句3<br>x=4;            //语句4<br>y=-1            //语句5<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">①由于flag为<span class="keyword">volatile</span>变量，在进行指令重排序时，不会将语句<span class="number">3</span>放到语句<span class="number">1</span>、<span class="number">2</span>前面，也不会将语句<span class="number">3</span>放到语句<span class="number">4</span>、<span class="number">5</span>的后面，但是语句<span class="number">1</span>、<span class="number">2</span>的顺序，语句<span class="number">4</span>、<span class="number">5</span>的执行顺序是不做任何保证的。  </div><div class="line">②并且<span class="keyword">volatile</span>保证：执行到语句<span class="number">3</span>时，语句<span class="number">1</span>、<span class="number">2</span>必定是执行完毕类的，而且语句<span class="number">1</span>、<span class="number">2</span>的执行结果对语句<span class="number">3</span>、<span class="number">4</span>、<span class="number">5</span>是可见的。  </div><div class="line"></div><div class="line">## <span class="number">3</span>、<span class="keyword">volatile</span>不能保证原子性</div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;原子性：即一个操作或多个操作要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。  </span></div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;可以通过synchronized或Lock进行加锁，来保证操作的原子性。也可以通过使用java.util.concurrent.atomic包下提供的原子操作类（对基本数据类型的一些操作进行了封装）来实现。  </span></div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;atomic是利用CAS（Compare And Swap）来实现原子性操作的，CAS实际上利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性的操作。  </span></div><div class="line"></div><div class="line">## <span class="number">4</span>、<span class="keyword">volatile</span>的应用场景</div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;相较于synchronized，volatile是较为轻量级的同步策略，使用和执行成本更低，因为它不会引起线程上下文的切换和调度。但volatile无法代替synchronized，因为volatile无法保证操作的原子性。  </span></div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;使用volatile的两个条件：  </span></div><div class="line"><span class="number">1</span>、对变量的写操作不依赖于当前值  </div><div class="line"><span class="number">2</span>、 该变量没有包含在具有其他变量的不变式中  </div><div class="line">&lt;<span class="title">!--</span> more --&gt;</div><div class="line"># 二、<span class="keyword">volatile</span>的实现原理</div><div class="line">## <span class="number">1</span>、可见性</div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据读到内部缓存后再进行操作，但操作完后不知道何时才会写到内存中。  </span></div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;对声明了volatile变量进行写操作时，**JVM会向处理器发送一条Lock前缀的指令，将这个变量所在的缓存行的数据写回到系统内存。** 这一步确保了如果有其他线程对声明了volatile的变量进行修改时，则立即更新主内存中的数据。  </span></div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;但此时其他处理器的缓存的数据还是旧数据，**所以在多处理器的环境下，为了保证各个处理器的缓存一致，每个处理器会通过嗅探在总线上传播的数据来检查自己的缓存是否过期。当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置为无效状态，当处理器要对这个数据进行修改时，会强制重新从系统内存把数据读到处理器缓存里。** 这一步确保了其他线程获得的声明了volatile的变量都是从主内存中获取的最新的。  </span></div><div class="line">## <span class="number">2</span>、有序性</div><div class="line">&amp;emsp<span class="comment">;&amp;emsp;Lock前缀指令实际上相当于一个内存屏障（也称内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障之后的位置，即在执行到内存屏障这句指令时，在它之前的操作已经全部完成。  </span></div><div class="line"></div><div class="line">## <span class="number">3</span>、Lock前缀指令</div><div class="line">在多处理器下会引发两件事：  </div><div class="line">①将当前处理器缓存行的数据写回到系统内存。  </div><div class="line">②这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。  </div><div class="line">## <span class="keyword">volatile</span>的内存语义</div><div class="line">![image](http://osrmzp<span class="number">0</span>jr.bkt.clouddn.com/<span class="symbol">%E5</span><span class="symbol">%B1</span><span class="symbol">%8</span>F<span class="symbol">%E5</span><span class="symbol">%B9</span><span class="symbol">%95</span><span class="symbol">%E5</span><span class="symbol">%BF</span><span class="symbol">%AB</span><span class="symbol">%E7</span><span class="symbol">%85</span><span class="symbol">%A7</span><span class="symbol">%202018</span><span class="number">-04</span><span class="number">-10</span><span class="symbol">%20</span><span class="symbol">%E4</span><span class="symbol">%B8</span><span class="symbol">%8</span>A<span class="symbol">%E5</span><span class="symbol">%8</span>D<span class="symbol">%8810</span>.<span class="number">32.06</span>.png)</div><div class="line">- 第二个操作是<span class="keyword">volatile</span>写时，不管第一个操作是什么，都不能重排序。这个规则确保<span class="keyword">volatile</span>写之前的操作不会被编译器重排序到<span class="keyword">volatile</span>写之后。  </div><div class="line">- 第一个操作时<span class="keyword">volatile</span>读时，不管第二个操作是什么，都不能重排序。这个规则确保<span class="keyword">volatile</span>读之后的操作不会被编译器重排序到<span class="keyword">volatile</span>读之前。  </div><div class="line">- 当第一个操作时<span class="keyword">volatile</span>写，第二个操作时<span class="keyword">volatile</span>读时，不能重排序。</div><div class="line">### 内存屏障类型</div><div class="line">![image](http://osrmzp<span class="number">0</span>jr.bkt.clouddn.com/<span class="symbol">%E5</span><span class="symbol">%B1</span><span class="symbol">%8</span>F<span class="symbol">%E5</span><span class="symbol">%B9</span><span class="symbol">%95</span><span class="symbol">%E5</span><span class="symbol">%BF</span><span class="symbol">%AB</span><span class="symbol">%E7</span><span class="symbol">%85</span><span class="symbol">%A7</span><span class="symbol">%202018</span><span class="number">-04</span><span class="number">-10</span><span class="symbol">%20</span><span class="symbol">%E4</span><span class="symbol">%B8</span><span class="symbol">%8</span>A<span class="symbol">%E5</span><span class="symbol">%8</span>D<span class="symbol">%8810</span>.<span class="number">42.48</span>.png)</div><div class="line">为了实现<span class="keyword">volatile</span>的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。基于保守策略的JMM内存屏障插入策略如下（**在实际的执行中，只要不改变<span class="keyword">volatile</span>写-读的内存语义，编译器可以根据具体情况省略一些不必要的屏障**）：  </div><div class="line">- 在每个<span class="keyword">volatile</span>写操作的前面插入一个StoreStore屏障，用于禁止上面的普通写和下面的<span class="keyword">volatile</span>写重排序。</div><div class="line">- 在每个<span class="keyword">volatile</span>写操作的后面插入一个StoreLoad屏障，用于禁止上面的<span class="keyword">volatile</span>写操作和下面可能有的<span class="keyword">volatile</span>读/写重排序。</div><div class="line">![image](http://osrmzp<span class="number">0</span>jr.bkt.clouddn.com/<span class="keyword">volatile</span><span class="symbol">%E5</span><span class="symbol">%86</span><span class="symbol">%99</span>.png)</div><div class="line">- 在每个<span class="keyword">volatile</span>读操作的后面插入一个LoadLoad屏障，用于禁止下面的普通读操作和上面的<span class="keyword">volatile</span>读重排序。</div><div class="line">- 在每个<span class="keyword">volatile</span>读操作的后面插入一个LoadStore屏障，用于禁止下面的普通写操作和上面的<span class="keyword">volatile</span>读重排序。</div><div class="line">![image](http://osrmzp<span class="number">0</span>jr.bkt.clouddn.com/<span class="keyword">volatile</span><span class="symbol">%E8</span><span class="symbol">%AF</span><span class="symbol">%BB.png</span>)</div><div class="line"></div><div class="line">### <span class="keyword">volatile</span>写-读的内存语义</div></pre></td></tr></table></figure></p>
+<p>class VolatileExample{<br>    int a = 0;<br>    volatile boolean flag = false;</p>
+<pre><code>public void writer(){
+    a = 1;        //1
+    flag = true;  //2
+}
+
+public void reader(){
+    if(flag){      //3
+        int i = a; //4
+    }
+}
+</code></pre><p>}<br>```<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-04-10%20%E4%B8%8A%E5%8D%889.48.12.png" alt="image"></p>
+<ul>
+<li>volatile写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量值刷新到主内存。（包含volatile变量flag和定义在flag之前的共享变量a）  </li>
+<li>volatile读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量。<br>综合来看的话，即读线程B读一个volatile变量后，写线程A在写这个volatile变量之前所有可见的共享变量的值都将立即变得对读线程B可见。<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3></li>
+<li>线程A写一个volatile变量，实际上是线程A向接下来将要读这个volatile变量的某个线程发出了（其对共享变量所做修改的）消息。</li>
+<li>线程B读一个volatile变量，实质上是线程B接收了之前某个线程发出的（在写这个volatile变量之前对共享变量所做修改的）消息。</li>
+<li>线程A写一个volatile变量，随后线程B读这个volatile变量，这个过程实质上是线程A通过主内存向线程B发送消息。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-04-10%20%E4%B8%8A%E5%8D%889.48.27.png" alt="image">  </li>
+</ul>
+<h2 id="4、JSR-133为什么要增强volatile的内存语义"><a href="#4、JSR-133为什么要增强volatile的内存语义" class="headerlink" title="4、JSR-133为什么要增强volatile的内存语义"></a>4、JSR-133为什么要增强volatile的内存语义</h2><p>在JSR-133之前的JMM中，虽然不允许volatile变量之间重排序，但旧的JMM允许volatile变量与普通变量重排序。则上面VolatileExample程序可能被重排序成下列时序运行。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-04-10%20%E4%B8%8A%E5%8D%8810.13.36.png" alt="image"><br>&emsp;&emsp;此时，步骤3和4重排序，造成结果：读线程B执行4时，不一定能看到写线程A在执行1时对共享变量的修改。而正确的结果应该是线程A对volatile的写，使得共享变量和volatile变量刷新到主内存，之后步骤3对volatile的读使得线程B本地内存数据失效，并从主内存中取出最新数据。<br>&emsp;&emsp;在旧的JMM中，volatile的写-读不具有锁的释放-获取所具有的内存语义<br>。（<strong>volatile写对应锁的释放，volatile读对应锁的获取</strong>），所以专家组决定增强volatile的内存语义，严格限制编程器和处理器对volatile变量与普通变量的重排序，让volatile的写-读具有锁的释放-获取所具有的内存语义。  </p>
+<h1 id="三、volatile和synchronized的区别"><a href="#三、volatile和synchronized的区别" class="headerlink" title="三、volatile和synchronized的区别"></a>三、volatile和synchronized的区别</h1><p>1、volatile的本质实在告诉jvm当前变量在寄存器（工作内存）中的值是不确定的，需要从主存中去获取。synchronized则是锁定当前线程才可以访问该变量，其他线程被阻塞住；<br>2、volatile只能使用在变量，synchronized可以使用在变量和方法上；<br>3、volatile只能实现变量的修改可见性，synchronized可以保证变量修改的可见性和原子性；<br>4、volatile不会造成线程的阻塞，synchronized会造成线程的阻塞。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-分布式系统互斥性与幂等性问题的分析和解决" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -526,6 +615,80 @@
 
 
   
+    <article id="post-单例模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/单例模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/单例模式/">单例模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。  </p>
+<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
+<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -628,80 +791,6 @@
 <h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只需工厂方法进行修改</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-单例模式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/01/单例模式/" class="article-date">
-      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/单例模式/">单例模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
-<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。  </p>
-<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
-<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
-<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -853,82 +942,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Linux系统——IO多路复用select、poll、epoll的区别与使用" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/" class="article-date">
-      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="I-O复用简述"><a href="#I-O复用简述" class="headerlink" title="I/O复用简述"></a>I/O复用简述</h2><p>&emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞于某个特定的I/O系统调用。<br>&emsp;select()、poll()、epoll()都是I/O多路复用的机制。<strong>I/O多路复用通过一种机制，可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</strong> select()、poll()、epoll()本质上都是同步IO，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说，读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会负责把数据从内核拷贝到用户空间。  </p>
-<h2 id="一、select-的使用"><a href="#一、select-的使用" class="headerlink" title="一、select()的使用"></a>一、select()的使用</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int <span class="keyword">select</span>(<span class="built_in">int</span> nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, <span class="keyword">struct</span> timeval *<span class="keyword">timeout</span>);</div><div class="line">nfds:要监视的文件描述符的范围，一般取描述符数的最大值+1</div><div class="line">readfds：监视的可读描述符集合，只要有文件描述符即将进行读操作，这个文件描述符就存储到这。</div><div class="line">writefds：监视的可写描述符集合。</div><div class="line">exceptfds：监视的错误异常描述符集合。</div></pre></td></tr></table></figure>
-<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化（可读、可写或错误异常）。select()函数监视的文件描述符分为三类，分别是readfds，writefds，exceptfds。调用select()函数会阻塞，直到有描述符就绪（有数据可读、可写或者有错误异常，或者超时），函数才会返回。当select()函数返回后，可以通过遍历fdset来找到就绪的描述符。</p>
-<h3 id="select-的优缺点"><a href="#select-的优缺点" class="headerlink" title="select()的优缺点"></a>select()的优缺点</h3><p><strong>优点：</strong> 几乎在所有平台是都支持，具有良好的跨平台支持。<br><strong>缺点：</strong><br>1、每次调用select()，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大；同时每次调用select()，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。<br>2、单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但是这样也会造成效率的降低。  </p>
-<h2 id="二、poll-的使用"><a href="#二、poll-的使用" class="headerlink" title="二、poll()的使用"></a>二、poll()的使用</h2><p>select()和poll()系统调用的本质一样，管理多个描述符也是进行轮询，根据描述符的状态进行处理，但是poll()没有最大文件描述符数量的限制（但数量过大后性能也会下降）。poll()和select()同样存在一个缺点是，包含大量文件描述符的集合被整体复制于用户态和内核态之间，而不论这些文件描述符是否就绪，随文件描述符数量的增加而线性增大。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span><span class="params">(struct pollfd *fds, <span class="keyword">nfds_t</span> nfds, <span class="keyword">int</span> timeout)</span></span></div></pre></td></tr></table></figure></p>
-<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>&emsp;监视并等待多个文件描述符的属性变化。<br>&emsp;poll()的实现和select()非常相似，只是描述fd集合的方式不同，poll()使用pollfd结构而不是select()的fd_set结构，还有就是poll()没有最大文件描述符数量的限制，其他的都差不多。  </p>
-<h2 id="三、epoll-的使用"><a href="#三、epoll-的使用" class="headerlink" title="三、epoll()的使用"></a>三、epoll()的使用</h2><p>epoll()是select()和poll()的增强版本。但epoll更加灵活，没有描述符限制。epoll()使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。<br>epoll操作过程需要三个接口：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create</span>(<span class="params"><span class="keyword">int</span> size</span>)</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_ctl</span>(<span class="params"><span class="keyword">int</span> epfd, <span class="keyword">int</span> op, <span class="keyword">int</span> fd, <span class="keyword">struct</span> epoll_event *<span class="keyword">event</span></span>)</span>;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span>(<span class="params"><span class="keyword">int</span> epfd, <span class="keyword">struct</span> epoll_event *events, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout</span>)</span>;</div></pre></td></tr></table></figure></p>
-<h3 id="1、int-epoll-create-int-size"><a href="#1、int-epoll-create-int-size" class="headerlink" title="1、int epoll_create(int size)"></a>1、int epoll_create(int size)</h3><p><strong>功能：</strong> 该函数生成一个epoll专用的文件描述符（创建一个epoll的句柄）。在创建好epoll句柄后，它就是会占用一个fd值，在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。  </p>
-<h3 id="2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event"><a href="#2、int-epoll-ctl-int-epfd-int-op-int-fd-struct-epoll-event-event" class="headerlink" title="2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)"></a>2、int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</h3><p><strong>功能：</strong> epoll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，epoll需要先注册要监听的事件类型。  </p>
-<h3 id="3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout"><a href="#3、int-epoll-wait-int-epfd-struct-epoll-event-events-int-maxevents-int-timeout" class="headerlink" title="3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)"></a>3、int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)</h3><p><strong>功能：</strong> 等待事件的发生，收集在epoll监控的事件中已经发送的事件，类似于select()调用。  </p>
-<p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
-<p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
-<h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
     </div>
 
       
