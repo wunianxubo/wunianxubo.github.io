@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-11T09:07:30.650Z</updated>
+  <updated>2018-04-11T09:16:56.141Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2018/04/11/Java%20NIO%20%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/"/>
     <id>http://yoursite.com/2018/04/11/Java NIO 原理解析/</id>
     <published>2018-04-11T09:05:00.000Z</published>
-    <updated>2018-04-11T09:07:30.650Z</updated>
+    <updated>2018-04-11T09:16:56.141Z</updated>
     
     <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NIO（Non-blocking I/O，在Java领域，也成为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，Netty其实就是对NIO的一种封装，以实现高性能。<br>那么NIO的本质是怎样的？它是怎样与事件模型结合来解放线程、提高系统吞吐的呢？<br><a id="more"></a></p>
 <h2 id="传统BIO模型分析"><a href="#传统BIO模型分析" class="headerlink" title="传统BIO模型分析"></a>传统BIO模型分析</h2><pre>
@@ -50,39 +50,27 @@ class ConnectIOnHandler extends Thread{
     }
 }
 </pre>
-这是一个经典的一个连接一个线程的模型，主线程死循环等待新连接的到来，到来后accept阻塞等待数据的到来，到来后便开启新的线程来处理数据。  
 
-这里使用线程池，来让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机1000）的情况下，这种模型是比较不错的，可以让每一个连接专注于自己的I/O并且编程模型简单，也不用过多考虑系统的过载、限流等问题。  
-
-但是，这个模型最本质的问题在于，严重依赖于线程。但是线程是很昂贵的资源，主要体现在：
-1. 线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。
-2. 线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。
-3. 线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU 使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。
-4. 容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。  
-
-所以，在面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的，我们需要更高效的I/O处理模型。  
-## 常见I/O模型对比
-所有的系统I/O都分为两个阶段：等待就绪和操作。比方说，读函数就分为等待系统可读和真正的读；写函数与之类似。  
-
-需要说明的是等待就绪的阻塞是不使用CPU的，是在**空等**。而真正的读写操作的阻塞是使用CPU的，真正在干活，而且这个过程非常快，属于memory copy，带宽通常在1GB/s以上，可以理解为基本不耗时。  
-
-下图是几种常见I/O模型的对比：  
-![image](http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg)  
-
-以socket.read()为例：  
-
-对于BIO：如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读到的数据。  
-
-对于NIO：如果TCP RecvBuffer里有数据，就把数据从网卡读到内存，并且返回给用户；反之则直接返回0，不会造成阻塞。  
-
-对于AIO：不但等待就绪时非阻塞的，就连数据从网卡到内存的过程都是异步的，由操作系统去完成一系列的操作。  
-
-换句话说，BIO中用户最关心"我要读"，NIO中用户最关心"我可以读了"，AIO中用户更关注的是"读完了"。
-
-NIO的重要特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作时同步阻塞的（消耗CPU但是性能非常高）。  
-
-## 如何结合事件模型使用NIO同步非阻塞特性
-<pre>
+<p>这是一个经典的一个连接一个线程的模型，主线程死循环等待新连接的到来，到来后accept阻塞等待数据的到来，到来后便开启新的线程来处理数据。    </p>
+<p>这里使用线程池，来让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机1000）的情况下，这种模型是比较不错的，可以让每一个连接专注于自己的I/O并且编程模型简单，也不用过多考虑系统的过载、限流等问题。    </p>
+<p>但是，这个模型最本质的问题在于，严重依赖于线程。但是线程是很昂贵的资源，主要体现在：  </p>
+<ol>
+<li>线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。  </li>
+<li>线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。  </li>
+<li>线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU 使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。  </li>
+<li>容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。  </li>
+</ol>
+<p>所以，在面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的，我们需要更高效的I/O处理模型。    </p>
+<h2 id="常见I-O模型对比"><a href="#常见I-O模型对比" class="headerlink" title="常见I/O模型对比"></a>常见I/O模型对比</h2><p>所有的系统I/O都分为两个阶段：等待就绪和操作。比方说，读函数就分为等待系统可读和真正的读；写函数与之类似。  </p>
+<p>需要说明的是等待就绪的阻塞是不使用CPU的，是在<strong>空等</strong>。而真正的读写操作的阻塞是使用CPU的，真正在干活，而且这个过程非常快，属于memory copy，带宽通常在1GB/s以上，可以理解为基本不耗时。  </p>
+<p>下图是几种常见I/O模型的对比：<br><img src="http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg" alt="image">  </p>
+<p>以socket.read()为例：  </p>
+<p>对于BIO：如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读到的数据。  </p>
+<p>对于NIO：如果TCP RecvBuffer里有数据，就把数据从网卡读到内存，并且返回给用户；反之则直接返回0，不会造成阻塞。  </p>
+<p>对于AIO：不但等待就绪时非阻塞的，就连数据从网卡到内存的过程都是异步的，由操作系统去完成一系列的操作。  </p>
+<p>换句话说，BIO中用户最关心”我要读”，NIO中用户最关心”我可以读了”，AIO中用户更关注的是”读完了”。</p>
+<p>NIO的重要特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作时同步阻塞的（消耗CPU但是性能非常高）。  </p>
+<h2 id="如何结合事件模型使用NIO同步非阻塞特性"><a href="#如何结合事件模型使用NIO同步非阻塞特性" class="headerlink" title="如何结合事件模型使用NIO同步非阻塞特性"></a>如何结合事件模型使用NIO同步非阻塞特性</h2><pre>
 interface ChannelHandler{
       void channelReadable(Channel channel);
       void channelWritable(Channel channel);
@@ -171,7 +159,7 @@ interface ChannelHandler{
     <link href="http://yoursite.com/2018/04/10/%E6%B7%B1%E5%85%A5%E5%89%96%E6%9E%90volatile/"/>
     <id>http://yoursite.com/2018/04/10/深入剖析volatile/</id>
     <published>2018-04-10T02:54:00.000Z</published>
-    <updated>2018-04-10T03:16:44.510Z</updated>
+    <updated>2018-04-11T09:17:48.026Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、volatile的性质"><a href="#一、volatile的性质" class="headerlink" title="一、volatile的性质"></a>一、volatile的性质</h1><h2 id="1、volatile保证可见性"><a href="#1、volatile保证可见性" class="headerlink" title="1、volatile保证可见性"></a>1、volatile保证可见性</h2><ol>
 <li>volatile关键字保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这个新值对于其他线程来说是立即可见的。  </li>
@@ -186,7 +174,7 @@ while(!stop)
 stop=true;  
 </pre>
 
-<p>上面的代码，可能导致无法中断线程。当线程2更改了stop变量的值后，还没来得及写入内存中，线程2就转去做其他事情了，线程1由于不知道线程2对stop变量的修改，会一直循环下去。<br>&nbsp;&nbsp;使用volatile修饰后，发生变化：<br>第一：使用volatile会强制将修改的值写入主内存。<br>第二：使用volatile的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量stop的缓存行无效。<br>第三：由于线程1的工作内存中的缓存变量stop的缓存行无效，所以线程1再次读取变量stop的值时会去主内存读取。    </p>
+<p>上面的代码，可能导致无法中断线程。当线程2更改了stop变量的值后，还没来得及写入内存中，线程2就转去做其他事情了，线程1由于不知道线程2对stop变量的修改，会一直循环下去。<br>&nbsp;&nbsp;使用volatile修饰后，发生变化：<br>第一：使用volatile会强制将修改的值写入主内存。<br>第二：使用volatile的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量stop的缓存行无效。<br>第三：由于线程1的工作内存中的缓存变量stop的缓存行无效，所以线程1再次读取变量stop的值时会去主内存读取。<br><a id="more"></a></p>
 <h2 id="2、volatile保证有序性"><a href="#2、volatile保证有序性" class="headerlink" title="2、volatile保证有序性"></a>2、volatile保证有序性</h2><pre> 
 //x、y不是volatile变量
 //flag为volatile变量
@@ -199,7 +187,7 @@ y=-1            //语句5
 
 <p>①由于flag为volatile变量，在进行指令重排序时，不会将语句3放到语句1、2前面，也不会将语句3放到语句4、5的后面，但是语句1、2的顺序，语句4、5的执行顺序是不做任何保证的。<br>②并且volatile保证：执行到语句3时，语句1、2必定是执行完毕类的，而且语句1、2的执行结果对语句3、4、5是可见的。  </p>
 <h2 id="3、volatile不能保证原子性"><a href="#3、volatile不能保证原子性" class="headerlink" title="3、volatile不能保证原子性"></a>3、volatile不能保证原子性</h2><p>&emsp;&emsp;原子性：即一个操作或多个操作要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。<br>&emsp;&emsp;可以通过synchronized或Lock进行加锁，来保证操作的原子性。也可以通过使用java.util.concurrent.atomic包下提供的原子操作类（对基本数据类型的一些操作进行了封装）来实现。<br>&emsp;&emsp;atomic是利用CAS（Compare And Swap）来实现原子性操作的，CAS实际上利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性的操作。  </p>
-<h2 id="4、volatile的应用场景"><a href="#4、volatile的应用场景" class="headerlink" title="4、volatile的应用场景"></a>4、volatile的应用场景</h2><p>&emsp;&emsp;相较于synchronized，volatile是较为轻量级的同步策略，使用和执行成本更低，因为它不会引起线程上下文的切换和调度。但volatile无法代替synchronized，因为volatile无法保证操作的原子性。<br>&emsp;&emsp;使用volatile的两个条件：<br>1、对变量的写操作不依赖于当前值<br>2、 该变量没有包含在具有其他变量的不变式中<br><a id="more"></a></p>
+<h2 id="4、volatile的应用场景"><a href="#4、volatile的应用场景" class="headerlink" title="4、volatile的应用场景"></a>4、volatile的应用场景</h2><p>&emsp;&emsp;相较于synchronized，volatile是较为轻量级的同步策略，使用和执行成本更低，因为它不会引起线程上下文的切换和调度。但volatile无法代替synchronized，因为volatile无法保证操作的原子性。<br>&emsp;&emsp;使用volatile的两个条件：<br>1、对变量的写操作不依赖于当前值<br>2、 该变量没有包含在具有其他变量的不变式中  </p>
 <h1 id="二、volatile的实现原理"><a href="#二、volatile的实现原理" class="headerlink" title="二、volatile的实现原理"></a>二、volatile的实现原理</h1><h2 id="1、可见性"><a href="#1、可见性" class="headerlink" title="1、可见性"></a>1、可见性</h2><p>&emsp;&emsp;处理器为了提高处理速度，不直接和内存进行通讯，而是将系统内存的数据读到内部缓存后再进行操作，但操作完后不知道何时才会写到内存中。<br>&emsp;&emsp;对声明了volatile变量进行写操作时，<strong>JVM会向处理器发送一条Lock前缀的指令，将这个变量所在的缓存行的数据写回到系统内存。</strong> 这一步确保了如果有其他线程对声明了volatile的变量进行修改时，则立即更新主内存中的数据。<br>&emsp;&emsp;但此时其他处理器的缓存的数据还是旧数据，<strong>所以在多处理器的环境下，为了保证各个处理器的缓存一致，每个处理器会通过嗅探在总线上传播的数据来检查自己的缓存是否过期。当处理器发现自己缓存行对应的内存地址被修改了，就会将当前处理器的缓存行设置为无效状态，当处理器要对这个数据进行修改时，会强制重新从系统内存把数据读到处理器缓存里。</strong> 这一步确保了其他线程获得的声明了volatile的变量都是从主内存中获取的最新的。  </p>
 <h2 id="2、有序性"><a href="#2、有序性" class="headerlink" title="2、有序性"></a>2、有序性</h2><p>&emsp;&emsp;Lock前缀指令实际上相当于一个内存屏障（也称内存栅栏），它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障之后的位置，即在执行到内存屏障这句指令时，在它之前的操作已经全部完成。  </p>
 <h2 id="3、Lock前缀指令"><a href="#3、Lock前缀指令" class="headerlink" title="3、Lock前缀指令"></a>3、Lock前缀指令</h2><p>在多处理器下会引发两件事：<br>①将当前处理器缓存行的数据写回到系统内存。<br>②这个写回内存的操作会使在其他CPU里缓存了该内存地址的数据无效。  </p>
@@ -241,20 +229,7 @@ while(!stop)
 stop=true;  
 &lt;/pre&gt;
 
-&lt;p&gt;上面的代码，可能导致无法中断线程。当线程2更改了stop变量的值后，还没来得及写入内存中，线程2就转去做其他事情了，线程1由于不知道线程2对stop变量的修改，会一直循环下去。&lt;br&gt;&amp;nbsp;&amp;nbsp;使用volatile修饰后，发生变化：&lt;br&gt;第一：使用volatile会强制将修改的值写入主内存。&lt;br&gt;第二：使用volatile的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量stop的缓存行无效。&lt;br&gt;第三：由于线程1的工作内存中的缓存变量stop的缓存行无效，所以线程1再次读取变量stop的值时会去主内存读取。    &lt;/p&gt;
-&lt;h2 id=&quot;2、volatile保证有序性&quot;&gt;&lt;a href=&quot;#2、volatile保证有序性&quot; class=&quot;headerlink&quot; title=&quot;2、volatile保证有序性&quot;&gt;&lt;/a&gt;2、volatile保证有序性&lt;/h2&gt;&lt;pre&gt; 
-//x、y不是volatile变量
-//flag为volatile变量
-x=2;            //语句1
-y=0;            //语句2
-flag=true;      //语句3
-x=4;            //语句4
-y=-1            //语句5
-&lt;/pre&gt;
-
-&lt;p&gt;①由于flag为volatile变量，在进行指令重排序时，不会将语句3放到语句1、2前面，也不会将语句3放到语句4、5的后面，但是语句1、2的顺序，语句4、5的执行顺序是不做任何保证的。&lt;br&gt;②并且volatile保证：执行到语句3时，语句1、2必定是执行完毕类的，而且语句1、2的执行结果对语句3、4、5是可见的。  &lt;/p&gt;
-&lt;h2 id=&quot;3、volatile不能保证原子性&quot;&gt;&lt;a href=&quot;#3、volatile不能保证原子性&quot; class=&quot;headerlink&quot; title=&quot;3、volatile不能保证原子性&quot;&gt;&lt;/a&gt;3、volatile不能保证原子性&lt;/h2&gt;&lt;p&gt;&amp;emsp;&amp;emsp;原子性：即一个操作或多个操作要么全部执行并且执行的过程不会被任何因素打断，要么就都不执行。&lt;br&gt;&amp;emsp;&amp;emsp;可以通过synchronized或Lock进行加锁，来保证操作的原子性。也可以通过使用java.util.concurrent.atomic包下提供的原子操作类（对基本数据类型的一些操作进行了封装）来实现。&lt;br&gt;&amp;emsp;&amp;emsp;atomic是利用CAS（Compare And Swap）来实现原子性操作的，CAS实际上利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性的操作。  &lt;/p&gt;
-&lt;h2 id=&quot;4、volatile的应用场景&quot;&gt;&lt;a href=&quot;#4、volatile的应用场景&quot; class=&quot;headerlink&quot; title=&quot;4、volatile的应用场景&quot;&gt;&lt;/a&gt;4、volatile的应用场景&lt;/h2&gt;&lt;p&gt;&amp;emsp;&amp;emsp;相较于synchronized，volatile是较为轻量级的同步策略，使用和执行成本更低，因为它不会引起线程上下文的切换和调度。但volatile无法代替synchronized，因为volatile无法保证操作的原子性。&lt;br&gt;&amp;emsp;&amp;emsp;使用volatile的两个条件：&lt;br&gt;1、对变量的写操作不依赖于当前值&lt;br&gt;2、 该变量没有包含在具有其他变量的不变式中&lt;br&gt;
+&lt;p&gt;上面的代码，可能导致无法中断线程。当线程2更改了stop变量的值后，还没来得及写入内存中，线程2就转去做其他事情了，线程1由于不知道线程2对stop变量的修改，会一直循环下去。&lt;br&gt;&amp;nbsp;&amp;nbsp;使用volatile修饰后，发生变化：&lt;br&gt;第一：使用volatile会强制将修改的值写入主内存。&lt;br&gt;第二：使用volatile的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量stop的缓存行无效。&lt;br&gt;第三：由于线程1的工作内存中的缓存变量stop的缓存行无效，所以线程1再次读取变量stop的值时会去主内存读取。&lt;br&gt;
     
     </summary>
     
@@ -478,9 +453,9 @@ y=-1            //语句5
     <link href="http://yoursite.com/2017/12/05/%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%A1%BA%E5%BA%8F%E6%89%A7%E8%A1%8C%EF%BC%9F/"/>
     <id>http://yoursite.com/2017/12/05/如何保证线程的顺序执行？/</id>
     <published>2017-12-05T08:43:00.000Z</published>
-    <updated>2018-04-09T01:06:17.620Z</updated>
+    <updated>2018-04-11T09:18:12.696Z</updated>
     
-    <content type="html"><![CDATA[<p>&nbsp;&nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  </p>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：<br><a id="more"></a></p>
 <h2 id="1、使用join关键字实现"><a href="#1、使用join关键字实现" class="headerlink" title="1、使用join关键字实现"></a>1、使用join关键字实现</h2><p>join关键字用于让当前线程等待join线程执行完毕后再执行，否则会处于等待阻塞状态。有两种方法：<br>方法一：<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="keyword">Task</span> <span class="keyword">implements</span> Runnable&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> taskId;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">Task</span>(<span class="keyword">int</span> taskId)&#123;</div><div class="line">        <span class="keyword">this</span>.taskId = taskId; </div><div class="line">    &#125;    </div><div class="line">    </div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> run()&#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"线程"</span>+taskId+<span class="string">"运行！"</span>)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> method1() <span class="keyword">throws</span> InterruptedException&#123;</div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">1</span>));</div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">2</span>));</div><div class="line">    Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">3</span>));</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t1.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程1执行完</span></div><div class="line">    t2.start();</div><div class="line">    t2.<span class="keyword">join</span>();<span class="comment">//阻塞主线程，直到线程2执行完</span></div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>方法二：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"线程1运行！"</span>)；</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                t1.<span class="keyword">join</span>();</div><div class="line">                System.<span class="keyword">out</span>.println(<span class="string">"线程2运行！"</span>);</div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">        @<span class="function">Override</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>)&#123;</div><div class="line">            <span class="keyword">try</span>&#123;</div><div class="line">                t2.<span class="keyword">join</span>();</div><div class="line">                System.<span class="keyword">out</span>.println(<span class="string">"线程3运行！"</span>);</div><div class="line">            &#125;<span class="keyword">catch</span>(Exception e)&#123;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    t1.start();</div><div class="line">    t2.start();</div><div class="line">    t3.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="2、使用队列"><a href="#2、使用队列" class="headerlink" title="2、使用队列"></a>2、使用队列</h2><p>把线程依次加入到队列里，按顺序执行即可。newSingleThreadExecutor是一个只有一个消费线程的线程池，这个消费线程会按队列FIFO的顺序去任务队列里取任务，只要保证三个线程按顺序放入就可以了。<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="keyword">Task</span> <span class="keyword">implements</span> Runnable&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> taskId;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">Task</span>(<span class="keyword">int</span> taskId)&#123;</div><div class="line">        <span class="keyword">this</span>.taskId = taskId;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> run()&#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"线程"</span>+taskId+<span class="string">"执行！"</span>)；</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> method3()&#123;</div><div class="line">    ExecutorService threadPool = Executors.newSingleThreadExecutor();</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">1</span>));</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">2</span>));</div><div class="line">    threadPool.execute(<span class="keyword">new</span> <span class="keyword">Task</span>(<span class="number">3</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -489,8 +464,7 @@ y=-1            //语句5
     
     <summary type="html">
     
-      &lt;p&gt;&amp;nbsp;&amp;nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：  &lt;/p&gt;
-&lt;h2 id=&quot;1、使用join关键字实现&quot;&gt;&lt;a hre
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;有T1，T2，T3三个线程，如何保证T1执行完再执行T2，T2执行完再执行T3？这个问题是面试的常考问题，涉及到了一些java并发知识的实际应用。主要有下面三种方法，依次讲解下：&lt;br&gt;
     
     </summary>
     
@@ -504,23 +478,30 @@ y=-1            //语句5
   </entry>
   
   <entry>
-    <title>抽象工厂模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
+    <title>工厂方法模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/工厂方法模式/</id>
     <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-09T01:06:17.620Z</updated>
+    <updated>2018-04-11T09:22:53.809Z</updated>
     
-    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>Sender接口：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public<span class="built_in"> interface </span>Sender&#123;</div><div class="line">    public void Send();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>两个实现类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>两个工厂类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendMailFactory</span> <span class="keyword">implements</span> <span class="title">Provider</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendSmsFactory</span> <span class="keyword">implements</span> <span class="title">Provider</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>提供一个接口：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public<span class="built_in"> interface </span>Provider&#123;</div><div class="line">    public Sender produce();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+    <content type="html"><![CDATA[<h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br><a id="more"></a><br>举例如下：发送邮件和发送短信的例子</p>
+<p><pre><br>//两者的共同接口<br>public interface Sender{<br>    public void Send();<br>}</pre></p>
+<p>//创建实现类<br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</p>
+<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}</p>
+<p>//建工厂类<br>public class SendFactory{<br>    public Sender produce(String type){<br>        if(“mail”.equals(type)){<br>            return new MailSender();<br>        }else if(“sms”.equals(type)){<br>            return new SmsSender();<br>        }else{<br>            System.out.println(“请输入正确的类型！”)<br>            return null;<br>        }<br>    }<br>}</p>
+<p>//测试类<br>public class FactoryTest{<br>    public static void main(String[] args){<br>        SendFactory factory = new SendFactory();<br>        Sender sender = factory.produce(“mail”);<br>        sender.Send();<br>    }<br>}<br></p>
+<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image">  </p>
+<p><pre><br>//只需工厂方法进行修改<br>public class SendFactory{<br>    public Sender produceMail(){<br>        return new MailSender();<br>    }<br>    public Sender produceSms(){<br>        return new SmsSender();<br>    }<br>}</pre></p>
+<p>//测试类<br>public class FactoryTest{<br>    public static void main(String[] args){<br>        SendFactory factory = new SendFactory();<br>        Sender sender = factory.produceMail();<br>        sender.Send();<br>    }<br>}<br></p>
+<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。  </p>
+<p><pre><br>public class SendFactory{<br>    public static Sender produceMail(){<br>        return new MailSender();<br>    }<br>    public static Sender produceSms(){<br>        return new SmsSender();<br>    }<br>}</pre></p>
+<p>//测试类<br>public class FactoryTest{<br>    public static void main(String[] args){<br>        Sender sender = SendFactory.produceMail();<br>        sender.Send();<br>    }<br>}<br></p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=
+      &lt;h1 id=&quot;一、普通工厂模式&quot;&gt;&lt;a href=&quot;#一、普通工厂模式&quot; class=&quot;headerlink&quot; title=&quot;一、普通工厂模式&quot;&gt;&lt;/a&gt;一、普通工厂模式&lt;/h1&gt;&lt;p&gt;就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory1.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
     
     </summary>
     
@@ -536,11 +517,11 @@ y=-1            //语句5
     <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
     <id>http://yoursite.com/2017/12/01/单例模式/</id>
     <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-09T01:06:17.619Z</updated>
+    <updated>2018-04-11T09:24:08.012Z</updated>
     
     <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
 <h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
-<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br><a id="more"></a></p>
 <h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
@@ -553,7 +534,9 @@ y=-1            //语句5
     
     <summary type="html">
     
-      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容
+      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  &lt;/p&gt;
+&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;p&gt;保证整个应用中某个实例有且只有一个。  &lt;/p&gt;
+&lt;h2 id=&quot;应用场合&quot;&gt;&lt;a href=&quot;#应用场合&quot; class=&quot;headerlink&quot; title=&quot;应用场合&quot;&gt;&lt;/a&gt;应用场合&lt;/h2&gt;&lt;p&gt;有些对象我们只需要一个，比如&lt;strong&gt;配置文件、工具类、线程池、缓存、日志对象&lt;/strong&gt;等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。&lt;br&gt;
     
     </summary>
     
@@ -565,21 +548,25 @@ y=-1            //语句5
   </entry>
   
   <entry>
-    <title>工厂方法模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/工厂方法模式/</id>
+    <title>抽象工厂模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
     <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-09T01:06:17.620Z</updated>
+    <updated>2018-04-11T09:20:41.700Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者的共同接口</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//创建实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">(String type)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="string">"mail"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"sms"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.println(<span class="string">"请输入正确的类型！"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produce(<span class="string">"mail"</span>);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只需工厂方法进行修改</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br><a id="more"></a><br>Sender接口：</p>
+<p><pre><br>public interface Sender{<br>    public void Send();<br>}<br></pre><br>两个实现类：  </p>
+<p><pre><br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</pre></p>
+<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}<br><br>两个工厂类：  </p>
+<p><pre><br>public class SendMailFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new MailSender();<br>    }<br>}</pre></p>
+<p>public class SendSmsFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new SmsSender();<br>    }<br>}<br><br>提供一个接口：  </p>
+<p><pre><br>public interface Provider{<br>    public Sender produce();<br>}<br></pre><br>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;一、普通工厂模式&quot;&gt;&lt;a href=&quot;#一、普通工厂模式&quot; class=&quot;headerlink&quot; title=&quot;一、普通工厂模式&quot;&gt;&lt;/a&gt;一、普通工厂模式&lt;/h1&gt;&lt;p&gt;就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：&lt;br&gt;&lt;img s
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory3.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
     
     </summary>
     
@@ -649,6 +636,40 @@ y=-1            //语句5
   </entry>
   
   <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2018-04-09T01:06:17.618Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>IO多路复用select、poll、epoll的区别与使用</title>
     <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
@@ -673,40 +694,6 @@ y=-1            //语句5
     <summary type="html">
     
       &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
-    
-    </summary>
-    
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux的五种I/O模型</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2018-04-09T01:06:17.618Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
     
     </summary>
     
@@ -796,9 +783,9 @@ y=-1            //语句5
     <link href="http://yoursite.com/2017/10/13/%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/"/>
     <id>http://yoursite.com/2017/10/13/常用排序算法总结/</id>
     <published>2017-10-13T13:07:00.000Z</published>
-    <updated>2018-04-09T01:06:17.620Z</updated>
+    <updated>2018-04-11T09:20:59.913Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="各比较排序性能比较"><a href="#各比较排序性能比较" class="headerlink" title="各比较排序性能比较"></a>各比较排序性能比较</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%AF%94%E8%BE%83%E6%8E%92%E5%BA%8F%E6%80%A7%E8%83%BD.jpg" alt="image">  </p>
+    <content type="html"><![CDATA[<h3 id="各比较排序性能比较"><a href="#各比较排序性能比较" class="headerlink" title="各比较排序性能比较"></a>各比较排序性能比较</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%AF%94%E8%BE%83%E6%8E%92%E5%BA%8F%E6%80%A7%E8%83%BD.jpg" alt="image"><br><a id="more"></a></p>
 <h3 id="1、冒泡排序"><a href="#1、冒泡排序" class="headerlink" title="1、冒泡排序"></a>1、冒泡排序</h3><p>1、比较相邻的元素，如果前一个比后一个大，就把他们两个调换位置。<br>2、对每一对相邻的元素作同样的工作，从开始一对到最后一对，完成后，最后的元素会是最大的数。<br>3、针对所有元素重复上面的步骤，除了最后一个元素。<br>4、对剩下越来越少的元素重复上面的步骤。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------加了isSorted标记，在第一趟运行时，发现无需进行下一趟比较，可把时间复杂度降为O(n)</div><div class="line">平均时间复杂度---------O(n^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;arr.length-<span class="number">1</span>; i++)&#123;<span class="comment">//比较趟数</span></div><div class="line">            <span class="keyword">boolean</span> isSorted = <span class="keyword">true</span>;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;arr.length-<span class="number">1</span>-i; j++)&#123;<span class="comment">//当前趟需要的比较次数</span></div><div class="line">                <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>])&#123;<span class="comment">//将最大元素浮到数组最后</span></div><div class="line">                    isSorted = <span class="keyword">false</span>;</div><div class="line">                    swap(arr,j,j+<span class="number">1</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(isSorted)&#123;<span class="comment">//当前趟比较完后，发现没有元素需要交换位置，表示数组已有序，不必进行下一趟。</span></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123;<span class="comment">//元素交换位置（通用）</span></div><div class="line">        <span class="keyword">int</span> temp=arr[i];</div><div class="line">        arr[i]=arr[j];</div><div class="line">        arr[j]=temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="2、鸡尾酒排序"><a href="#2、鸡尾酒排序" class="headerlink" title="2、鸡尾酒排序"></a>2、鸡尾酒排序</h3><p>也叫定向冒泡排序，是冒泡排序的一种改进。与冒泡排序不同在于先从低到高将最大元素放到后面然后再从高到底将最小元素放到前面。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%B8%A1%E5%B0%BE%E9%85%92%E6%8E%92%E5%BA%8F.gif" alt="image"><br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">分类-------------------内部比较排序</div><div class="line">数据结构---------------数组</div><div class="line">最差时间复杂度---------O(<span class="built_in">n</span>^<span class="number">2</span>)</div><div class="line">最优时间复杂度---------如果数组一开始大部分已经排序过的话，接近O(<span class="built_in">n</span>)</div><div class="line">平均时间复杂度---------O(<span class="built_in">n</span>^<span class="number">2</span>)</div><div class="line">所需辅助空间-----------O(<span class="number">1</span>)</div><div class="line">稳定性-----------------稳定</div><div class="line"></div><div class="line">void CocktailSort(<span class="built_in">int</span>[] A, <span class="built_in">int</span> <span class="built_in">n</span>)&#123;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">left</span>=<span class="number">0</span>;//初始化边界</div><div class="line">    <span class="built_in">int</span> <span class="built_in">right</span>=<span class="built_in">n</span>-<span class="number">1</span>;</div><div class="line">    while(<span class="built_in">left</span> &lt; <span class="built_in">right</span>)&#123;</div><div class="line">    </div><div class="line">        for(<span class="built_in">int</span> i=<span class="built_in">left</span>; i&lt;<span class="built_in">right</span>; i++)&#123;//从左往右，将最大元素放到数组最后</div><div class="line">            <span class="built_in">if</span>(A[i]&gt;A[i+<span class="number">1</span>])</div><div class="line">                swap(A, i, i+<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">right</span>--;</div><div class="line">        </div><div class="line">        for(<span class="built_in">int</span> i=<span class="built_in">right</span>; i&gt;<span class="built_in">left</span>; i--)&#123;//从右往左，将最小元素放到数组最前</div><div class="line">            <span class="built_in">if</span>(A[i]&lt;A[i-<span class="number">1</span>])</div><div class="line">                swap(A, i ,i-<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">left</span>++;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="3、选择排序"><a href="#3、选择排序" class="headerlink" title="3、选择排序"></a>3、选择排序</h3><p>选择排序，第一次遍历找到最小（大）元素，放到序列的起始位置，之后每次遍历继续寻找最小（大）元素，放到已排序序列的后面，直到所有元素都排序完毕。<br>选择排序和冒泡排序的区别：冒泡排序一次交换相邻两个顺序不合法的元素位置，从而将最小（大）元素放到合适的位置；而选择排序没遍历一次都记住当前最小（大）元素的位置，最后仅需一次交换操作就可以放到合适的位置。  </p>
@@ -817,7 +804,7 @@ y=-1            //语句5
     
     <summary type="html">
     
-      &lt;h3 id=&quot;各比较排序性能比较&quot;&gt;&lt;a href=&quot;#各比较排序性能比较&quot; class=&quot;headerlink&quot; title=&quot;各比较排序性能比较&quot;&gt;&lt;/a&gt;各比较排序性能比较&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com
+      &lt;h3 id=&quot;各比较排序性能比较&quot;&gt;&lt;a href=&quot;#各比较排序性能比较&quot; class=&quot;headerlink&quot; title=&quot;各比较排序性能比较&quot;&gt;&lt;/a&gt;各比较排序性能比较&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/%E6%AF%94%E8%BE%83%E6%8E%92%E5%BA%8F%E6%80%A7%E8%83%BD.jpg&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
     
     </summary>
     
@@ -835,9 +822,10 @@ y=-1            //语句5
     <link href="http://yoursite.com/2017/10/13/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%85%88%E5%BA%8F%E3%80%81%E4%B8%AD%E5%BA%8F%E3%80%81%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86/"/>
     <id>http://yoursite.com/2017/10/13/二叉树的先序、中序、后序遍历/</id>
     <published>2017-10-13T13:06:00.000Z</published>
-    <updated>2018-04-09T01:06:17.619Z</updated>
+    <updated>2018-04-11T09:24:28.269Z</updated>
     
     <content type="html"><![CDATA[<h3 id="先序遍历示意图："><a href="#先序遍历示意图：" class="headerlink" title="先序遍历示意图："></a>先序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
+<a id="more"></a>
 <h3 id="中序遍历示意图："><a href="#中序遍历示意图：" class="headerlink" title="中序遍历示意图："></a>中序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
 <h3 id="后序遍历示意图："><a href="#后序遍历示意图：" class="headerlink" title="后序遍历示意图："></a>后序遍历示意图：</h3><p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86.jpg" alt="image">  </p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public class <span class="keyword">Node</span> <span class="title">&#123;  </span></div><div class="line">    private int data;  </div><div class="line">    private <span class="keyword">Node</span> <span class="title">leftNode</span>;  </div><div class="line">    private <span class="keyword">Node</span> <span class="title">rightNode</span>;  </div><div class="line">    public <span class="keyword">Node</span><span class="title">(int</span> data, <span class="keyword">Node</span> <span class="title">leftNode</span>, <span class="keyword">Node</span> <span class="title">rightNode</span>)&#123;  </div><div class="line">        this.data = data;  </div><div class="line">        this.leftNode = leftNode;  </div><div class="line">        this.rightNode = rightNode;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    public int getData() &#123;  </div><div class="line">        return data;  </div><div class="line">    &#125;  </div><div class="line">    public void setData(int data) &#123;  </div><div class="line">        this.data = data;  </div><div class="line">    &#125;  </div><div class="line">    public <span class="keyword">Node</span> <span class="title">getLeftNode</span>() &#123;  </div><div class="line">        return leftNode;  </div><div class="line">    &#125;  </div><div class="line">    public void setLeftNode(<span class="keyword">Node</span> <span class="title">leftNode</span>) &#123;  </div><div class="line">        this.leftNode = leftNode;  </div><div class="line">    &#125;  </div><div class="line">    public <span class="keyword">Node</span> <span class="title">getRightNode</span>() &#123;  </div><div class="line">        return rightNode;  </div><div class="line">    &#125;  </div><div class="line">    public void setRightNode(<span class="keyword">Node</span> <span class="title">rightNode</span>) &#123;  </div><div class="line">        this.rightNode = rightNode;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -847,7 +835,7 @@ y=-1            //语句5
     
     <summary type="html">
     
-      &lt;h3 id=&quot;先序遍历示意图：&quot;&gt;&lt;a href=&quot;#先序遍历示意图：&quot; class=&quot;headerlink&quot; title=&quot;先序遍历示意图：&quot;&gt;&lt;/a&gt;先序遍历示意图：&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/%E5
+      &lt;h3 id=&quot;先序遍历示意图：&quot;&gt;&lt;a href=&quot;#先序遍历示意图：&quot; class=&quot;headerlink&quot; title=&quot;先序遍历示意图：&quot;&gt;&lt;/a&gt;先序遍历示意图：&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86.jpg&quot; alt=&quot;image&quot;&gt;  &lt;/p&gt;
     
     </summary>
     

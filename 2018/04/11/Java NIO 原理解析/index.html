@@ -22,12 +22,13 @@
 <meta property="og:url" content="http://yoursite.com/2018/04/11/Java NIO 原理解析/index.html">
 <meta property="og:site_name" content="Wunian&#39;s Blog">
 <meta property="og:description" content="前言NIO（Non-blocking I/O，在Java领域，也成为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，Netty其实就是对NIO的一种封装，以实现高性能。那么NIO的本质是怎样的？它是怎样与事件模型结合来解放线程、提高系统吞吐的呢？">
+<meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg">
 <meta property="og:image" content="http://osrmzp0jr.bkt.clouddn.com/reactor.jpg">
-<meta property="og:updated_time" content="2018-04-11T09:07:30.650Z">
+<meta property="og:updated_time" content="2018-04-11T09:16:56.141Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java NIO 原理解析">
 <meta name="twitter:description" content="前言NIO（Non-blocking I/O，在Java领域，也成为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，Netty其实就是对NIO的一种封装，以实现高性能。那么NIO的本质是怎样的？它是怎样与事件模型结合来解放线程、提高系统吞吐的呢？">
-<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/reactor.jpg">
+<meta name="twitter:image" content="http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -313,39 +314,27 @@ class ConnectIOnHandler extends Thread{
     }
 }
 </pre>
-这是一个经典的一个连接一个线程的模型，主线程死循环等待新连接的到来，到来后accept阻塞等待数据的到来，到来后便开启新的线程来处理数据。  
 
-这里使用线程池，来让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机1000）的情况下，这种模型是比较不错的，可以让每一个连接专注于自己的I/O并且编程模型简单，也不用过多考虑系统的过载、限流等问题。  
-
-但是，这个模型最本质的问题在于，严重依赖于线程。但是线程是很昂贵的资源，主要体现在：
-1. 线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。
-2. 线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。
-3. 线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU 使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。
-4. 容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。  
-
-所以，在面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的，我们需要更高效的I/O处理模型。  
-## 常见I/O模型对比
-所有的系统I/O都分为两个阶段：等待就绪和操作。比方说，读函数就分为等待系统可读和真正的读；写函数与之类似。  
-
-需要说明的是等待就绪的阻塞是不使用CPU的，是在**空等**。而真正的读写操作的阻塞是使用CPU的，真正在干活，而且这个过程非常快，属于memory copy，带宽通常在1GB/s以上，可以理解为基本不耗时。  
-
-下图是几种常见I/O模型的对比：  
-![image](http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg)  
-
-以socket.read()为例：  
-
-对于BIO：如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读到的数据。  
-
-对于NIO：如果TCP RecvBuffer里有数据，就把数据从网卡读到内存，并且返回给用户；反之则直接返回0，不会造成阻塞。  
-
-对于AIO：不但等待就绪时非阻塞的，就连数据从网卡到内存的过程都是异步的，由操作系统去完成一系列的操作。  
-
-换句话说，BIO中用户最关心"我要读"，NIO中用户最关心"我可以读了"，AIO中用户更关注的是"读完了"。
-
-NIO的重要特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作时同步阻塞的（消耗CPU但是性能非常高）。  
-
-## 如何结合事件模型使用NIO同步非阻塞特性
-<pre>
+<p>这是一个经典的一个连接一个线程的模型，主线程死循环等待新连接的到来，到来后accept阻塞等待数据的到来，到来后便开启新的线程来处理数据。    </p>
+<p>这里使用线程池，来让线程的创建和回收成本相对较低。在活动连接数不是特别高（小于单机1000）的情况下，这种模型是比较不错的，可以让每一个连接专注于自己的I/O并且编程模型简单，也不用过多考虑系统的过载、限流等问题。    </p>
+<p>但是，这个模型最本质的问题在于，严重依赖于线程。但是线程是很昂贵的资源，主要体现在：  </p>
+<ol>
+<li>线程的创建和销毁成本很高，在Linux这样的操作系统中，线程本质上就是一个进程。创建和销毁都是重量级的系统函数。  </li>
+<li>线程本身占用较大内存，像Java的线程栈，一般至少分配512K～1M的空间，如果系统中的线程数过千，恐怕整个JVM的内存都会被吃掉一半。  </li>
+<li>线程的切换成本是很高的。操作系统发生线程切换的时候，需要保留线程的上下文，然后执行系统调用。如果线程数过高，可能执行线程切换的时间甚至会大于线程执行的时间，这时候带来的表现往往是系统load偏高、CPU 使用率特别高（超过20%以上)，导致系统几乎陷入不可用的状态。  </li>
+<li>容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。  </li>
+</ol>
+<p>所以，在面对十万甚至百万级连接的时候，传统的BIO模型是无能为力的，我们需要更高效的I/O处理模型。    </p>
+<h2 id="常见I-O模型对比"><a href="#常见I-O模型对比" class="headerlink" title="常见I/O模型对比"></a>常见I/O模型对比</h2><p>所有的系统I/O都分为两个阶段：等待就绪和操作。比方说，读函数就分为等待系统可读和真正的读；写函数与之类似。  </p>
+<p>需要说明的是等待就绪的阻塞是不使用CPU的，是在<strong>空等</strong>。而真正的读写操作的阻塞是使用CPU的，真正在干活，而且这个过程非常快，属于memory copy，带宽通常在1GB/s以上，可以理解为基本不耗时。  </p>
+<p>下图是几种常见I/O模型的对比：<br><img src="http://osrmzp0jr.bkt.clouddn.com/io%20moxing.jpg" alt="image">  </p>
+<p>以socket.read()为例：  </p>
+<p>对于BIO：如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读到的数据。  </p>
+<p>对于NIO：如果TCP RecvBuffer里有数据，就把数据从网卡读到内存，并且返回给用户；反之则直接返回0，不会造成阻塞。  </p>
+<p>对于AIO：不但等待就绪时非阻塞的，就连数据从网卡到内存的过程都是异步的，由操作系统去完成一系列的操作。  </p>
+<p>换句话说，BIO中用户最关心”我要读”，NIO中用户最关心”我可以读了”，AIO中用户更关注的是”读完了”。</p>
+<p>NIO的重要特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作时同步阻塞的（消耗CPU但是性能非常高）。  </p>
+<h2 id="如何结合事件模型使用NIO同步非阻塞特性"><a href="#如何结合事件模型使用NIO同步非阻塞特性" class="headerlink" title="如何结合事件模型使用NIO同步非阻塞特性"></a>如何结合事件模型使用NIO同步非阻塞特性</h2><pre>
 interface ChannelHandler{
       void channelReadable(Channel channel);
       void channelWritable(Channel channel);
@@ -423,7 +412,7 @@ interface ChannelHandler{
         <p><span>Title:</span><a href="/2018/04/11/Java NIO 原理解析/">Java NIO 原理解析</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage">Xu Bo</a></p>
         <p><span>Created:</span>2018-04-11, 17:05:00</p>
-        <p><span>Updated:</span>2018-04-11, 17:07:30</p>
+        <p><span>Updated:</span>2018-04-11, 17:16:56</p>
         <p>
             <span>Full URL:</span><a class="post-url" href="/2018/04/11/Java NIO 原理解析/" title="Java NIO 原理解析">http://yoursite.com/2018/04/11/Java NIO 原理解析/</a>
             <span class="copy-path" data-clipboard-text="From http://yoursite.com/2018/04/11/Java NIO 原理解析/　　By Xu Bo" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
@@ -453,7 +442,7 @@ interface ChannelHandler{
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传统BIO模型分析"><span class="toc-number">2.</span> <span class="toc-text">传统BIO模型分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proactor与Reactor"><span class="toc-number">3.</span> <span class="toc-text">Proactor与Reactor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在Reactor中实现读"><span class="toc-number">3.1.</span> <span class="toc-text">在Reactor中实现读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在Proactor中实现读："><span class="toc-number">3.2.</span> <span class="toc-text">在Proactor中实现读：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buffer的选择"><span class="toc-number">4.</span> <span class="toc-text">Buffer的选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NIO存在的问题"><span class="toc-number">5.</span> <span class="toc-text">NIO存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">6.</span> <span class="toc-text">参考文章</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传统BIO模型分析"><span class="toc-number">2.</span> <span class="toc-text">传统BIO模型分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见I-O模型对比"><span class="toc-number">3.</span> <span class="toc-text">常见I/O模型对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何结合事件模型使用NIO同步非阻塞特性"><span class="toc-number">4.</span> <span class="toc-text">如何结合事件模型使用NIO同步非阻塞特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proactor与Reactor"><span class="toc-number">5.</span> <span class="toc-text">Proactor与Reactor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在Reactor中实现读"><span class="toc-number">5.1.</span> <span class="toc-text">在Reactor中实现读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在Proactor中实现读："><span class="toc-number">5.2.</span> <span class="toc-text">在Proactor中实现读：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buffer的选择"><span class="toc-number">6.</span> <span class="toc-text">Buffer的选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NIO存在的问题"><span class="toc-number">7.</span> <span class="toc-text">NIO存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">8.</span> <span class="toc-text">参考文章</span></a></li></ol>
         
     </div>
     <style>
@@ -521,7 +510,7 @@ interface ChannelHandler{
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/Java NIO 原理解析/">Java NIO 原理解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/10/深入剖析volatile/">深入剖析volatile</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/AVL树的java实现/">AVL树的Java实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/16/Java中的BIO、NIO、AIO/">Java中的BIO、NIO、AIO</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/常用排序算法总结/">常用排序算法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/二叉树的先序、中序、后序遍历/">Java实现二叉树的先序、中序、后序遍历</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">字符串、基本数据类型等在堆、栈、常量池中的存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/Java对象的创建过程/">Java对象的创建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/JVM之垃圾收集器/">深入java虚拟机之垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/10/JVM之垃圾回收算法/">深入java虚拟机之垃圾回收算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/09/Java中的异常和处理/">Java中的异常和处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/（转）Java中锁概念总结/">（转）Java中锁概念总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/Java中的线程池/">Java中的线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/cglib动态代理/">cglib动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/JDK动态代理/">JDK动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/24/Java反射机制/">Java反射机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/23/ThreadLocal/">ThreadLocal</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/深入ReetrantLock/">深入ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/17/Semaphore/">Semaphore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/CyclicBarrier/">CyclicBarrier</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/CountDownLatch/">CountDownLatch</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/java队列同步器AQS/">Java队列同步器AQS</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/14/Java内存模型/">Java内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/13/synchronized的实现原理及锁的升级/">synchronized的实现原理及锁的升级</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/12/原子操作及CAS算法/">原子操作及CAS算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/08/Java基础---深入浅出多线程/">深入浅出多线程</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/11/Java NIO 原理解析/">Java NIO 原理解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/10/深入剖析volatile/">深入剖析volatile</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/分布式系统互斥性与幂等性问题的分析和解决/">分布式系统互斥性与幂等性问题的分析和解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/04/大型网站的架构模式/">大型网站的架构模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/（转）Java内存溢出和内存泄漏/">Java内存溢出与内存泄漏</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/如何保证线程的顺序执行？/">如何保证线程的顺序执行？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/工厂方法模式/">工厂方法模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/单例模式/">单例模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/">IO多路复用select、poll、epoll的区别与使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/AVL树的java实现/">AVL树的Java实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/16/Java中的BIO、NIO、AIO/">Java中的BIO、NIO、AIO</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/常用排序算法总结/">常用排序算法总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/二叉树的先序、中序、后序遍历/">Java实现二叉树的先序、中序、后序遍历</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/字符串、基本数据类型等在堆、栈、常量池中的存储/">字符串、基本数据类型等在堆、栈、常量池中的存储</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/Java对象的创建过程/">Java对象的创建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/11/JVM之垃圾收集器/">深入java虚拟机之垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/10/JVM之垃圾回收算法/">深入java虚拟机之垃圾回收算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/09/Java中的异常和处理/">Java中的异常和处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/（转）Java中锁概念总结/">（转）Java中锁概念总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/29/28、字符串的排列/">28、字符串的排列</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/31/深入java虚拟机之类加载机制/">深入java虚拟机之类加载机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/Java中的线程池/">Java中的线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/cglib动态代理/">cglib动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/25/JDK动态代理/">JDK动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/24/Java反射机制/">Java反射机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/23/ThreadLocal/">ThreadLocal</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/深入ReetrantLock/">深入ReetrantLock</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/17/Semaphore/">Semaphore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/CyclicBarrier/">CyclicBarrier</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/CountDownLatch/">CountDownLatch</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/java队列同步器AQS/">Java队列同步器AQS</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/14/Java内存模型/">Java内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/13/synchronized的实现原理及锁的升级/">synchronized的实现原理及锁的升级</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/12/原子操作及CAS算法/">原子操作及CAS算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/08/Java基础---深入浅出多线程/">深入浅出多线程</a></li></ul>
 
 
 
