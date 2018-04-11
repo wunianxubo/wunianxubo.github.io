@@ -244,6 +244,74 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Java NIO 原理解析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/11/Java NIO 原理解析/" class="article-date">
+      <time datetime="2018-04-11T09:05:00.000Z" itemprop="datePublished">2018-04-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/11/Java NIO 原理解析/">Java NIO 原理解析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NIO（Non-blocking I/O，在Java领域，也成为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，Netty其实就是对NIO的一种封装，以实现高性能。<br>那么NIO的本质是怎样的？它是怎样与事件模型结合来解放线程、提高系统吞吐的呢？<br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/04/11/Java NIO 原理解析/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-深入剖析volatile" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -620,73 +688,6 @@ y=-1            //语句5
 
 
   
-    <article id="post-工厂方法模式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/01/工厂方法模式/" class="article-date">
-      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/工厂方法模式/">工厂方法模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者的共同接口</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//创建实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">(String type)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="string">"mail"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"sms"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.println(<span class="string">"请输入正确的类型！"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produce(<span class="string">"mail"</span>);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只需工厂方法进行修改</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -830,6 +831,73 @@ y=-1            //语句5
 
 
   
+    <article id="post-工厂方法模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/工厂方法模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/工厂方法模式/">工厂方法模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、普通工厂模式"><a href="#一、普通工厂模式" class="headerlink" title="一、普通工厂模式"></a>一、普通工厂模式</h1><p>就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory1.png" alt="image"><br>举例如下：发送邮件和发送短信的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//两者的共同接口</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//创建实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is mailSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsSender</span> <span class="keyword">implements</span> <span class="title">Sender</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Send</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"this is smsSender!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//建工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produce</span><span class="params">(String type)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="string">"mail"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="string">"sms"</span>.equals(type))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            System.out.println(<span class="string">"请输入正确的类型！"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produce(<span class="string">"mail"</span>);</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="二、多个工厂方法模式"><a href="#二、多个工厂方法模式" class="headerlink" title="二、多个工厂方法模式"></a>二、多个工厂方法模式</h1><p>是对普通工厂方法模式的改进，在普通方法的模式中，如果传递的字符串出错，就不能正确的创建对象。而多个工厂方法模式，提供多个工厂方法，分别创建对象。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory2.png" alt="image"><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只需工厂方法进行修改</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        SendFactory factory = <span class="keyword">new</span> SendFactory();</div><div class="line">        Sender sender = factory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="三、静态工厂方法模式"><a href="#三、静态工厂方法模式" class="headerlink" title="三、静态工厂方法模式"></a>三、静态工厂方法模式</h1><p>将上面多个工厂方法的模式里的方法设置为静态的，不需要创建实例，直接调用即可。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SendFactory</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceMail</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MailSender();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sender <span class="title">produceSms</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SmsSender();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//测试类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FactoryTest</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Sender sender = SendFactory.produceMail();</div><div class="line">        sender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>如果出现了大量的产品需要创建，并且有共同的接口时，可以通过工厂方法模式来进行创建。第一种如果传入的字符串有错误，不能正确创建对象；第三种相较于第二种，不需要实例化工厂类。大多数情况下，静态工厂方法模式使用较多。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-HashMap的四种遍历方式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -864,74 +932,6 @@ y=-1            //语句5
 <h2 id="3、foreach-map-keySet"><a href="#3、foreach-map-keySet" class="headerlink" title="3、foreach map.keySet()"></a>3、foreach map.keySet()</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="keyword">for</span>(<span class="keyword">String</span> <span class="built_in">key</span> : <span class="built_in">map</span>.keySet())&#123;</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">get</span>(<span class="built_in">key</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="4、foreach-map-entrySet-，用临时变量保存map-entrySet"><a href="#4、foreach-map-entrySet-，用临时变量保存map-entrySet" class="headerlink" title="4、foreach map.entrySet()，用临时变量保存map.entrySet()"></a>4、foreach map.entrySet()，用临时变量保存map.entrySet()</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">Set</span>&lt;<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt;&gt; </span>entrySet = <span class="meta">map</span>.entrySet()<span class="comment">;</span></div><div class="line"><span class="symbol">for</span>(<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> : entrySet())&#123;</div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="二、结论"><a href="#二、结论" class="headerlink" title="二、结论"></a>二、结论</h1><p>1、在foreach map.entrySet()这种遍历方法的遍历过程中，不能删除元素，由于在遍历HashMap中删除了当前元素，下一个待访问的元素的指针也丢失了，所以会抛出java.util.ConcurrentModificationException。<br>2、如果需要在遍历过程中进行删除元素，可以使用调用map.entrySet()的集合迭代器来进行遍历。<br>3、如果只需要遍历key而不需要value的话，可以使用foreach map.keySet()的方式进行遍历。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java基础/">java基础</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Java三大特性之多态" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/01/Java三大特性之多态/" class="article-date">
-      <time datetime="2017-12-01T12:38:00.000Z" itemprop="datePublished">2017-12-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="一、多态的定义"><a href="#一、多态的定义" class="headerlink" title="一、多态的定义"></a>一、多态的定义</h1><p>&nbsp;&nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量到底会指向哪个类的实例对象，该引用变量发出的方法到底是哪个类中实现的方法，必须由程序运行期间才能决定。这样，不需要修改源程序，就可以让引用变量绑定到各种不同的类实现上，从而导致该引用调用的具体方法随之改变，即不修改程序代码就可以改变程序运行时所绑定的具体代码，让程序选择多个运行状态，这就是多态性。  </p>
-<h1 id="二、多态的实现条件"><a href="#二、多态的实现条件" class="headerlink" title="二、多态的实现条件"></a>二、多态的实现条件</h1><p>Java实现多态有三个必要条件：<strong>继承、重写、向上转型</strong>。<br>继承：在多台中必须存在有继承关系的子类和父类。<br>重写：子类对父类中的某些方法进行重新定义，在调用这些方法时就会调用子类的方法。<br>向上转型：在多态中需要把父类型的引用变量指向子类对象。<br>&nbsp;&nbsp;多态的实现机制遵循一个原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。  </p>
-<h1 id="三、经典实例"><a href="#三、经典实例" class="headerlink" title="三、经典实例"></a>三、经典实例</h1><p>&nbsp;&nbsp;<strong>原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。如果不符合前面的条件，它仍然需要根据继承链中方法调用的优先级来确认方法，优先级为：</strong><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这类this指的是引用变量的类型</span></div><div class="line"><span class="keyword">this</span>.show(o)---&gt;<span class="keyword">super</span>.show(o)---&gt;<span class="keyword">this</span>.show((<span class="keyword">super</span>)o)---&gt;<span class="keyword">super</span>.show((<span class="keyword">super</span>)o)</div></pre></td></tr></table></figure></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">D</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and D"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and A"</span>);</div><div class="line">    &#125; </div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">B</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and B"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and A"</span>);</div><div class="line">    &#125; </div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">D</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    public static void main(<span class="type">String</span>[] args) &#123;</div><div class="line">        <span class="type">A</span> a1 = <span class="keyword">new</span> <span class="type">A</span>();</div><div class="line">        <span class="type">A</span> a2 = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">B</span> b = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">C</span> c = <span class="keyword">new</span> <span class="type">C</span>();</div><div class="line">        <span class="type">D</span> d = <span class="keyword">new</span> <span class="type">D</span>();</div><div class="line">        </div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"1--"</span> + a1.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"2--"</span> + a1.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"3--"</span> + a1.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"4--"</span> + a2.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"5--"</span> + a2.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"6--"</span> + a2.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"7--"</span> + b.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"8--"</span> + b.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"9--"</span> + b.show(d));      </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//运行结果</span></div><div class="line"><span class="number">1</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">2</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">3</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">4</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">5</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">6</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">7</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">8</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">9</span>--<span class="type">A</span> and <span class="type">D</span></div></pre></td></tr></table></figure>
-<p>&nbsp;&nbsp;比如分析4，a2.show(b)，按照上面原则的意思，是由B来决定调用谁的方法，所有a2.show(b)应该要调用B中的show(B obj)，产生的结果应该是“B and B”，但是这样是错误的，因为我们忽略了后面那句话：被调用的方法必须要在父类中定义过的，不符合要求，不能直接这么做！所以仍然要按照继承链的调用方法的优先级来确认。由于this(A)没有父类，跳到第三级this((super)o)，找到了A中的show(A obj)方法，同时由于B重写了该方法，所以最终会调用B类中的show(A obj)方法，最后输出“B and A”。</p>
 
       
     </div>

@@ -244,6 +244,74 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-CountDownLatch" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/15/CountDownLatch/" class="article-date">
+      <time datetime="2017-08-15T12:33:00.000Z" itemprop="datePublished">2017-08-15</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/15/CountDownLatch/">CountDownLatch</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="什么是CountDownLatch"><a href="#什么是CountDownLatch" class="headerlink" title="什么是CountDownLatch"></a>什么是CountDownLatch</h2><p><strong>CountDownLatch也叫闭锁，在jdk1.5中引入，允许一个或多个线程等待其他线程完成操作后再执行。<br>CountDownLatch内部会维护一个初始值等于线程数量的计数器，主线程执行await方法，如果计数器大于0，那么主线程就阻塞等待。每当一个线程完成任务，计数器值就减一。当计数器为0时，表示所有的线程都已经完成任务，阻塞等待的主线程被唤醒，继续执行。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/countdownlatch1.png" alt="image"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCountDownLatch</span></span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">	<span class="keyword">final</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">5</span>);</div><div class="line">	LatchDemo ld = <span class="keyword">new</span> LatchDemo(latch);</div><div class="line"></div><div class="line">	<span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</div><div class="line">		<span class="keyword">new</span> Thread(ld).start();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">try</span>&#123;</div><div class="line">		latch.await();<span class="comment">//await方法挂起主线程</span></div><div class="line">	&#125;<span class="keyword">catch</span>(InterruptedException e)&#123;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">long</span> end = System.currentTimeMillis();</div><div class="line">	</div><div class="line">	System.out.println(<span class="string">"耗费时间："</span>+(end-start));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">LatchDemo</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> CountDownLatch latch;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">LatchDemo</span><span class="params">(CountDownLatch latch)</span></span>&#123;</div><div class="line">		<span class="keyword">this</span>.latch=latch;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">synchronized</span>(<span class="keyword">this</span>)&#123;</div><div class="line">			<span class="keyword">try</span>&#123;</div><div class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">50000</span>; i++)&#123;</div><div class="line">					<span class="keyword">if</span>(i%<span class="number">2</span>==<span class="number">0</span>)&#123;</div><div class="line">						System.out.println(i);</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;<span class="keyword">finally</span>&#123;</div><div class="line">				latch.countDown();<span class="comment">//计数器减一</span></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="CountDownLatch的实现原理"><a href="#CountDownLatch的实现原理" class="headerlink" title="CountDownLatch的实现原理"></a>CountDownLatch的实现原理</h2><p>CountDownLatch的实现主要是基于Java同步器AQS。其内部维护了一个AQS子类，并重写了相关的方法。  </p>
+<h3 id="await实现"><a href="#await实现" class="headerlink" title="await实现"></a>await实现</h3><p>主线程执行await方法，tryAcquireShared方法中，如果state（state为未完成线程任务的线程个数）不等于0，返回-1，将主线程加入到等待队列中，主线程通过LockSupport.park(this)被挂起。<br>await():使当前线程在计数器至零之前一直等待，除非线程被中断。  </p>
+<h3 id="countDown实现"><a href="#countDown实现" class="headerlink" title="countDown实现"></a>countDown实现</h3><p>countDown方法实现state的减1操作，即通过unsafe.compareAndSwapInt方法设置state值。<br>如果state的值为0，那么通过LockSupport.unpark唤醒await方法中挂起的主线程。  </p>
+<h2 id="join方法"><a href="#join方法" class="headerlink" title="join方法"></a>join方法</h2><p><strong>join用于让当前的执行线程等待join线程执行结束。其实现原理是不停检查join线程是否存活，如果join线程存活就让当前线程继续等待下去。</strong> CountDownLatch也实现了join功能，并且比join功能更丰富。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-java队列同步器AQS" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

@@ -244,6 +244,74 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Java三大特性之多态" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/Java三大特性之多态/" class="article-date">
+      <time datetime="2017-12-01T12:38:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/Java三大特性之多态/">Java三大特性之多态性</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、多态的定义"><a href="#一、多态的定义" class="headerlink" title="一、多态的定义"></a>一、多态的定义</h1><p>&nbsp;&nbsp;多态就是指：程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量到底会指向哪个类的实例对象，该引用变量发出的方法到底是哪个类中实现的方法，必须由程序运行期间才能决定。这样，不需要修改源程序，就可以让引用变量绑定到各种不同的类实现上，从而导致该引用调用的具体方法随之改变，即不修改程序代码就可以改变程序运行时所绑定的具体代码，让程序选择多个运行状态，这就是多态性。  </p>
+<h1 id="二、多态的实现条件"><a href="#二、多态的实现条件" class="headerlink" title="二、多态的实现条件"></a>二、多态的实现条件</h1><p>Java实现多态有三个必要条件：<strong>继承、重写、向上转型</strong>。<br>继承：在多台中必须存在有继承关系的子类和父类。<br>重写：子类对父类中的某些方法进行重新定义，在调用这些方法时就会调用子类的方法。<br>向上转型：在多态中需要把父类型的引用变量指向子类对象。<br>&nbsp;&nbsp;多态的实现机制遵循一个原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。  </p>
+<h1 id="三、经典实例"><a href="#三、经典实例" class="headerlink" title="三、经典实例"></a>三、经典实例</h1><p>&nbsp;&nbsp;<strong>原则：当父类对象的引用变量指向子类对象时，子类对象的类型决定了调用的是谁的方法，但是这个被调用的方法必须是在父类中定义过的，也就是说被子类覆盖的方法。如果不符合前面的条件，它仍然需要根据继承链中方法调用的优先级来确认方法，优先级为：</strong><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这类this指的是引用变量的类型</span></div><div class="line"><span class="keyword">this</span>.show(o)---&gt;<span class="keyword">super</span>.show(o)---&gt;<span class="keyword">this</span>.show((<span class="keyword">super</span>)o)---&gt;<span class="keyword">super</span>.show((<span class="keyword">super</span>)o)</div></pre></td></tr></table></figure></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">D</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and D"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj) &#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"A and A"</span>);</div><div class="line">    &#125; </div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</div><div class="line">    public <span class="type">String</span> show(<span class="type">B</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and B"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public <span class="type">String</span> show(<span class="type">A</span> obj)&#123;</div><div class="line">        <span class="keyword">return</span> (<span class="string">"B and A"</span>);</div><div class="line">    &#125; </div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">D</span> <span class="keyword">extends</span> <span class="title">B</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    public static void main(<span class="type">String</span>[] args) &#123;</div><div class="line">        <span class="type">A</span> a1 = <span class="keyword">new</span> <span class="type">A</span>();</div><div class="line">        <span class="type">A</span> a2 = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">B</span> b = <span class="keyword">new</span> <span class="type">B</span>();</div><div class="line">        <span class="type">C</span> c = <span class="keyword">new</span> <span class="type">C</span>();</div><div class="line">        <span class="type">D</span> d = <span class="keyword">new</span> <span class="type">D</span>();</div><div class="line">        </div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"1--"</span> + a1.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"2--"</span> + a1.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"3--"</span> + a1.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"4--"</span> + a2.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"5--"</span> + a2.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"6--"</span> + a2.show(d));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"7--"</span> + b.show(b));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"8--"</span> + b.show(c));</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"9--"</span> + b.show(d));      </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//运行结果</span></div><div class="line"><span class="number">1</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">2</span>--<span class="type">A</span> and <span class="type">A</span></div><div class="line"><span class="number">3</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">4</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">5</span>--<span class="type">B</span> and <span class="type">A</span></div><div class="line"><span class="number">6</span>--<span class="type">A</span> and <span class="type">D</span></div><div class="line"><span class="number">7</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">8</span>--<span class="type">B</span> and <span class="type">B</span></div><div class="line"><span class="number">9</span>--<span class="type">A</span> and <span class="type">D</span></div></pre></td></tr></table></figure>
+<p>&nbsp;&nbsp;比如分析4，a2.show(b)，按照上面原则的意思，是由B来决定调用谁的方法，所有a2.show(b)应该要调用B中的show(B obj)，产生的结果应该是“B and B”，但是这样是错误的，因为我们忽略了后面那句话：被调用的方法必须要在父类中定义过的，不符合要求，不能直接这么做！所以仍然要按照继承链的调用方法的优先级来确认。由于this(A)没有父类，跳到第三级this((super)o)，找到了A中的show(A obj)方法，同时由于B重写了该方法，所以最终会调用B类中的show(A obj)方法，最后输出“B and A”。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-Linux系统——IO多路复用select、poll、epoll的区别与使用" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -873,78 +941,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-静态代码块、构造代码块、构造函数及类初始化顺序" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/" class="article-date">
-      <time datetime="2017-10-12T07:35:00.000Z" itemprop="datePublished">2017-10-12</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/12/静态代码块、构造代码块、构造函数及类初始化顺序/">静态代码块、构造代码块、构造函数及类初始化顺序</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>静态代码块：用static声明，jvm加载类时执行，仅执行一次。<br>构造代码块：类中直接用{}定义，每一次创建对象时执行。<br>执行顺序优先级：<strong>静态块-&gt;main()-&gt;构造块-&gt;构造函数</strong>。  </p>
-<h2 id="二、详解"><a href="#二、详解" class="headerlink" title="二、详解"></a>二、详解</h2><h3 id="1、构造函数"><a href="#1、构造函数" class="headerlink" title="1、构造函数"></a>1、构造函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Hello</span><span class="params">()</span></span>&#123;<span class="comment">//构造函数</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>1.对象一建立就会调用与之相应的构造函数，也就是说，不建立对象，构造函数是不会运行的。<br>2.构造函数的作用是用于给对象初始化。<br>3.一个对象建立，构造函数只运行一次。  </p>
-<h3 id="2、构造代码块"><a href="#2、构造代码块" class="headerlink" title="2、构造代码块"></a>2、构造代码块</h3><figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="comment">//构造代码块</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>1.构造代码块的作用是给对象进行初始化。<br>2.对象一建立就运行构造代码块了，而且优先于构造函数。有对象建立，才会运行构造代码块，类是不能调用构造代码块的。<br>3.构造代码块和构造函数的区别：<strong>构造代码块是给所有对象进行统一初始化，而构造函数是给对应的对象初始化。</strong>因为构造函数可以有多个，运行哪个构造函数就会建立什么样的对象，但无论建立哪个对象，都会执行相同的构造代码块。也就是说，构造代码块中定义的是不同对象共性的初始化内容。  </p>
-<h3 id="3、静态代码块"><a href="#3、静态代码块" class="headerlink" title="3、静态代码块"></a>3、静态代码块</h3><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span>&#123;<span class="comment">//静态代码块</span></div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>1.<strong>它随着类的加载而执行，只执行一次，并且优先于主函数</strong>。具体说，静态代码块是由类调用的，类调用时，先执行静态代码块，然后再执行主函数。<br>2.静态代码块其实是给类初始化的，而构造代码块是给对象初始化的。<br>3.静态代码块中的变量是局部变量，与普通函数中的局部变量没有区别。<br>4.一个类中可以有多个静态代码块。  </p>
-<h2 id="三、类初始化顺序"><a href="#三、类初始化顺序" class="headerlink" title="三、类初始化顺序"></a>三、类初始化顺序</h2><p>&emsp;其中，<strong>静态变量、静态初始化块，变量、初始化块（构造代码块）的初始化顺序取决于它们在类中出现的先后顺序。</strong><br>首先，访问SubClass.main()，这是一个static方法，于是装载器会寻找已经编译的SubClass.class文件。在装载过程中，如果注意到有基类（extends），会装载基类。不管创不创建基类对象，这个过程都会发生。之后是正常的初始化顺序：  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F.png" alt="image"><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="title">Parent</span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String p_StaticField=<span class="string">"父类--静态变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> String p_Field=<span class="string">"父类--变量"</span>;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> i=<span class="number">9</span>;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> j=<span class="number">0</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(p_StaticField);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--静态初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(p_Field);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Parent</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"父类--构造器"</span>);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"i="</span> + i+ <span class="string">",j="</span> + j);</div><div class="line">        j=<span class="number">20</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SubClass</span> <span class="title">extends</span> <span class="title">Parent</span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String s_StaticField=<span class="string">"子类--静态变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> String s_Field=<span class="string">"子类--变量"</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(s_StaticField);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--静态初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    &#123;</div><div class="line">        System.<span class="keyword">out</span>.println(s_Field);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--初始化块"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubClass</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类--构造器"</span>);</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"i="</span> + i+ <span class="string">",j="</span> + j);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)</span>&#123;</div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"子类main方法"</span>);</div><div class="line">        <span class="keyword">new</span> SubClass();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">运行结果：  </div><div class="line">父类--静态变量  </div><div class="line">父类--静态初始化块  </div><div class="line">子类--静态变量  </div><div class="line">子类--静态初始化块  </div><div class="line">子类main方法  </div><div class="line">父类--变量  </div><div class="line">父类--初始化块  </div><div class="line">父类--构造器  </div><div class="line">i=<span class="number">9</span>, j=<span class="number">0</span>  </div><div class="line">子类--变量  </div><div class="line">子类--初始化块  </div><div class="line">子类--构造器  </div><div class="line">i=<span class="number">9</span>,j=<span class="number">20</span></div></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java基础/">java基础</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
     </div>
 
       
