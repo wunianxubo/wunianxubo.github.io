@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -243,6 +243,73 @@
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-27、二叉搜索树转双向链表" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/29/27、二叉搜索树转双向链表/" class="article-date">
+      <time datetime="2017-09-29T10:35:00.000Z" itemprop="datePublished">2017-09-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> TreeNode &#123;</div><div class="line">    <span class="built_in">int</span> val = <span class="number">0</span>;</div><div class="line">    TreeNode <span class="built_in">left</span> = <span class="literal">null</span>;</div><div class="line">    TreeNode <span class="built_in">right</span> = <span class="literal">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> TreeNode(<span class="built_in">int</span> val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    TreeNode leftHead=<span class="literal">null</span>;</div><div class="line">    TreeNode rightHead=<span class="literal">null</span>;</div><div class="line">    <span class="keyword">public</span> TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        <span class="keyword">if</span>(pRootOfTree==<span class="literal">null</span>)</div><div class="line">            return <span class="literal">null</span>;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">left</span>);</div><div class="line">        <span class="keyword">if</span>(leftHead==<span class="literal">null</span>)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            rightHead.<span class="built_in">right</span>=pRootOfTree;</div><div class="line">            pRootOfTree.<span class="built_in">left</span>=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">right</span>);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-28、字符串的排列" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -869,75 +936,6 @@
 <h3 id="公平策略"><a href="#公平策略" class="headerlink" title="公平策略"></a>公平策略</h3><h4 id="1、acquire实现-1"><a href="#1、acquire实现-1" class="headerlink" title="1、acquire实现"></a>1、acquire实现</h4><p>核心代码如下<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">final <span class="keyword">int</span> TryAcquireShared(<span class="keyword">int</span> acquires)&#123;</div><div class="line">    <span class="built_in">for</span>(;;)&#123;</div><div class="line">        <span class="built_in">if</span>(hasQueuePredecessors())</div><div class="line">            <span class="built_in">return</span> <span class="number">-1</span>;</div><div class="line">        <span class="keyword">int</span> <span class="built_in">available</span> = getState();</div><div class="line">        <span class="keyword">int</span> remaining = <span class="built_in">available</span> - acquires;</div><div class="line">        <span class="built_in">if</span>(remaining&lt;<span class="number">0</span> || compareAndSetState(<span class="built_in">available</span>,remaining)</div><div class="line">            <span class="built_in">return</span> remaining;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>acquires的值默认为1，表示尝试获取一个许可，remaining代表剩余的许可数。<br>与非公平策略相比，只是多了一个对阻塞队列的检查。<br><strong>1、如果阻塞队列中没有等待的线程，那么当前线程可以参与许可的竞争；</strong><br><strong>2、如果阻塞队列中有等待的线程，那么直接插入阻塞队列尾结点并挂起，等待被唤醒。</strong>  </p>
 <h4 id="2、release实现-1"><a href="#2、release实现-1" class="headerlink" title="2、release实现"></a>2、release实现</h4><p>和非公平策略一样。  </p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-CyclicBarrier" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/08/16/CyclicBarrier/" class="article-date">
-      <time datetime="2017-08-16T13:34:00.000Z" itemprop="datePublished">2017-08-16</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/16/CyclicBarrier/">CyclicBarrier</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="什么是CyclicBarrier"><a href="#什么是CyclicBarrier" class="headerlink" title="什么是CyclicBarrier"></a>什么是CyclicBarrier</h2><p>CyclicBarrier也叫同步屏障，在jdk1.5中引入，<strong>可以让一组线程到达一个屏障时被阻塞，直到最后一个线程到达屏障时，所有被阻塞的线程才能继续执行。</strong><br>CyclicBarrier就好比是一扇门，默认情况是关闭的，堵住所有线程执行的路径，只有所有线程都到达时，门才会打开。  </p>
-<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><p>1、<strong>默认的构造方法是CyclicBarrier(int parties)，参数parties表示屏障拦截的线程数量，每个线程会调用await方法来告诉CyclicBarrier它已经到达了屏障，然后当前线程就被阻塞。</strong><br>2、<strong>更高级的构造函数是CyclicBarrier(int parties, Runnable barrierAction)用于在所有线程到达屏障时，优先执行barrierAction。</strong><br><img src="http://osrmzp0jr.bkt.clouddn.com/CyclicBarrier.png" alt="image">  </p>
-<h2 id="CyclicBarrier的实现原理"><a href="#CyclicBarrier的实现原理" class="headerlink" title="CyclicBarrier的实现原理"></a>CyclicBarrier的实现原理</h2><p>CyclicBarrier的实现主要基于ReentrantLock。<br><figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CyclicBarrier</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Generation</span></span>&#123;</div><div class="line">        <span class="keyword">boolean</span> broken = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition trip = lock.newCondition();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> parties;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Runnable barrierCommand;</div><div class="line">    <span class="keyword">private</span> Generation generation = <span class="keyword">new</span> Generation();</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>其中，<strong>Generation用来控制屏障的循环使用，如果generation.broken为true的话，说明这个屏障已经损坏了，当某个线程await的时候，直接抛出异常。</strong>  </p>
-<h3 id="await实现原理"><a href="#await实现原理" class="headerlink" title="await实现原理"></a>await实现原理</h3><p><strong>1、每当线程执行await方法时，内部变量count就减1，如果count!=0，说明有线程还没有到达屏障处，那么在锁的条件变量trip上等待。</strong><br><strong>2、当count==0时，说明所有的线程都到达屏障处，执行条件变量trip的signAll方法来唤醒等待的线程。</strong><br>其中nextGeneration可以实现屏障的循环使用：可以实现重新生成Generation对象和恢复count值。  </p>
-<h2 id="CountDownLatch和CyclicBarrier的区别"><a href="#CountDownLatch和CyclicBarrier的区别" class="headerlink" title="CountDownLatch和CyclicBarrier的区别"></a>CountDownLatch和CyclicBarrier的区别</h2><p><strong>1、CountDownLatch的计数器只可以使用一次；而CyclicBarrier的计数器可以使用reset()方法重置，能够重复利用。</strong><br><strong>2、CountDownLatch是减计数器方式，构造方法中参数是要等待的线程的个数，每完成一个任务，调用countDown减1，当计数器为0时，说明所有线程的任务已经执行完，阻塞等待的线程被唤醒继续执行；CyclicBarrier中，构造方法中参数是屏障拦截的线程数量，当所有线程到达时，线程数等于parties变量指定的数，栅栏打开，所有线程通过。</strong><br><strong>3、CountDownLatch中，调用countDown方法实现计数器减1，调用await()方法只进行阻塞，对计数没有影响；CyclicBarrier中，调用await()方法计数器加1，加1后的值没有到达屏障拦截的数量，那么线程被阻塞。</strong></p>
 
       
     </div>

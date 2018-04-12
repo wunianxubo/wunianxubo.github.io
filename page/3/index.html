@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -243,6 +243,73 @@
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Java实现二叉排序树的插入、查找和删除" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/" class="article-date">
+      <time datetime="2017-10-12T07:39:00.000Z" itemprop="datePublished">2017-10-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p><strong>查找性能</strong>：含有n个节点的二叉排序树的平均查找长度和树的形态有关。<br>（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)<br>（最好情况）二叉排序的形态和折半查找的判定树相同，平均查找长度和log2(n)成正比  </p>
+<p><strong>插入、删除性能</strong>：插入、删除操作的时间复杂度都是O(logn)级的。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//二叉树节点定义</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</div><div class="line">    <span class="keyword">private</span> Node left;</div><div class="line">    <span class="keyword">private</span> Node right;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params">Node left, Node right, <span class="keyword">int</span> <span class="keyword">value</span></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.left = left;</div><div class="line">        <span class="keyword">this</span>.right=right;</div><div class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">set</span>,<span class="keyword">get</span>...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BinarySortTree</span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> Node root=<span class="literal">null</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//查找二叉排序树中是否有key值</span></div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">searchBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node current = root;</div><div class="line">        <span class="keyword">while</span>(current != <span class="literal">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(key == current.getValue())</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            <span class="keyword">else</span>(key &lt; current.getValue())</div><div class="line">                current=current.getLeft();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                current=current.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//向二叉排序树中插入节点</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node p = root;</div><div class="line">        <span class="comment">//记录查找节点的父节点</span></div><div class="line">        Node prev = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//一直查找下去，一直到满足条件的叶子节点</span></div><div class="line">        <span class="keyword">while</span>(p != <span class="literal">null</span>)&#123;</div><div class="line">            prev=p;</div><div class="line">            <span class="keyword">if</span>(key &lt; p.getValue())</div><div class="line">                p = p.getLeft();</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(key &gt; p.getValue())</div><div class="line">                p = p.getRight();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span>;<span class="comment">//找到了相同节点就返回</span></div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">//prev为要安放节点的父结点，根据key的大小，判断放入prev的左右节点</span></div><div class="line">        <span class="keyword">if</span>(root == <span class="literal">null</span>)</div><div class="line">            root = <span class="keyword">new</span> Node(key);</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(key &lt; prev.getValue())</div><div class="line">            prev.setLeft(<span class="keyword">new</span> Node(key));</div><div class="line">        <span class="keyword">else</span></div><div class="line">            prev.setRight(<span class="keyword">new</span> Node(key));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//删除二叉排序树中的节点</span></div><div class="line">    分为三种情况：</div><div class="line">    (<span class="number">1</span>)要删除的节点p是叶子节点，删除置空即可</div><div class="line">    (<span class="number">2</span>)p只有左子树或右子树，直接让左子树/右子树代替p</div><div class="line">    (<span class="number">3</span>)p既有左子树又有右子树，用p左子树中最大的那个值（最右端s）代替p，删除s，重接其左子树</div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">delete</span>(<span class="params">Node node</span>)</span>&#123;</div><div class="line">        Node temp = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//右子树为空，重接它的左子树；如果是叶子节点，在这也被置为空</span></div><div class="line">        <span class="keyword">if</span>(node.getRight()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getLeft();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左子树为空，重接它的右子树</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(node.getLeft()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左右子树都不为空</span></div><div class="line">        <span class="keyword">else</span>&#123;</div><div class="line">            temp = node;</div><div class="line">            Node s = node;</div><div class="line">            <span class="comment">//转向左子树，然后向右走到尽头</span></div><div class="line">            s=s.getLeft();<span class="comment">//temp是s的父结点</span></div><div class="line">            <span class="keyword">while</span>(s.getRight() != <span class="literal">null</span>)&#123;</div><div class="line">                temp = s;</div><div class="line">                s = s.getRight();</div><div class="line">            &#125;</div><div class="line">            node.setValue(s.getValue());<span class="comment">//将node的值设为左子树最右侧s的值</span></div><div class="line">            <span class="keyword">if</span>(temp != node)&#123;</div><div class="line">                temp.setRight(s.getLeft());<span class="comment">//见书p326</span></div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span>&#123;</div><div class="line">                temp.setLeft(s.getLeft());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-静态代码块、构造代码块、构造函数及类初始化顺序" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -853,73 +920,6 @@ String ss2=new String("china");
         <p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
 <h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
 <h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    <span class="keyword">public</span> RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        <span class="keyword">if</span>(pHead==<span class="keyword">null</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        <span class="comment">//第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A'-&gt;B-&gt;B'-&gt;C-&gt;C'</span></div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            RandomListNode node=<span class="keyword">new</span> RandomListNode(pCur.label);</div><div class="line">            node.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>;</div><div class="line">            pCur.<span class="keyword">next</span>=node;</div><div class="line">            pCur=node.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第二步，复制random</span></div><div class="line">        pCur=pHead;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(pCur.random!=<span class="keyword">null</span>)</div><div class="line">                pCur.<span class="keyword">next</span>.random=pCur.random.<span class="keyword">next</span>;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第三步，拆分链表</span></div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.<span class="keyword">next</span>;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            pCur.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            <span class="keyword">if</span>(cur.<span class="keyword">next</span>!=<span class="keyword">null</span>)&#123;</div><div class="line">                cur.<span class="keyword">next</span>=cur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>;</div><div class="line">            cur=cur.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">    	<span class="keyword">return</span> pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-27、二叉搜索树转双向链表" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/29/27、二叉搜索树转双向链表/" class="article-date">
-      <time datetime="2017-09-29T10:35:00.000Z" itemprop="datePublished">2017-09-29</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/29/27、二叉搜索树转双向链表/">27、二叉搜索树转双向链表</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>&emsp;输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>&emsp;用中序遍历来遍历树中每一个结点，因为中序遍历的特点是按照从小到大的顺序遍历二叉树每个节点。当遍历到根节点10时，它的左子树已经转换成一个排序的链表，并且处在链表最后一个节点的是当前值的最大节点8。我们把值为8的节点和根节点链接起来，此时最后一个节点变为根节点10。接着去遍历转换右子树，并把根节点和右子树中最小的节点连接起来。</p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929165150.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> TreeNode &#123;</div><div class="line">    <span class="built_in">int</span> val = <span class="number">0</span>;</div><div class="line">    TreeNode <span class="built_in">left</span> = <span class="literal">null</span>;</div><div class="line">    TreeNode <span class="built_in">right</span> = <span class="literal">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> TreeNode(<span class="built_in">int</span> val) &#123;</div><div class="line">        this.val = val;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    TreeNode leftHead=<span class="literal">null</span>;</div><div class="line">    TreeNode rightHead=<span class="literal">null</span>;</div><div class="line">    <span class="keyword">public</span> TreeNode Convert(TreeNode pRootOfTree) &#123;</div><div class="line">        <span class="keyword">if</span>(pRootOfTree==<span class="literal">null</span>)</div><div class="line">            return <span class="literal">null</span>;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">left</span>);</div><div class="line">        <span class="keyword">if</span>(leftHead==<span class="literal">null</span>)&#123;</div><div class="line">            leftHead=rightHead=pRootOfTree;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            rightHead.<span class="built_in">right</span>=pRootOfTree;</div><div class="line">            pRootOfTree.<span class="built_in">left</span>=rightHead;</div><div class="line">            rightHead=pRootOfTree;</div><div class="line">        &#125;</div><div class="line">        Convert(pRootOfTree.<span class="built_in">right</span>);</div><div class="line">        return leftHead;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>

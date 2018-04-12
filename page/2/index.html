@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -243,6 +243,74 @@
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-HashMap的四种遍历方式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/HashMap的四种遍历方式/" class="article-date">
+      <time datetime="2017-12-01T12:39:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、Map的四种遍历方式"><a href="#一、Map的四种遍历方式" class="headerlink" title="一、Map的四种遍历方式"></a>一、Map的四种遍历方式</h1><h2 id="1、foreach-map-entrySet"><a href="#1、foreach-map-entrySet" class="headerlink" title="1、foreach map.entrySet()"></a>1、foreach map.entrySet()</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="built_in">for</span>(Entry&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; entry : <span class="built_in">map</span>.entrySet())&#123;</div><div class="line">    entry.<span class="built_in">getKey</span>();</div><div class="line">    entry.getValue();</div><div class="line">    </div><div class="line">    <span class="comment">//在遍历过程中删除元素，会抛出异常java.util.ConcurrentModificationException</span></div><div class="line">    <span class="comment">//entry.remove(entry.getKey());</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、调用map-entrySet-的集合迭代器"><a href="#2、调用map-entrySet-的集合迭代器" class="headerlink" title="2、调用map.entrySet()的集合迭代器"></a>2、调用map.entrySet()的集合迭代器</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Iterator&lt;Map.Entry&lt;String,String&gt;&gt; </span><span class="keyword">it </span>= <span class="meta">map</span>.entrySet().<span class="keyword">iterator();</span></div><div class="line"><span class="symbol">while</span>(<span class="keyword">it.hasNext())&#123;</span></div><div class="line">    <span class="meta">Map</span>.Entry&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> = <span class="keyword">it.next();</span></div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3、foreach-map-keySet"><a href="#3、foreach-map-keySet" class="headerlink" title="3、foreach map.keySet()"></a>3、foreach map.keySet()</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="keyword">for</span>(<span class="keyword">String</span> <span class="built_in">key</span> : <span class="built_in">map</span>.keySet())&#123;</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">get</span>(<span class="built_in">key</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4、foreach-map-entrySet-，用临时变量保存map-entrySet"><a href="#4、foreach-map-entrySet-，用临时变量保存map-entrySet" class="headerlink" title="4、foreach map.entrySet()，用临时变量保存map.entrySet()"></a>4、foreach map.entrySet()，用临时变量保存map.entrySet()</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">Set</span>&lt;<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt;&gt; </span>entrySet = <span class="meta">map</span>.entrySet()<span class="comment">;</span></div><div class="line"><span class="symbol">for</span>(<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> : entrySet())&#123;</div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="二、结论"><a href="#二、结论" class="headerlink" title="二、结论"></a>二、结论</h1><p>1、在foreach map.entrySet()这种遍历方法的遍历过程中，不能删除元素，由于在遍历HashMap中删除了当前元素，下一个待访问的元素的指针也丢失了，所以会抛出java.util.ConcurrentModificationException。<br>2、如果需要在遍历过程中进行删除元素，可以使用调用map.entrySet()的集合迭代器来进行遍历。<br>3、如果只需要遍历key而不需要value的话，可以使用foreach map.keySet()的方式进行遍历。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java基础/">java基础</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-Java三大特性之多态" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -312,81 +380,6 @@
 
 
   
-    <article id="post-Linux的五种IO模型" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/27/Linux的五种IO模型/" class="article-date">
-      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-Linux系统——IO多路复用select、poll、epoll的区别与使用" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -429,6 +422,81 @@
 <p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
 <p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
 <h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux的五种IO模型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/27/Linux的五种IO模型/" class="article-date">
+      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
 
       
     </div>
@@ -863,73 +931,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Java实现二叉排序树的插入、查找和删除" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/" class="article-date">
-      <time datetime="2017-10-12T07:39:00.000Z" itemprop="datePublished">2017-10-12</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/12/Java实现二叉排序树的插入、查找和删除/">Java实现二叉排序树的插入、查找和删除</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h2><p>又叫二叉查找树。<br>1.可以使一颗空树<br>2.若左子树不为空，则左子树上所有节点的值均小于根节点的值<br>3.若右子树不为空，则右子树上所有节点的值均大于根节点的值<br>4.左右子树也分别为二叉排序树  </p>
-<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p><strong>查找性能</strong>：含有n个节点的二叉排序树的平均查找长度和树的形态有关。<br>（最坏情况）当先后插入的关键字有序时，构成的二叉排序树蜕变为单枝树，查找性能为O(n)<br>（最好情况）二叉排序的形态和折半查找的判定树相同，平均查找长度和log2(n)成正比  </p>
-<p><strong>插入、删除性能</strong>：插入、删除操作的时间复杂度都是O(logn)级的。</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//二叉树节点定义</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Node</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> <span class="keyword">value</span>;</div><div class="line">    <span class="keyword">private</span> Node left;</div><div class="line">    <span class="keyword">private</span> Node right;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span>(<span class="params">Node left, Node right, <span class="keyword">int</span> <span class="keyword">value</span></span>)</span>&#123;</div><div class="line">        <span class="keyword">this</span>.left = left;</div><div class="line">        <span class="keyword">this</span>.right=right;</div><div class="line">        <span class="keyword">this</span>.<span class="keyword">value</span> = <span class="keyword">value</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">set</span>,<span class="keyword">get</span>...</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BinarySortTree</span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> Node root=<span class="literal">null</span>;</div><div class="line">    </div><div class="line">    <span class="comment">//查找二叉排序树中是否有key值</span></div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">searchBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node current = root;</div><div class="line">        <span class="keyword">while</span>(current != <span class="literal">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(key == current.getValue())</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            <span class="keyword">else</span>(key &lt; current.getValue())</div><div class="line">                current=current.getLeft();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                current=current.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//向二叉排序树中插入节点</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertBST</span>(<span class="params"><span class="keyword">int</span> key</span>)</span>&#123;</div><div class="line">        Node p = root;</div><div class="line">        <span class="comment">//记录查找节点的父节点</span></div><div class="line">        Node prev = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//一直查找下去，一直到满足条件的叶子节点</span></div><div class="line">        <span class="keyword">while</span>(p != <span class="literal">null</span>)&#123;</div><div class="line">            prev=p;</div><div class="line">            <span class="keyword">if</span>(key &lt; p.getValue())</div><div class="line">                p = p.getLeft();</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(key &gt; p.getValue())</div><div class="line">                p = p.getRight();</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span>;<span class="comment">//找到了相同节点就返回</span></div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">//prev为要安放节点的父结点，根据key的大小，判断放入prev的左右节点</span></div><div class="line">        <span class="keyword">if</span>(root == <span class="literal">null</span>)</div><div class="line">            root = <span class="keyword">new</span> Node(key);</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(key &lt; prev.getValue())</div><div class="line">            prev.setLeft(<span class="keyword">new</span> Node(key));</div><div class="line">        <span class="keyword">else</span></div><div class="line">            prev.setRight(<span class="keyword">new</span> Node(key));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//删除二叉排序树中的节点</span></div><div class="line">    分为三种情况：</div><div class="line">    (<span class="number">1</span>)要删除的节点p是叶子节点，删除置空即可</div><div class="line">    (<span class="number">2</span>)p只有左子树或右子树，直接让左子树/右子树代替p</div><div class="line">    (<span class="number">3</span>)p既有左子树又有右子树，用p左子树中最大的那个值（最右端s）代替p，删除s，重接其左子树</div><div class="line">    <span class="function"><span class="keyword">public</span> boolean <span class="title">delete</span>(<span class="params">Node node</span>)</span>&#123;</div><div class="line">        Node temp = <span class="literal">null</span>;</div><div class="line">        <span class="comment">//右子树为空，重接它的左子树；如果是叶子节点，在这也被置为空</span></div><div class="line">        <span class="keyword">if</span>(node.getRight()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getLeft();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左子树为空，重接它的右子树</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(node.getLeft()==<span class="literal">null</span>)&#123;</div><div class="line">            temp = node;</div><div class="line">            node = node.getRight();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//左右子树都不为空</span></div><div class="line">        <span class="keyword">else</span>&#123;</div><div class="line">            temp = node;</div><div class="line">            Node s = node;</div><div class="line">            <span class="comment">//转向左子树，然后向右走到尽头</span></div><div class="line">            s=s.getLeft();<span class="comment">//temp是s的父结点</span></div><div class="line">            <span class="keyword">while</span>(s.getRight() != <span class="literal">null</span>)&#123;</div><div class="line">                temp = s;</div><div class="line">                s = s.getRight();</div><div class="line">            &#125;</div><div class="line">            node.setValue(s.getValue());<span class="comment">//将node的值设为左子树最右侧s的值</span></div><div class="line">            <span class="keyword">if</span>(temp != node)&#123;</div><div class="line">                temp.setRight(s.getLeft());<span class="comment">//见书p326</span></div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span>&#123;</div><div class="line">                temp.setLeft(s.getLeft());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
     </div>
 
       

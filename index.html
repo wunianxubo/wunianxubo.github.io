@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -471,6 +471,91 @@ stop=true;
 
 
   
+    <article id="post-浅谈分库分表" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/04/浅谈分库分表/" class="article-date">
+      <time datetime="2018-01-04T03:24:00.000Z" itemprop="datePublished">2018-01-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/04/浅谈分库分表/">浅谈分库分表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是分库分表？"><a href="#什么是分库分表？" class="headerlink" title="什么是分库分表？"></a>什么是分库分表？</h3><p>从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  </p>
+<h3 id="为什么要分库分表？"><a href="#为什么要分库分表？" class="headerlink" title="为什么要分库分表？"></a>为什么要分库分表？</h3><p>数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  </p>
+<h3 id="常用的分库分表中间件"><a href="#常用的分库分表中间件" class="headerlink" title="常用的分库分表中间件"></a>常用的分库分表中间件</h3><p>简单易用的组件：  </p>
+<ul>
+<li>当当sharding-jdbc  </li>
+<li>蘑菇街TSharding  </li>
+</ul>
+<p>强悍重量级的中间件：  </p>
+<ul>
+<li>sharding  </li>
+<li>TDDL Smart Client的方式（淘宝）  </li>
+<li>Atlas(Qihoo 360)  </li>
+<li>alibaba.cobar(是阿里巴巴（B2B）部门开发)  </li>
+<li>MyCAT（基于阿里开源的Cobar产品而研发）  </li>
+<li>Oceanus(58同城数据库中间件)  </li>
+<li>OneProxy(支付宝首席架构师楼方鑫开发)  </li>
+<li>vitess（谷歌开发的数据库中间件）  </li>
+</ul>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/分布式系统/">分布式系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/01/04/浅谈分库分表/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-大型网站的架构模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -675,6 +760,74 @@ stop=true;
 
 
   
+    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/12/01/抽象工厂模式/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-工厂方法模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -796,142 +949,6 @@ stop=true;
         <p class="article-more-link">
           <a href="/2017/12/01/单例模式/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
-      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/12/01/抽象工厂模式/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-HashMap的四种遍历方式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/01/HashMap的四种遍历方式/" class="article-date">
-      <time datetime="2017-12-01T12:39:00.000Z" itemprop="datePublished">2017-12-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/HashMap的四种遍历方式/">HashMap的四种遍历方式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="一、Map的四种遍历方式"><a href="#一、Map的四种遍历方式" class="headerlink" title="一、Map的四种遍历方式"></a>一、Map的四种遍历方式</h1><h2 id="1、foreach-map-entrySet"><a href="#1、foreach-map-entrySet" class="headerlink" title="1、foreach map.entrySet()"></a>1、foreach map.entrySet()</h2><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> HashMap&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="built_in">for</span>(Entry&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; entry : <span class="built_in">map</span>.entrySet())&#123;</div><div class="line">    entry.<span class="built_in">getKey</span>();</div><div class="line">    entry.getValue();</div><div class="line">    </div><div class="line">    <span class="comment">//在遍历过程中删除元素，会抛出异常java.util.ConcurrentModificationException</span></div><div class="line">    <span class="comment">//entry.remove(entry.getKey());</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2、调用map-entrySet-的集合迭代器"><a href="#2、调用map-entrySet-的集合迭代器" class="headerlink" title="2、调用map.entrySet()的集合迭代器"></a>2、调用map.entrySet()的集合迭代器</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Iterator&lt;Map.Entry&lt;String,String&gt;&gt; </span><span class="keyword">it </span>= <span class="meta">map</span>.entrySet().<span class="keyword">iterator();</span></div><div class="line"><span class="symbol">while</span>(<span class="keyword">it.hasNext())&#123;</span></div><div class="line">    <span class="meta">Map</span>.Entry&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> = <span class="keyword">it.next();</span></div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3、foreach-map-keySet"><a href="#3、foreach-map-keySet" class="headerlink" title="3、foreach map.keySet()"></a>3、foreach map.keySet()</h2><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt; <span class="built_in">map</span> = <span class="keyword">new</span> <span class="keyword">HashMap</span>&lt;<span class="keyword">String</span>,<span class="keyword">String</span>&gt;();</div><div class="line"><span class="keyword">for</span>(<span class="keyword">String</span> <span class="built_in">key</span> : <span class="built_in">map</span>.keySet())&#123;</div><div class="line">    <span class="built_in">map</span>.<span class="built_in">get</span>(<span class="built_in">key</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="4、foreach-map-entrySet-，用临时变量保存map-entrySet"><a href="#4、foreach-map-entrySet-，用临时变量保存map-entrySet" class="headerlink" title="4、foreach map.entrySet()，用临时变量保存map.entrySet()"></a>4、foreach map.entrySet()，用临时变量保存map.entrySet()</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">Set</span>&lt;<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt;&gt; </span>entrySet = <span class="meta">map</span>.entrySet()<span class="comment">;</span></div><div class="line"><span class="symbol">for</span>(<span class="meta">Entry</span>&lt;<span class="keyword">String,String&gt; </span><span class="meta">entry</span> : entrySet())&#123;</div><div class="line">    <span class="meta">entry</span>.getKey()<span class="comment">;</span></div><div class="line">    <span class="meta">entry</span>.getValue()<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="二、结论"><a href="#二、结论" class="headerlink" title="二、结论"></a>二、结论</h1><p>1、在foreach map.entrySet()这种遍历方法的遍历过程中，不能删除元素，由于在遍历HashMap中删除了当前元素，下一个待访问的元素的指针也丢失了，所以会抛出java.util.ConcurrentModificationException。<br>2、如果需要在遍历过程中进行删除元素，可以使用调用map.entrySet()的集合迭代器来进行遍历。<br>3、如果只需要遍历key而不需要value的话，可以使用foreach map.keySet()的方式进行遍历。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java基础/">java基础</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java基础/">java基础</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>
