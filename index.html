@@ -244,6 +244,91 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-浅谈分库分表" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/12/浅谈分库分表/" class="article-date">
+      <time datetime="2018-04-12T08:40:00.000Z" itemprop="datePublished">2018-04-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/12/浅谈分库分表/">浅谈分库分表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是分库分表？"><a href="#什么是分库分表？" class="headerlink" title="什么是分库分表？"></a>什么是分库分表？</h3><p>从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  </p>
+<h3 id="为什么要分库分表？"><a href="#为什么要分库分表？" class="headerlink" title="为什么要分库分表？"></a>为什么要分库分表？</h3><p>数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  </p>
+<h3 id="常用的分库分表中间件"><a href="#常用的分库分表中间件" class="headerlink" title="常用的分库分表中间件"></a>常用的分库分表中间件</h3><p>简单易用的组件：  </p>
+<ul>
+<li>当当sharding-jdbc  </li>
+<li>蘑菇街TSharding  </li>
+</ul>
+<p>强悍重量级的中间件：  </p>
+<ul>
+<li>sharding  </li>
+<li>TDDL Smart Client的方式（淘宝）  </li>
+<li>Atlas(Qihoo 360)  </li>
+<li>alibaba.cobar(是阿里巴巴（B2B）部门开发)  </li>
+<li>MyCAT（基于阿里开源的Cobar产品而研发）  </li>
+<li>Oceanus(58同城数据库中间件)  </li>
+<li>OneProxy(支付宝首席架构师楼方鑫开发)  </li>
+<li>vitess（谷歌开发的数据库中间件）  </li>
+</ul>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/分布式系统/">分布式系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/04/12/浅谈分库分表/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-Java NIO 原理解析" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -471,91 +556,6 @@ stop=true;
 
 
   
-    <article id="post-浅谈分库分表" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/01/04/浅谈分库分表/" class="article-date">
-      <time datetime="2018-01-04T03:24:00.000Z" itemprop="datePublished">2018-01-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/04/浅谈分库分表/">浅谈分库分表</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是分库分表？"><a href="#什么是分库分表？" class="headerlink" title="什么是分库分表？"></a>什么是分库分表？</h3><p>从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  </p>
-<h3 id="为什么要分库分表？"><a href="#为什么要分库分表？" class="headerlink" title="为什么要分库分表？"></a>为什么要分库分表？</h3><p>数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  </p>
-<h3 id="常用的分库分表中间件"><a href="#常用的分库分表中间件" class="headerlink" title="常用的分库分表中间件"></a>常用的分库分表中间件</h3><p>简单易用的组件：  </p>
-<ul>
-<li>当当sharding-jdbc  </li>
-<li>蘑菇街TSharding  </li>
-</ul>
-<p>强悍重量级的中间件：  </p>
-<ul>
-<li>sharding  </li>
-<li>TDDL Smart Client的方式（淘宝）  </li>
-<li>Atlas(Qihoo 360)  </li>
-<li>alibaba.cobar(是阿里巴巴（B2B）部门开发)  </li>
-<li>MyCAT（基于阿里开源的Cobar产品而研发）  </li>
-<li>Oceanus(58同城数据库中间件)  </li>
-<li>OneProxy(支付宝首席架构师楼方鑫开发)  </li>
-<li>vitess（谷歌开发的数据库中间件）  </li>
-</ul>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/分布式系统/">分布式系统</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2018/01/04/浅谈分库分表/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-大型网站的架构模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -760,10 +760,10 @@ stop=true;
 
 
   
-    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-单例模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
+      <a href="/2017/12/01/单例模式/" class="article-date">
       <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
 </a>
 
@@ -779,7 +779,7 @@ stop=true;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
+      <a class="article-title" href="/2017/12/01/单例模式/">单例模式</a>
     </h1>
   
 
@@ -789,7 +789,9 @@ stop=true;
     <div class="article-entry" itemprop="articleBody">
       
           
-              <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>
+              <h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br>
           
       
     </div>
@@ -809,7 +811,7 @@ stop=true;
 
       
         <p class="article-more-link">
-          <a href="/2017/12/01/抽象工厂模式/#more">more >></a>
+          <a href="/2017/12/01/单例模式/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -896,10 +898,10 @@ stop=true;
 
 
   
-    <article id="post-单例模式" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/12/01/单例模式/" class="article-date">
+      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
       <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
 </a>
 
@@ -915,7 +917,7 @@ stop=true;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/01/单例模式/">单例模式</a>
+      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
     </h1>
   
 
@@ -925,9 +927,7 @@ stop=true;
     <div class="article-entry" itemprop="articleBody">
       
           
-              <h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
-<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br>
+              <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>
           
       
     </div>
@@ -947,7 +947,7 @@ stop=true;
 
       
         <p class="article-more-link">
-          <a href="/2017/12/01/单例模式/#more">more >></a>
+          <a href="/2017/12/01/抽象工厂模式/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

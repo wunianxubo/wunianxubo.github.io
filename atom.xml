@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-11T09:16:56.141Z</updated>
+  <updated>2018-04-12T08:45:57.065Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>浅谈分库分表</title>
+    <link href="http://yoursite.com/2018/04/12/%E6%B5%85%E8%B0%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/"/>
+    <id>http://yoursite.com/2018/04/12/浅谈分库分表/</id>
+    <published>2018-04-12T08:40:00.000Z</published>
+    <updated>2018-04-12T08:45:57.065Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是分库分表？"><a href="#什么是分库分表？" class="headerlink" title="什么是分库分表？"></a>什么是分库分表？</h3><p>从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  </p>
+<h3 id="为什么要分库分表？"><a href="#为什么要分库分表？" class="headerlink" title="为什么要分库分表？"></a>为什么要分库分表？</h3><p>数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  </p>
+<h3 id="常用的分库分表中间件"><a href="#常用的分库分表中间件" class="headerlink" title="常用的分库分表中间件"></a>常用的分库分表中间件</h3><p>简单易用的组件：  </p>
+<ul>
+<li>当当sharding-jdbc  </li>
+<li>蘑菇街TSharding  </li>
+</ul>
+<p>强悍重量级的中间件：  </p>
+<ul>
+<li>sharding  </li>
+<li>TDDL Smart Client的方式（淘宝）  </li>
+<li>Atlas(Qihoo 360)  </li>
+<li>alibaba.cobar(是阿里巴巴（B2B）部门开发)  </li>
+<li>MyCAT（基于阿里开源的Cobar产品而研发）  </li>
+<li>Oceanus(58同城数据库中间件)  </li>
+<li>OneProxy(支付宝首席架构师楼方鑫开发)  </li>
+<li>vitess（谷歌开发的数据库中间件）  </li>
+</ul>
+<a id="more"></a>
+<h2 id="一、分库分表的实施策略"><a href="#一、分库分表的实施策略" class="headerlink" title="一、分库分表的实施策略"></a>一、分库分表的实施策略</h2><p>分库分表有垂直切分和水平切分两种。</p>
+<h3 id="垂直分表"><a href="#垂直分表" class="headerlink" title="垂直分表"></a>垂直分表</h3><p>即大表拆小表，拆分是基于关系型数据库中的”列字段”进行的。通常情况，某个表的字段比较多时，可以新建立一张扩展表，将不经常使用或者长度较大的字段拆分出去放到扩展表中。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9E%82%E7%9B%B4%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
+<h3 id="垂直分库"><a href="#垂直分库" class="headerlink" title="垂直分库"></a>垂直分库</h3><p>基本思路是按照业务模块来划分出不同的数据库，而不是像早期一样将所有的数据表都放到同一个数据库中。例如，我们会建立定义数据库workDB、商品数据库payDB、用户数据库userDB、日志数据库logDB等，分别用于存储项目数据定义表、商品定义表、用户数据表、日志数据表等。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9E%82%E7%9B%B4%E5%88%86%E5%BA%93.jpg" alt="image"></p>
+<h3 id="水平分表"><a href="#水平分表" class="headerlink" title="水平分表"></a>水平分表</h3><p>当一个表中的数据量过大时，我们可以把该表的数据按照某种规则，例如userID散列，进行划分，然后存储到多个结构相同的表，以此来降低单表数据量，优化查询性能。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%B0%B4%E5%B9%B3%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
+<h3 id="水平分库分表"><a href="#水平分库分表" class="headerlink" title="水平分库分表"></a>水平分库分表</h3><p>与水平分表思想一致，不同在于这些拆分出来的表保存在不同的数据库中。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
+<h2 id="二、分库分表的难点"><a href="#二、分库分表的难点" class="headerlink" title="二、分库分表的难点"></a>二、分库分表的难点</h2><p>在高并发和海量数据的场景下，通过使用分库分表的手段，能够解决单机或者单库单表的性能瓶颈和压力，突破IO、连接数、硬件资源的瓶颈。当然，投入硬件资源会更多，同时也会带来一些技术问题和挑战：如跨分片的复杂查询，跨分片事务等。  </p>
+<h3 id="1、跨节点Join的问题"><a href="#1、跨节点Join的问题" class="headerlink" title="1、跨节点Join的问题"></a>1、跨节点Join的问题</h3><h4 id="①全局表"><a href="#①全局表" class="headerlink" title="①全局表"></a>①全局表</h4><p>全局表意思就是有可能系统中所有模块都可能会依赖到的一些表。为避免跨库join查询，可以将这类表在每个数据库中均保存一份。同时这类数据很少修改，不用太担心一致性的问题。  </p>
+<h4 id="②字段冗余"><a href="#②字段冗余" class="headerlink" title="②字段冗余"></a>②字段冗余</h4><p>是典型的反范式手段，以空间换事件的方式，来避免join查询。例如订单表在保存卖家id的同时，将卖家的name字段也冗余。这样查询订单详情的时候就不需要再去查询卖家用户表。  </p>
+<h4 id="③系统层拼装"><a href="#③系统层拼装" class="headerlink" title="③系统层拼装"></a>③系统层拼装</h4><p>将一次查询分为两次查询，在第一次查询的结果集中找出关联数据的id，根据这些id发起第二次请求得到关联数据。</p>
+<h3 id="2、跨节点的count，order-by，group-by以及聚合函数的问题"><a href="#2、跨节点的count，order-by，group-by以及聚合函数的问题" class="headerlink" title="2、跨节点的count，order by，group by以及聚合函数的问题"></a>2、跨节点的count，order by，group by以及聚合函数的问题</h3><p>这类问题，需要基于全部的数据集进行计算。解决方案：与跨节点join问题类似，分别在各个节点上得到结果后在应用程序端进行合并。和join不同的是每个节点的查询可以并行处理，因此很多时候比单一大表快很多，但对应用内存消耗较大。  </p>
+<h3 id="3、数据迁移，容量规划，扩容等问题"><a href="#3、数据迁移，容量规划，扩容等问题" class="headerlink" title="3、数据迁移，容量规划，扩容等问题"></a>3、数据迁移，容量规划，扩容等问题</h3><p>淘宝TDDL中，利用对2的倍数取余具有向前兼容的特性（如对4取余得1的数对2取余也是1）来分配数据，避免了行级别的数据迁移，但是仍然需要进行表级别的迁移，同时对扩容规模（需为2的倍数）和分表数量都有限制。<br>参考文章：<a href="https://www.cnblogs.com/tommyli/p/3767362.html" target="_blank" rel="external">https://www.cnblogs.com/tommyli/p/3767362.html</a>  </p>
+<p>总而言之，主要基于两种规则映射：  </p>
+<ol>
+<li>离散映射：如mod或dayofweek（一周七天），这种类型的映射能够很好的解决热点问题，但带来了数据迁移和历史数据问题。  </li>
+<li>连续映射：如按id或create_time的连续范围做映射，比如id范围0-1000在库1，1000-2000在库2.这种类型的映射可以避免数据迁移，但又会带来热点问题。</li>
+</ol>
+<h3 id="4、分布式事务问题"><a href="#4、分布式事务问题" class="headerlink" title="4、分布式事务问题"></a>4、分布式事务问题</h3><p>分布式事务是个较复杂的问题，后续会添加文章专门讲解分布式事务及其解决方案。  </p>
+<h3 id="5、分布式全局唯一ID"><a href="#5、分布式全局唯一ID" class="headerlink" title="5、分布式全局唯一ID"></a>5、分布式全局唯一ID</h3><p>在复杂的分布式系统中，往往需要对大量的数据和消息进行唯一标识。如外卖系统中的订单、骑手、优惠券等都需要有唯一的ID做标识（因为分库分表的原因，比如订单表不放在一个库一个表中，那么就无法通过使用数据库自增ID这种简单方式来实现订单的唯一标识）。此时一个能生成全局唯一ID的系统是十分必要的。后续会补上相关文章，也可参考美团的文章：<a href="https://tech.meituan.com/MT_Leaf.html" target="_blank" rel="external">https://tech.meituan.com/MT_Leaf.html</a>   </p>
+<p>参考文章：<br><a href="https://www.jianshu.com/p/32b3e91aa22c?from=timeline" target="_blank" rel="external">https://www.jianshu.com/p/32b3e91aa22c?from=timeline</a><br><a href="http://www.infoq.com/cn/articles/key-steps-and-likely-problems-of-split-table?utm_source=infoq&amp;utm_campaign=user_page&amp;utm_medium=link" target="_blank" rel="external">http://www.infoq.com/cn/articles/key-steps-and-likely-problems-of-split-table?utm_source=infoq&amp;utm_campaign=user_page&amp;utm_medium=link</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;h3 id=&quot;什么是分库分表？&quot;&gt;&lt;a href=&quot;#什么是分库分表？&quot; class=&quot;headerlink&quot; title=&quot;什么是分库分表？&quot;&gt;&lt;/a&gt;什么是分库分表？&lt;/h3&gt;&lt;p&gt;从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  &lt;/p&gt;
+&lt;h3 id=&quot;为什么要分库分表？&quot;&gt;&lt;a href=&quot;#为什么要分库分表？&quot; class=&quot;headerlink&quot; title=&quot;为什么要分库分表？&quot;&gt;&lt;/a&gt;为什么要分库分表？&lt;/h3&gt;&lt;p&gt;数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  &lt;/p&gt;
+&lt;h3 id=&quot;常用的分库分表中间件&quot;&gt;&lt;a href=&quot;#常用的分库分表中间件&quot; class=&quot;headerlink&quot; title=&quot;常用的分库分表中间件&quot;&gt;&lt;/a&gt;常用的分库分表中间件&lt;/h3&gt;&lt;p&gt;简单易用的组件：  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当当sharding-jdbc  &lt;/li&gt;
+&lt;li&gt;蘑菇街TSharding  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;强悍重量级的中间件：  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sharding  &lt;/li&gt;
+&lt;li&gt;TDDL Smart Client的方式（淘宝）  &lt;/li&gt;
+&lt;li&gt;Atlas(Qihoo 360)  &lt;/li&gt;
+&lt;li&gt;alibaba.cobar(是阿里巴巴（B2B）部门开发)  &lt;/li&gt;
+&lt;li&gt;MyCAT（基于阿里开源的Cobar产品而研发）  &lt;/li&gt;
+&lt;li&gt;Oceanus(58同城数据库中间件)  &lt;/li&gt;
+&lt;li&gt;OneProxy(支付宝首席架构师楼方鑫开发)  &lt;/li&gt;
+&lt;li&gt;vitess（谷歌开发的数据库中间件）  &lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="分布式系统" scheme="http://yoursite.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="大型网站技术架构" scheme="http://yoursite.com/tags/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="分布式" scheme="http://yoursite.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>Java NIO 原理解析</title>
@@ -375,87 +456,6 @@ stop=true;
   </entry>
   
   <entry>
-    <title>浅谈分库分表</title>
-    <link href="http://yoursite.com/2018/01/04/%E6%B5%85%E8%B0%88%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/"/>
-    <id>http://yoursite.com/2018/01/04/浅谈分库分表/</id>
-    <published>2018-01-04T03:24:00.000Z</published>
-    <updated>2018-04-12T08:31:01.266Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="什么是分库分表？"><a href="#什么是分库分表？" class="headerlink" title="什么是分库分表？"></a>什么是分库分表？</h3><p>从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  </p>
-<h3 id="为什么要分库分表？"><a href="#为什么要分库分表？" class="headerlink" title="为什么要分库分表？"></a>为什么要分库分表？</h3><p>数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  </p>
-<h3 id="常用的分库分表中间件"><a href="#常用的分库分表中间件" class="headerlink" title="常用的分库分表中间件"></a>常用的分库分表中间件</h3><p>简单易用的组件：  </p>
-<ul>
-<li>当当sharding-jdbc  </li>
-<li>蘑菇街TSharding  </li>
-</ul>
-<p>强悍重量级的中间件：  </p>
-<ul>
-<li>sharding  </li>
-<li>TDDL Smart Client的方式（淘宝）  </li>
-<li>Atlas(Qihoo 360)  </li>
-<li>alibaba.cobar(是阿里巴巴（B2B）部门开发)  </li>
-<li>MyCAT（基于阿里开源的Cobar产品而研发）  </li>
-<li>Oceanus(58同城数据库中间件)  </li>
-<li>OneProxy(支付宝首席架构师楼方鑫开发)  </li>
-<li>vitess（谷歌开发的数据库中间件）  </li>
-</ul>
-<a id="more"></a>
-<h2 id="一、分库分表的实施策略"><a href="#一、分库分表的实施策略" class="headerlink" title="一、分库分表的实施策略"></a>一、分库分表的实施策略</h2><p>分库分表有垂直切分和水平切分两种。</p>
-<h3 id="垂直分表"><a href="#垂直分表" class="headerlink" title="垂直分表"></a>垂直分表</h3><p>即大表拆小表，拆分是基于关系型数据库中的”列字段”进行的。通常情况，某个表的字段比较多时，可以新建立一张扩展表，将不经常使用或者长度较大的字段拆分出去放到扩展表中。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9E%82%E7%9B%B4%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
-<h3 id="垂直分库"><a href="#垂直分库" class="headerlink" title="垂直分库"></a>垂直分库</h3><p>基本思路是按照业务模块来划分出不同的数据库，而不是像早期一样将所有的数据表都放到同一个数据库中。例如，我们会建立定义数据库workDB、商品数据库payDB、用户数据库userDB、日志数据库logDB等，分别用于存储项目数据定义表、商品定义表、用户数据表、日志数据表等。<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%9E%82%E7%9B%B4%E5%88%86%E5%BA%93.jpg" alt="image"></p>
-<h3 id="水平分表"><a href="#水平分表" class="headerlink" title="水平分表"></a>水平分表</h3><p>当一个表中的数据量过大时，我们可以把该表的数据按照某种规则，例如userID散列，进行划分，然后存储到多个结构相同的表，以此来降低单表数据量，优化查询性能。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%B0%B4%E5%B9%B3%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
-<h3 id="水平分库分表"><a href="#水平分库分表" class="headerlink" title="水平分库分表"></a>水平分库分表</h3><p>与水平分表思想一致，不同在于这些拆分出来的表保存在不同的数据库中。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E6%B0%B4%E5%B9%B3%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8.jpg" alt="image"></p>
-<h2 id="二、分库分表的难点"><a href="#二、分库分表的难点" class="headerlink" title="二、分库分表的难点"></a>二、分库分表的难点</h2><p>在高并发和海量数据的场景下，通过使用分库分表的手段，能够解决单机或者单库单表的性能瓶颈和压力，突破IO、连接数、硬件资源的瓶颈。当然，投入硬件资源会更多，同时也会带来一些技术问题和挑战：如跨分片的复杂查询，跨分片事务等。  </p>
-<h3 id="1、跨节点Join的问题"><a href="#1、跨节点Join的问题" class="headerlink" title="1、跨节点Join的问题"></a>1、跨节点Join的问题</h3><h4 id="①全局表"><a href="#①全局表" class="headerlink" title="①全局表"></a>①全局表</h4><p>全局表意思就是有可能系统中所有模块都可能会依赖到的一些表。为避免跨库join查询，可以将这类表在每个数据库中均保存一份。同时这类数据很少修改，不用太担心一致性的问题。  </p>
-<h4 id="②字段冗余"><a href="#②字段冗余" class="headerlink" title="②字段冗余"></a>②字段冗余</h4><p>是典型的反范式手段，以空间换事件的方式，来避免join查询。例如订单表在保存卖家id的同时，将卖家的name字段也冗余。这样查询订单详情的时候就不需要再去查询卖家用户表。  </p>
-<h4 id="③系统层拼装"><a href="#③系统层拼装" class="headerlink" title="③系统层拼装"></a>③系统层拼装</h4><p>将一次查询分为两次查询，在第一次查询的结果集中找出关联数据的id，根据这些id发起第二次请求得到关联数据。</p>
-<h3 id="2、跨节点的count，order-by，group-by以及聚合函数的问题"><a href="#2、跨节点的count，order-by，group-by以及聚合函数的问题" class="headerlink" title="2、跨节点的count，order by，group by以及聚合函数的问题"></a>2、跨节点的count，order by，group by以及聚合函数的问题</h3><p>这类问题，需要基于全部的数据集进行计算。解决方案：与跨节点join问题类似，分别在各个节点上得到结果后在应用程序端进行合并。和join不同的是每个节点的查询可以并行处理，因此很多时候比单一大表快很多，但对应用内存消耗较大。  </p>
-<h3 id="3、数据迁移，容量规划，扩容等问题"><a href="#3、数据迁移，容量规划，扩容等问题" class="headerlink" title="3、数据迁移，容量规划，扩容等问题"></a>3、数据迁移，容量规划，扩容等问题</h3><p>淘宝TDDL中，利用对2的倍数取余具有向前兼容的特性（如对4取余得1的数对2取余也是1）来分配数据，避免了行级别的数据迁移，但是仍然需要进行表级别的迁移，同时对扩容规模（需为2的倍数）和分表数量都有限制。<br>参考文章：<a href="https://www.cnblogs.com/tommyli/p/3767362.html" target="_blank" rel="external">https://www.cnblogs.com/tommyli/p/3767362.html</a>  </p>
-<p>总而言之，主要基于两种规则映射：  </p>
-<ol>
-<li>离散映射：如mod或dayofweek（一周七天），这种类型的映射能够很好的解决热点问题，但带来了数据迁移和历史数据问题。  </li>
-<li>连续映射：如按id或create_time的连续范围做映射，比如id范围0-1000在库1，1000-2000在库2.这种类型的映射可以避免数据迁移，但又会带来热点问题。</li>
-</ol>
-<h3 id="4、分布式事务问题"><a href="#4、分布式事务问题" class="headerlink" title="4、分布式事务问题"></a>4、分布式事务问题</h3><p>分布式事务是个较复杂的问题，后续会添加文章专门讲解分布式事务及其解决方案。  </p>
-<h3 id="5、分布式全局唯一ID"><a href="#5、分布式全局唯一ID" class="headerlink" title="5、分布式全局唯一ID"></a>5、分布式全局唯一ID</h3><p>在复杂的分布式系统中，往往需要对大量的数据和消息进行唯一标识。如外卖系统中的订单、骑手、优惠券等都需要有唯一的ID做标识（因为分库分表的原因，比如订单表不放在一个库一个表中，那么就无法通过使用数据库自增ID这种简单方式来实现订单的唯一标识）。此时一个能生成全局唯一ID的系统是十分必要的。后续会补上相关文章，也可参考美团的文章：<a href="https://tech.meituan.com/MT_Leaf.html" target="_blank" rel="external">https://tech.meituan.com/MT_Leaf.html</a>   </p>
-<p>参考文章：<br><a href="https://www.jianshu.com/p/32b3e91aa22c?from=timeline" target="_blank" rel="external">https://www.jianshu.com/p/32b3e91aa22c?from=timeline</a><br><a href="http://www.infoq.com/cn/articles/key-steps-and-likely-problems-of-split-table?utm_source=infoq&amp;utm_campaign=user_page&amp;utm_medium=link" target="_blank" rel="external">http://www.infoq.com/cn/articles/key-steps-and-likely-problems-of-split-table?utm_source=infoq&amp;utm_campaign=user_page&amp;utm_medium=link</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;h3 id=&quot;什么是分库分表？&quot;&gt;&lt;a href=&quot;#什么是分库分表？&quot; class=&quot;headerlink&quot; title=&quot;什么是分库分表？&quot;&gt;&lt;/a&gt;什么是分库分表？&lt;/h3&gt;&lt;p&gt;从字面上简单理解，就是把原本存储于一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。  &lt;/p&gt;
-&lt;h3 id=&quot;为什么要分库分表？&quot;&gt;&lt;a href=&quot;#为什么要分库分表？&quot; class=&quot;headerlink&quot; title=&quot;为什么要分库分表？&quot;&gt;&lt;/a&gt;为什么要分库分表？&lt;/h3&gt;&lt;p&gt;数据库中的数据量不一定是可控的，在未进行分库分表的情况下，随着时间和业务的发展，库中的表会越来越多，表中的数据量也会越来越大，相应地，数据操作，增删改查的开销也会越来越大；另外，由于无法进行分布式部署，而一台服务器的资源（CPU、磁盘、内存、IO等）是有限的，最终数据库所能承载的数据量、数据处理能力都将遭遇瓶颈。  &lt;/p&gt;
-&lt;h3 id=&quot;常用的分库分表中间件&quot;&gt;&lt;a href=&quot;#常用的分库分表中间件&quot; class=&quot;headerlink&quot; title=&quot;常用的分库分表中间件&quot;&gt;&lt;/a&gt;常用的分库分表中间件&lt;/h3&gt;&lt;p&gt;简单易用的组件：  &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;当当sharding-jdbc  &lt;/li&gt;
-&lt;li&gt;蘑菇街TSharding  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;强悍重量级的中间件：  &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;sharding  &lt;/li&gt;
-&lt;li&gt;TDDL Smart Client的方式（淘宝）  &lt;/li&gt;
-&lt;li&gt;Atlas(Qihoo 360)  &lt;/li&gt;
-&lt;li&gt;alibaba.cobar(是阿里巴巴（B2B）部门开发)  &lt;/li&gt;
-&lt;li&gt;MyCAT（基于阿里开源的Cobar产品而研发）  &lt;/li&gt;
-&lt;li&gt;Oceanus(58同城数据库中间件)  &lt;/li&gt;
-&lt;li&gt;OneProxy(支付宝首席架构师楼方鑫开发)  &lt;/li&gt;
-&lt;li&gt;vitess（谷歌开发的数据库中间件）  &lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="分布式系统" scheme="http://yoursite.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="大型网站技术架构" scheme="http://yoursite.com/tags/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/"/>
-    
-      <category term="分布式" scheme="http://yoursite.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>大型网站的架构模式</title>
     <link href="http://yoursite.com/2018/01/04/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E7%9A%84%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F/"/>
     <id>http://yoursite.com/2018/01/04/大型网站的架构模式/</id>
@@ -559,25 +559,30 @@ stop=true;
   </entry>
   
   <entry>
-    <title>抽象工厂模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
+    <title>单例模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/单例模式/</id>
     <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-11T09:20:41.700Z</updated>
+    <updated>2018-04-11T09:24:08.012Z</updated>
     
-    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br><a id="more"></a><br>Sender接口：</p>
-<p><pre><br>public interface Sender{<br>    public void Send();<br>}<br></pre><br>两个实现类：  </p>
-<p><pre><br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</pre></p>
-<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}<br><br>两个工厂类：  </p>
-<p><pre><br>public class SendMailFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new MailSender();<br>    }<br>}</pre></p>
-<p>public class SendSmsFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new SmsSender();<br>    }<br>}<br><br>提供一个接口：  </p>
-<p><pre><br>public interface Provider{<br>    public Sender produce();<br>}<br></pre><br>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+    <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br><a id="more"></a></p>
+<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
+<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory3.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
+      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  &lt;/p&gt;
+&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;p&gt;保证整个应用中某个实例有且只有一个。  &lt;/p&gt;
+&lt;h2 id=&quot;应用场合&quot;&gt;&lt;a href=&quot;#应用场合&quot; class=&quot;headerlink&quot; title=&quot;应用场合&quot;&gt;&lt;/a&gt;应用场合&lt;/h2&gt;&lt;p&gt;有些对象我们只需要一个，比如&lt;strong&gt;配置文件、工具类、线程池、缓存、日志对象&lt;/strong&gt;等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。&lt;br&gt;
     
     </summary>
     
@@ -624,30 +629,25 @@ stop=true;
   </entry>
   
   <entry>
-    <title>单例模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/单例模式/</id>
+    <title>抽象工厂模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
     <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-11T09:24:08.012Z</updated>
+    <updated>2018-04-11T09:20:41.700Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
-<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br><a id="more"></a></p>
-<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
-<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
-<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br><a id="more"></a><br>Sender接口：</p>
+<p><pre><br>public interface Sender{<br>    public void Send();<br>}<br></pre><br>两个实现类：  </p>
+<p><pre><br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</pre></p>
+<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}<br><br>两个工厂类：  </p>
+<p><pre><br>public class SendMailFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new MailSender();<br>    }<br>}</pre></p>
+<p>public class SendSmsFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new SmsSender();<br>    }<br>}<br><br>提供一个接口：  </p>
+<p><pre><br>public interface Provider{<br>    public Sender produce();<br>}<br></pre><br>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  &lt;/p&gt;
-&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;p&gt;保证整个应用中某个实例有且只有一个。  &lt;/p&gt;
-&lt;h2 id=&quot;应用场合&quot;&gt;&lt;a href=&quot;#应用场合&quot; class=&quot;headerlink&quot; title=&quot;应用场合&quot;&gt;&lt;/a&gt;应用场合&lt;/h2&gt;&lt;p&gt;有些对象我们只需要一个，比如&lt;strong&gt;配置文件、工具类、线程池、缓存、日志对象&lt;/strong&gt;等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。&lt;br&gt;
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory3.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
     
     </summary>
     
@@ -717,6 +717,40 @@ stop=true;
   </entry>
   
   <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2018-04-09T01:06:17.618Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>IO多路复用select、poll、epoll的区别与使用</title>
     <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
@@ -741,40 +775,6 @@ stop=true;
     <summary type="html">
     
       &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
-    
-    </summary>
-    
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux的五种I/O模型</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2018-04-09T01:06:17.618Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
     
     </summary>
     
