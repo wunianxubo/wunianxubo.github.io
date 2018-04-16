@@ -244,6 +244,74 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-抽象工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/抽象工厂模式/" class="article-date">
+      <time datetime="2017-12-01T12:40:00.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/01/抽象工厂模式/">抽象工厂模式</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/12/01/抽象工厂模式/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-HashMap的四种遍历方式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -380,81 +448,6 @@
 
 
   
-    <article id="post-Linux的五种IO模型" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/27/Linux的五种IO模型/" class="article-date">
-      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-Linux系统——IO多路复用select、poll、epoll的区别与使用" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -497,6 +490,81 @@
 <p>&emsp;epoll对文件描述符的操作有两种模式：LT模式和ET模式。LT模式是默认模式，区别如下：<br><strong>LT模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br><strong>ET模式：</strong> 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>ET模式很大程度上减少了epoll事件被重复触发的次数，因此效率比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。  </p>
 <p>&emsp;在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll()事件通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。  </p>
 <h3 id="epoll-的优点"><a href="#epoll-的优点" class="headerlink" title="epoll()的优点"></a>epoll()的优点</h3><p>1、监视的描述符数量不受限制，它所支持的fd上限是最大可以打开文件的数目，一般远大于2048。1GB内存机器上大约是10万左右。<br>2、I/O效率不会随着监视fd的数量的增长而下降。select,poll需要不断轮询所有fd集合，直到设备就绪，期间可能要睡眠和唤醒多次交替。而epoll也需要调用epoll_wait()不断轮询就绪链表，期间也可能多次睡眠和唤醒交替，但是epoll在设备就绪时，调用回调函数，把就绪fd放入就绪链表中，并唤醒在epoll_wait()中睡眠的进程。虽然都要睡眠和交替，但是select和poll在“醒着”的时候要遍历整个fd集合，而epoll在“醒着”的时候只要判断一下就绪链表是否为空就行了，这节约了大量的CPU时间。<br>3、select,poll每次调用都要把fd集合从用户态复制到内核态，而epoll只要拷贝一次，这节省了很大的开销。  </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Linux的五种IO模型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/27/Linux的五种IO模型/" class="article-date">
+      <time datetime="2017-10-27T12:36:00.000Z" itemprop="datePublished">2017-10-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/27/Linux的五种IO模型/">linux的五种I/O模型</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
 
       
     </div>
@@ -850,72 +918,6 @@
         <p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。  </p>
 <h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>在遍历数组时，保存两个值：一个是数组中的一个数字，还有一个是次数。当我们遍历到下一个数字的时候，如果下一个数字和我们之前保存的相同，则次数加一，不同次数就减一。若次数为0，我们需要保存下一个数字，次数记为1。由于我们要找的数字出现次数比其他所有数字出现的次数之和还多，那么要找的数字肯定是最后一次把次数设为1时对应的数字。  </p>
 <h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">public class <span class="type">Solution</span> &#123;</div><div class="line">    public <span class="built_in">int</span> <span class="type">MoreThanHalfNum_Solution</span>(<span class="built_in">int</span> [] <span class="built_in">array</span>) &#123;</div><div class="line">        <span class="built_in">int</span> <span class="literal">result</span>=<span class="built_in">array</span>[<span class="number">0</span>];</div><div class="line">        <span class="built_in">int</span> count=<span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">1</span>;i&lt;<span class="built_in">array</span>.length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(count==<span class="number">0</span>)&#123;</div><div class="line">                <span class="literal">result</span>=<span class="built_in">array</span>[i];</div><div class="line">                count=<span class="number">1</span>;</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)&#123;</div><div class="line">                count++;</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                count--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(!<span class="type">CheckMoreThanHalf</span>(<span class="built_in">array</span>,<span class="built_in">array</span>.length,<span class="literal">result</span>))</div><div class="line">            <span class="literal">result</span>=<span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">result</span>;</div><div class="line">    &#125;</div><div class="line">    //检验最后一次把次数设为<span class="number">1</span>时对应的数字出现的次数是够满足超过一半的数字。</div><div class="line">    boolean <span class="type">CheckMoreThanHalf</span>(<span class="built_in">int</span>[] <span class="built_in">array</span>,<span class="built_in">int</span> length,<span class="built_in">int</span> <span class="literal">result</span>)&#123;</div><div class="line">        boolean a=<span class="literal">true</span>;</div><div class="line">        <span class="built_in">int</span> times=<span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)</div><div class="line">                times++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(times*<span class="number">2</span>&lt;=length)</div><div class="line">            a=<span class="literal">false</span>;</div><div class="line">        <span class="keyword">return</span> a;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-30、最小的k个数" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/13/30、最小的k个数/" class="article-date">
-      <time datetime="2017-10-13T12:08:00.000Z" itemprop="datePublished">2017-10-13</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>创建一个大小为k的最大堆，先依次放入k个数，找出k个数中的最大值，然后每次拿待插入的数和最大值比较。如果待插入的数比当前已知的最大值小，就用这个数替换最大值；若比最大值大，就抛弃该数。<br>堆满之后，要做三件事：一是找出最大数；二是可能需要删除最大数；三是可能要插入新数字，我们可以在O(logk)时间内完成这三步操作。对N个数字而言，总时间复杂度为O(nlogk)。  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.PriorityQueue;</div><div class="line"><span class="keyword">import</span> java.util.Comparator;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="keyword">public</span> ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(<span class="keyword">int</span> [] input, <span class="keyword">int</span> k) &#123;</div><div class="line">        ArrayList&lt;Integer&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">        <span class="keyword">int</span> length=input.length;</div><div class="line">        <span class="keyword">if</span>(k&gt;length || k&lt;=<span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">        </div><div class="line">        PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(k , <span class="keyword">new</span> Comparator&lt;Integer&gt;()&#123;<span class="comment">//PriorityQueue是基于最小堆的</span></div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(Integer o1,Integer o2)&#123;</div><div class="line">                <span class="keyword">return</span> o2.compareTo(o1);<span class="comment">//变为按逆序排的最大堆，原为按自然顺序的最小堆</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(maxHeap.size() != k)&#123;<span class="comment">//先填满大小为k的最大堆</span></div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(maxHeap.peek() &gt; input[i])&#123;<span class="comment">//如果比最大堆中最大的数小，则替换之。</span></div><div class="line">                maxHeap.poll();</div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(Integer integer : maxHeap)&#123;</div><div class="line">            <span class="built_in">list</span>.add(integer);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-12T08:45:57.065Z</updated>
+  <updated>2018-04-16T14:19:35.725Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>谈谈分布式事务</title>
+    <link href="http://yoursite.com/2018/04/16/%E8%B0%88%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/"/>
+    <id>http://yoursite.com/2018/04/16/谈谈分布式事务/</id>
+    <published>2018-04-16T14:17:00.000Z</published>
+    <updated>2018-04-16T14:19:35.725Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是分布式事务"><a href="#什么是分布式事务" class="headerlink" title="什么是分布式事务"></a>什么是分布式事务</h2><p>一个事务由多个不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要确保这些小的操作要么全部成功，要么全部失败。从本质上说，分布式事务是为了保证不同数据库之间的一致性。分布式事务的应用场景主要是在支付和在线下单，支付涉及到扣款和加钱，而在线下单则涉及到扣库存和更新账单，需要分布式事务来保证一致性。    </p>
+<a id="more"></a>
+<h2 id="分布式事务产生的原因"><a href="#分布式事务产生的原因" class="headerlink" title="分布式事务产生的原因"></a>分布式事务产生的原因</h2><h3 id="数据库的分库分表"><a href="#数据库的分库分表" class="headerlink" title="数据库的分库分表"></a>数据库的分库分表</h3><p>分库分表后，原来的一个数据库分为了多个数据库，如果一个操作既要更新库01，又要更新库02，而且要保证数据的一致性，那么就需要用到分布式事务。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/shiwu1.png" alt="image">  </p>
+<h3 id="应用SOA化"><a href="#应用SOA化" class="headerlink" title="应用SOA化"></a>应用SOA化</h3><p>即业务的服务化。以前单机支撑了整个电商网站，现在对整个网站进行拆解，分离出了订单中心，用户中心，库存中心等，对于每个中心有专门的数据库进行信息的存储。如果同时涉及到对订单和库存的操作，那么为了保证数据的一致性，需要用到分布式事务。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/shiwu2.png" alt="image">  </p>
+<h2 id="事务的ACID特性"><a href="#事务的ACID特性" class="headerlink" title="事务的ACID特性"></a>事务的ACID特性</h2><ul>
+<li>原子性<br>在整个事务中的所有操作，要么全部完成，要么全部不做，没有中间状态。对于事务在执行中发生错误，所有的操作都会被回滚，整个事务就像从没被执行过一样。</li>
+<li>一致性<br>事务的执行必须保证系统的一致性，就拿转账为例，A有500元，B有300元，如果在一个事务里A成功转给B50元，那么不管并发多少，不管发生什么，只要事务执行成功了，那么最后A账户一定是450元，B账户一定是350元。</li>
+<li>隔离性<br>所谓的隔离性就是说，事务与事务之间不会互相影响，一个事务的中间状态不会被其他事务感知。</li>
+<li>持久性<br>持久性，就是说一单事务完成了，那么事务对数据所做的变更就完全保存在了数据库中，即使发生停电，系统宕机也是如此。  </li>
+</ul>
+<h2 id="一致性理论"><a href="#一致性理论" class="headerlink" title="一致性理论"></a>一致性理论</h2><h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><p>在分布式系统中，一致性（Consistency）、可用性（Availabilty）和分区容忍性（Partition Tolerance）三个要素最多只能同时满足两个，不可兼得，而对于分布式系统，分区容忍性是不可或缺的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/cap.png" alt="image"></p>
+<ul>
+<li>一致性：分布式环境下多个节点的数据是否强一致。  </li>
+<li>可用性：分布式服务能一直保证可用状态。当用户发出一个请求后，服务能在有限时间内返回结果。  </li>
+<li>分区容忍性：特指对网络分区的容忍性。  </li>
+</ul>
+<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><ul>
+<li>基本可用（Basically Available）：指分布式系统在出现故障时，允许损失部分的可用性来保证核心可用。</li>
+<li>软状态（Soft State）：指允许分布式系统存在中间状态，该中间状态不会影响到系统的整体可用性。</li>
+<li>最终一致性（Eventual Consistency）：指分布式系统中的所有副本数据经过一定时间后，最终能够达到一致的状态</li>
+</ul>
+<h2 id="一致性模型"><a href="#一致性模型" class="headerlink" title="一致性模型"></a>一致性模型</h2><ul>
+<li>强一致性：数据更新成功后，任意时刻所有副本中的数据都是一致的，一般采用同步的方式实现。</li>
+<li>弱一致性：数据更新成功后，系统不承诺立即可以读到最新写入的值，也不承诺具体多久之后可以读到。</li>
+<li>最终一致性：弱一致性的一种形式，数据更新成功后，系统不承诺立即可以返回最新写入的值，但是保证最终会返回上一次更新操作的值。</li>
+</ul>
+<h2 id="常见的分布式事务解决方案"><a href="#常见的分布式事务解决方案" class="headerlink" title="常见的分布式事务解决方案"></a>常见的分布式事务解决方案</h2><h3 id="1、基于XA协议的两阶段提交（2PC）"><a href="#1、基于XA协议的两阶段提交（2PC）" class="headerlink" title="1、基于XA协议的两阶段提交（2PC）"></a>1、基于XA协议的两阶段提交（2PC）</h3><p>XA协议分为两部分：事务管理器和本地资源管理器，本地资源管理器主要由数据库实现，而事务管理器作为全局的调度者，负责各个本地资源的提交和回滚。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/2pc%20tb.jpg" alt="image">  </p>
+<p>这种方式实现难度不算高，比较适合传统的单体应用，在同一个方法中存在跨库操作的情况，能保证强一致性。但对性能的影响比较大，不适合高并发和高性能要求的场景。  </p>
+<h3 id="2、消息事务-最终一致性"><a href="#2、消息事务-最终一致性" class="headerlink" title="2、消息事务 - 最终一致性"></a>2、消息事务 - 最终一致性</h3><p>消息事务是基于消息中间件的两阶段提交，将本地事务和发消息放在了一个分布式事务里，保证要么本地操作成功并且对外发消息成功，要么两个操作都失败。  </p>
+<p>基于消息中间件的两阶段提交往往用在高并发场景下，将一个分布式事务拆分成一个消息事务（A系统的本地操作+发消息）+B系统的本地操作。其中B系统的操作由消息驱动，只要消息事务成功，那么A操作一定成功，消息也一定发出来了，之后B会受到消息去执行本地操作，如果本地操作失败，消息会重投，知道B操作成功，这样就变相的完成了A与B的分布式事务。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/message%20tx.png" alt="image">  </p>
+<h3 id="3、事务补偿型（TCC事务）"><a href="#3、事务补偿型（TCC事务）" class="headerlink" title="3、事务补偿型（TCC事务）"></a>3、事务补偿型（TCC事务）</h3><p>在一个长事务中，由两台服务器一起参与，服务器A发起事务，服务器B参与事务。如果服务器A的事务执行顺利，那么事务A先行提交，如果事务B也执行顺利，则事务B也提交，整个事务完成。如果事务B执行失败，事务B本身回滚，这时事务A已经被提交，所以需要执行一个补偿操作，将已经提交的事务A执行的操作作反操作，恢复到未执行事务A的状态。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/tcc.jpg" alt="image">  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/tcc2.jpg" alt="image">  </p>
+<p>参考文章：<br>分布式事务的典型处理方式 <a href="https://blog.csdn.net/mine_song/article/details/64118963" target="_blank" rel="external">https://blog.csdn.net/mine_song/article/details/64118963</a><br>大规模SOA系统中的分布事务处理  <a href="https://wenku.baidu.com/view/be946bec0975f46527d3e104.html" target="_blank" rel="external">https://wenku.baidu.com/view/be946bec0975f46527d3e104.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;什么是分布式事务&quot;&gt;&lt;a href=&quot;#什么是分布式事务&quot; class=&quot;headerlink&quot; title=&quot;什么是分布式事务&quot;&gt;&lt;/a&gt;什么是分布式事务&lt;/h2&gt;&lt;p&gt;一个事务由多个不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要确保这些小的操作要么全部成功，要么全部失败。从本质上说，分布式事务是为了保证不同数据库之间的一致性。分布式事务的应用场景主要是在支付和在线下单，支付涉及到扣款和加钱，而在线下单则涉及到扣库存和更新账单，需要分布式事务来保证一致性。    &lt;/p&gt;
+    
+    </summary>
+    
+      <category term="分布式系统" scheme="http://yoursite.com/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="大型网站技术架构" scheme="http://yoursite.com/tags/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%AB%99%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="分布式" scheme="http://yoursite.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>浅谈分库分表</title>
@@ -559,41 +622,6 @@ stop=true;
   </entry>
   
   <entry>
-    <title>单例模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/单例模式/</id>
-    <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-11T09:24:08.012Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
-<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br><a id="more"></a></p>
-<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
-<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
-<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  &lt;/p&gt;
-&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;p&gt;保证整个应用中某个实例有且只有一个。  &lt;/p&gt;
-&lt;h2 id=&quot;应用场合&quot;&gt;&lt;a href=&quot;#应用场合&quot; class=&quot;headerlink&quot; title=&quot;应用场合&quot;&gt;&lt;/a&gt;应用场合&lt;/h2&gt;&lt;p&gt;有些对象我们只需要一个，比如&lt;strong&gt;配置文件、工具类、线程池、缓存、日志对象&lt;/strong&gt;等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>工厂方法模式</title>
     <link href="http://yoursite.com/2017/12/01/%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
     <id>http://yoursite.com/2017/12/01/工厂方法模式/</id>
@@ -618,6 +646,41 @@ stop=true;
     <summary type="html">
     
       &lt;h1 id=&quot;一、普通工厂模式&quot;&gt;&lt;a href=&quot;#一、普通工厂模式&quot; class=&quot;headerlink&quot; title=&quot;一、普通工厂模式&quot;&gt;&lt;/a&gt;一、普通工厂模式&lt;/h1&gt;&lt;p&gt;就是建立一个工厂类，对实现了同一接口的一些类进行实例的创建。关系图如下：&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory1.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单例模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/单例模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2018-04-11T09:24:08.012Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="什么是设计模式"><a href="#什么是设计模式" class="headerlink" title="什么是设计模式"></a>什么是设计模式</h1><p>设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。<br>目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  </p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>保证整个应用中某个实例有且只有一个。  </p>
+<h2 id="应用场合"><a href="#应用场合" class="headerlink" title="应用场合"></a>应用场合</h2><p>有些对象我们只需要一个，比如<strong>配置文件、工具类、线程池、缓存、日志对象</strong>等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。<br><a id="more"></a></p>
+<h2 id="一、饿汉模式"><a href="#一、饿汉模式" class="headerlink" title="一、饿汉模式"></a>一、饿汉模式</h2><p>第一步：将构造方法私有化，不允许外部直接创建对象<br>第二步：创建类的唯一实例，使用private static修饰，private保证不让外部类直接访问，static保证在第一次加载类的时候就创建了类的唯一实例。<br>第三步：提供一个用于获取实例的方法，使用public static修饰，static保证外部可以用类来调用该方法。<br><strong>所谓饿汉，主要体现在第二步，在加载类的时候就创建了类的唯一实例，而不管你是否会使用到，用空间来换取时间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public calss Singleton&#123;</div><div class="line"></div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    //2.创建类的唯一实例，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="二、懒汉模式"><a href="#二、懒汉模式" class="headerlink" title="二、懒汉模式"></a>二、懒汉模式</h2><p><strong>懒汉主要体现在只有在需要获取实例时，才去创建。判断实例是否为空，为空则创建唯一实例。用时间来换取空间。</strong><br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private class Singleton&#123;</div><div class="line">    //1.将构造方法私有化，不允许外部直接创建对象</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //2.声明类的实例变量，使用private<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton instance;</div><div class="line">    </div><div class="line">    //3.提供一个用于获取实例的方法，使用public<span class="keyword"> static</span>修饰</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>饿汉模式的特点是加载类时比较慢，因为需要创建类的实例，但运行时获取对象的速度比较快，是线程安全的。<br>懒汉模式的特点是加载类时比较快，因为不需要在加载时创建类的实例，但运行时获取对象的速度比较慢，是线程不安全的。  </p>
+<h2 id="三、懒汉模式的优化"><a href="#三、懒汉模式的优化" class="headerlink" title="三、懒汉模式的优化"></a>三、懒汉模式的优化</h2><p>懒汉模式是线程不安全的，首先我们想到的是在getInstace()方法上加上synchronized关键字，如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static synchronized Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">           <span class="built_in"> instance </span>= new Singleton();</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样的做法，会让性能下降，原因是每次调用getInstance()，都需要拿到对象上锁，事实上我们只需要在第一次创建对象的时候加锁，之后就不需要了。进行下面的优化，使用双重判断：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static Singleton getInstance()&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                <span class="keyword">if</span>(<span class="attribute">instance</span>==null)&#123;</div><div class="line">               <span class="built_in"> instance </span>= new Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return<span class="built_in"> instance;</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>其实这样问题没有完全解决，instance = new Singleton()，这一句其实包含三个步骤：<br>1.在内存中为实例分配空间<br>2.进行Singleton的初始化动作<br>3.将实例的内存地址赋给instance变量<br>但这三步的顺序是不能保证的，可能在给Singleton分配完空间后就进行了赋值操作，使得没有进行初始化。这时候使用实例时，就会出现问题。  </p>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><h4 id="第一种方法："><a href="#第一种方法：" class="headerlink" title="第一种方法："></a>第一种方法：</h4><p>单例模式可以使用内部类来维护它的实现，jvm内部的机制可以保证一个类被加载时候是线程互斥的，当我们第一次调用getInstance方法时，可以保证Instance只被创建一次，并且保证instance初始化完毕，就不用担心上面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span>&#123;</span></div><div class="line"></div><div class="line">    <span class="comment">//私有构造方法，防止被实例化</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//使用内部类来维护单例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span>&#123;</span></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125; </div><div class="line">    </div><div class="line">    <span class="comment">//获取实例</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> SingletonFactory.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="第二种方法（推荐）"><a href="#第二种方法（推荐）" class="headerlink" title="第二种方法（推荐）"></a>第二种方法（推荐）</h4><p>将instance变量用volatile关键字修饰，这样做的目的是禁止指令重排序，就不会出现Singleton没有被正常初始化的问题。<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class Singleton&#123;</div><div class="line"></div><div class="line">    //私有构造方法</div><div class="line">   <span class="keyword"> private</span> Singleton()&#123;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //volatile修饰instance变量</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> volatile Singleton<span class="built_in"> instance </span>= null;</div><div class="line">    </div><div class="line">    //获取实例</div><div class="line">   <span class="keyword"> public</span><span class="keyword"> static</span> Singleton getInstance()&#123;</div><div class="line">        if(instance == null)&#123;</div><div class="line">            synchronized(instance)&#123;</div><div class="line">                if(instance == null)&#123;</div><div class="line">                   <span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;什么是设计模式&quot;&gt;&lt;a href=&quot;#什么是设计模式&quot; class=&quot;headerlink&quot; title=&quot;什么是设计模式&quot;&gt;&lt;/a&gt;什么是设计模式&lt;/h1&gt;&lt;p&gt;设计模式是一套被反复使用、多数人知晓的、代码设计经验的总结。&lt;br&gt;目的：为了可重用代码、让代码更容易被他人理解、保证代码的可靠性。  &lt;/p&gt;
+&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;p&gt;保证整个应用中某个实例有且只有一个。  &lt;/p&gt;
+&lt;h2 id=&quot;应用场合&quot;&gt;&lt;a href=&quot;#应用场合&quot; class=&quot;headerlink&quot; title=&quot;应用场合&quot;&gt;&lt;/a&gt;应用场合&lt;/h2&gt;&lt;p&gt;有些对象我们只需要一个，比如&lt;strong&gt;配置文件、工具类、线程池、缓存、日志对象&lt;/strong&gt;等。如果创造出多个实例，就会导致许多问题，比如占用过多资源，不一致的结果等。&lt;br&gt;
     
     </summary>
     
@@ -717,40 +780,6 @@ stop=true;
   </entry>
   
   <entry>
-    <title>linux的五种I/O模型</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2018-04-09T01:06:17.618Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
-    
-    </summary>
-    
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>IO多路复用select、poll、epoll的区别与使用</title>
     <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
@@ -775,6 +804,40 @@ stop=true;
     <summary type="html">
     
       &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2018-04-09T01:06:17.618Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
     
     </summary>
     
@@ -945,32 +1008,6 @@ stop=true;
     
       &lt;p&gt;数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。  &lt;/p&gt;
 &lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一
-    
-    </summary>
-    
-      <category term="剑指offer" scheme="http://yoursite.com/categories/%E5%89%91%E6%8C%87offer/"/>
-    
-    
-      <category term="算法，剑指offer" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95%EF%BC%8C%E5%89%91%E6%8C%87offer/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>30、最小的k个数</title>
-    <link href="http://yoursite.com/2017/10/13/30%E3%80%81%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0/"/>
-    <id>http://yoursite.com/2017/10/13/30、最小的k个数/</id>
-    <published>2017-10-13T12:08:00.000Z</published>
-    <updated>2018-04-09T01:06:17.614Z</updated>
-    
-    <content type="html"><![CDATA[<p>输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>创建一个大小为k的最大堆，先依次放入k个数，找出k个数中的最大值，然后每次拿待插入的数和最大值比较。如果待插入的数比当前已知的最大值小，就用这个数替换最大值；若比最大值大，就抛弃该数。<br>堆满之后，要做三件事：一是找出最大数；二是可能需要删除最大数；三是可能要插入新数字，我们可以在O(logk)时间内完成这三步操作。对N个数字而言，总时间复杂度为O(nlogk)。  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.PriorityQueue;</div><div class="line"><span class="keyword">import</span> java.util.Comparator;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="keyword">public</span> ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(<span class="keyword">int</span> [] input, <span class="keyword">int</span> k) &#123;</div><div class="line">        ArrayList&lt;Integer&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">        <span class="keyword">int</span> length=input.length;</div><div class="line">        <span class="keyword">if</span>(k&gt;length || k&lt;=<span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">        </div><div class="line">        PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(k , <span class="keyword">new</span> Comparator&lt;Integer&gt;()&#123;<span class="comment">//PriorityQueue是基于最小堆的</span></div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(Integer o1,Integer o2)&#123;</div><div class="line">                <span class="keyword">return</span> o2.compareTo(o1);<span class="comment">//变为按逆序排的最大堆，原为按自然顺序的最小堆</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(maxHeap.size() != k)&#123;<span class="comment">//先填满大小为k的最大堆</span></div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(maxHeap.peek() &gt; input[i])&#123;<span class="comment">//如果比最大堆中最大的数小，则替换之。</span></div><div class="line">                maxHeap.poll();</div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(Integer integer : maxHeap)&#123;</div><div class="line">            <span class="built_in">list</span>.add(integer);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  &lt;/p&gt;
-&lt;h2 id=&quot;一、思路&quot;&gt;&lt;a href=&quot;#一、思路&quot; class=&quot;headerlink&quot; title=&quot;一、思路&quot;&gt;&lt;/a&gt;一、思路
     
     </summary>
     

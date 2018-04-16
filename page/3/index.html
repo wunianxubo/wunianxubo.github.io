@@ -244,6 +244,72 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-30、最小的k个数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/30、最小的k个数/" class="article-date">
+      <time datetime="2017-10-13T12:08:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/30、最小的k个数/">30、最小的k个数</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>创建一个大小为k的最大堆，先依次放入k个数，找出k个数中的最大值，然后每次拿待插入的数和最大值比较。如果待插入的数比当前已知的最大值小，就用这个数替换最大值；若比最大值大，就抛弃该数。<br>堆满之后，要做三件事：一是找出最大数；二是可能需要删除最大数；三是可能要插入新数字，我们可以在O(logk)时间内完成这三步操作。对N个数字而言，总时间复杂度为O(nlogk)。  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.PriorityQueue;</div><div class="line"><span class="keyword">import</span> java.util.Comparator;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line">    <span class="keyword">public</span> ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(<span class="keyword">int</span> [] input, <span class="keyword">int</span> k) &#123;</div><div class="line">        ArrayList&lt;Integer&gt; <span class="built_in">list</span> = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">        <span class="keyword">int</span> length=input.length;</div><div class="line">        <span class="keyword">if</span>(k&gt;length || k&lt;=<span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">        </div><div class="line">        PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;Integer&gt;(k , <span class="keyword">new</span> Comparator&lt;Integer&gt;()&#123;<span class="comment">//PriorityQueue是基于最小堆的</span></div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">int</span> compare(Integer o1,Integer o2)&#123;</div><div class="line">                <span class="keyword">return</span> o2.compareTo(o1);<span class="comment">//变为按逆序排的最大堆，原为按自然顺序的最小堆</span></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(maxHeap.size() != k)&#123;<span class="comment">//先填满大小为k的最大堆</span></div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(maxHeap.peek() &gt; input[i])&#123;<span class="comment">//如果比最大堆中最大的数小，则替换之。</span></div><div class="line">                maxHeap.poll();</div><div class="line">                maxHeap.offer(input[i]);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span>(Integer integer : maxHeap)&#123;</div><div class="line">            <span class="built_in">list</span>.add(integer);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">list</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-Java实现二叉排序树的插入、查找和删除" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -869,72 +935,6 @@ String ss2=new String("china");
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-26、复杂链表的复制" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/29/26、复杂链表的复制/" class="article-date">
-      <time datetime="2017-09-29T12:08:00.000Z" itemprop="datePublished">2017-09-29</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/29/26、复杂链表的复制/">26、复杂链表的复制</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>&emsp;输入一个复杂链表（每个节点中有节点值，以及两个指针，一个指向下一个节点，另一个特殊指针指向任意一个节点），返回结果为复制后复杂链表的head  </p>
-<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>1、复制链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192000.jpg" alt="image"><br>2、复制random<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192011.jpg" alt="image"><br>3、拆分链表<br><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170929192006.jpg" alt="image">  </p>
-<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">public class RandomListNode &#123;</div><div class="line">    int label;</div><div class="line">    RandomListNode next = null;</div><div class="line">    RandomListNode random = null;</div><div class="line"></div><div class="line">    RandomListNode(int label) &#123;</div><div class="line">        this.label = label;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> Solution &#123;</div><div class="line">    <span class="keyword">public</span> RandomListNode Clone(RandomListNode pHead)</div><div class="line">    &#123;</div><div class="line">        RandomListNode pCur=pHead;</div><div class="line">        <span class="keyword">if</span>(pHead==<span class="keyword">null</span>)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        <span class="comment">//第一步，复制链表  A-&gt;B-&gt;C变为A-&gt;A'-&gt;B-&gt;B'-&gt;C-&gt;C'</span></div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            RandomListNode node=<span class="keyword">new</span> RandomListNode(pCur.label);</div><div class="line">            node.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>;</div><div class="line">            pCur.<span class="keyword">next</span>=node;</div><div class="line">            pCur=node.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第二步，复制random</span></div><div class="line">        pCur=pHead;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            <span class="keyword">if</span>(pCur.random!=<span class="keyword">null</span>)</div><div class="line">                pCur.<span class="keyword">next</span>.random=pCur.random.<span class="keyword">next</span>;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//第三步，拆分链表</span></div><div class="line">        pCur=pHead;</div><div class="line">        RandomListNode cur=pHead.<span class="keyword">next</span>;</div><div class="line">        RandomListNode pNode=cur;</div><div class="line">        <span class="keyword">while</span>(pCur!=<span class="keyword">null</span>)&#123;</div><div class="line">            pCur.<span class="keyword">next</span>=pCur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            <span class="keyword">if</span>(cur.<span class="keyword">next</span>!=<span class="keyword">null</span>)&#123;</div><div class="line">                cur.<span class="keyword">next</span>=cur.<span class="keyword">next</span>.<span class="keyword">next</span>;</div><div class="line">            &#125;</div><div class="line">            pCur=pCur.<span class="keyword">next</span>;</div><div class="line">            cur=cur.<span class="keyword">next</span>;</div><div class="line">        &#125;</div><div class="line">    	<span class="keyword">return</span> pNode;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
     </div>
 
       
