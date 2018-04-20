@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码解析/">源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -243,6 +243,72 @@
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-29、数组中出现超过一半的数字" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/13/29、数组中出现超过一半的数字/" class="article-date">
+      <time datetime="2017-10-13T13:05:00.000Z" itemprop="datePublished">2017-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/13/29、数组中出现超过一半的数字/">29、数组中出现超过一半的数字</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。  </p>
+<h2 id="一、思路"><a href="#一、思路" class="headerlink" title="一、思路"></a>一、思路</h2><p>在遍历数组时，保存两个值：一个是数组中的一个数字，还有一个是次数。当我们遍历到下一个数字的时候，如果下一个数字和我们之前保存的相同，则次数加一，不同次数就减一。若次数为0，我们需要保存下一个数字，次数记为1。由于我们要找的数字出现次数比其他所有数字出现的次数之和还多，那么要找的数字肯定是最后一次把次数设为1时对应的数字。  </p>
+<h2 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">public class <span class="type">Solution</span> &#123;</div><div class="line">    public <span class="built_in">int</span> <span class="type">MoreThanHalfNum_Solution</span>(<span class="built_in">int</span> [] <span class="built_in">array</span>) &#123;</div><div class="line">        <span class="built_in">int</span> <span class="literal">result</span>=<span class="built_in">array</span>[<span class="number">0</span>];</div><div class="line">        <span class="built_in">int</span> count=<span class="number">1</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">1</span>;i&lt;<span class="built_in">array</span>.length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(count==<span class="number">0</span>)&#123;</div><div class="line">                <span class="literal">result</span>=<span class="built_in">array</span>[i];</div><div class="line">                count=<span class="number">1</span>;</div><div class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)&#123;</div><div class="line">                count++;</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                count--;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(!<span class="type">CheckMoreThanHalf</span>(<span class="built_in">array</span>,<span class="built_in">array</span>.length,<span class="literal">result</span>))</div><div class="line">            <span class="literal">result</span>=<span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">result</span>;</div><div class="line">    &#125;</div><div class="line">    //检验最后一次把次数设为<span class="number">1</span>时对应的数字出现的次数是够满足超过一半的数字。</div><div class="line">    boolean <span class="type">CheckMoreThanHalf</span>(<span class="built_in">int</span>[] <span class="built_in">array</span>,<span class="built_in">int</span> length,<span class="built_in">int</span> <span class="literal">result</span>)&#123;</div><div class="line">        boolean a=<span class="literal">true</span>;</div><div class="line">        <span class="built_in">int</span> times=<span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="built_in">int</span> i=<span class="number">0</span>;i&lt;length;i++)&#123;</div><div class="line">            <span class="keyword">if</span>(<span class="built_in">array</span>[i]==<span class="literal">result</span>)</div><div class="line">                times++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(times*<span class="number">2</span>&lt;=length)</div><div class="line">            a=<span class="literal">false</span>;</div><div class="line">        <span class="keyword">return</span> a;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/剑指offer/">剑指offer</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-30、最小的k个数" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -865,78 +931,6 @@ String ss2=new String("china");
         <p class="article-more-link">
           <a href="/2017/09/30/（转）Java中锁概念总结/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Java多线程之锁优化策略" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/30/Java多线程之锁优化策略/" class="article-date">
-      <time datetime="2017-09-30T02:26:04.000Z" itemprop="datePublished">2017-09-30</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p>
-<h2 id="2、减小锁粒度"><a href="#2、减小锁粒度" class="headerlink" title="2、减小锁粒度"></a>2、减小锁粒度</h2><p>如：jdk1.6中，  ConcurrentHashMap中采取对segement加锁而不是整个map加锁，提高并发性。类似数据库中的行锁对表锁的优势。  </p>
-<h2 id="3、锁分离"><a href="#3、锁分离" class="headerlink" title="3、锁分离"></a>3、锁分离</h2><p>根据同步操作的性质，把锁划分为读锁和写锁，读锁之间不互斥，提高了并发性。  </p>
-<h2 id="4、锁粗化"><a href="#4、锁粗化" class="headerlink" title="4、锁粗化"></a>4、锁粗化</h2><p>在一个间隔性需要执行同步语句的线程中，如果在不连续的同步块间频繁加锁解锁是很耗性能的，因此把加锁范围扩大，把这些不连续的同步语句进行一次性加锁解锁。虽然线程持有锁的时间增加了，但是总体还是优化了的。  </p>
-<h2 id="5、锁消除"><a href="#5、锁消除" class="headerlink" title="5、锁消除"></a>5、锁消除</h2><p>锁消除是编译器做的事：根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸当前线程（即不会影响线程外的数据），那么可以认为这段代码是线程安全的，不需要加锁。  </p>
-<h1 id="二、Java虚拟机中采用的锁优化策略："><a href="#二、Java虚拟机中采用的锁优化策略：" class="headerlink" title="二、Java虚拟机中采用的锁优化策略："></a>二、Java虚拟机中采用的锁优化策略：</h1><p>主要包括偏向锁、轻量级锁和自旋锁。其中，<a href="http://xiaonanbobo.com/2017/08/13/synchronized的实现原理及锁的升级/" target="_blank" rel="external">偏向锁、轻量级锁及重量锁及其膨胀过程在之前博客中有了详细描述，</a>在这篇文章，我主要介绍下自旋锁。  </p>
-<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>如果当线程申请锁时，发现锁被占用，就让当前线程执行忙循环（自旋），观察持有锁的线程是否会很快释放锁。如果自旋后还没获得锁，才进入同步阻塞状态。  </p>
-<h3 id="自适应自旋"><a href="#自适应自旋" class="headerlink" title="自适应自旋"></a>自适应自旋</h3><p>自旋的线程的自旋时间为在同一个锁上，上一次线程自旋并获得锁的耗时。如果对于这个锁，自旋很少成功，就不自旋了，避免浪费CPU资源。 </p>
-<p>&emsp;<strong>为了尽量避免使用重量级锁，JVM首先会尝试轻量级锁，轻量级锁尝试使用CAS操作来获取锁，如果轻量级锁获取失败，说明存在竞争，但是可能很快就能获得锁，就会尝试自旋锁，将线程做几个空循环，每一次循环都不断尝试获得锁。如果自旋锁也失败，那么只能升级为重量级锁。</strong></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>

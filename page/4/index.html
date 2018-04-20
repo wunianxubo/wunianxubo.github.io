@@ -183,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java基础/">java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java并发/">java并发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java虚拟机/">java虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java，java基础/">java，java基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式系统/">分布式系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/大型网站技术架构/">大型网站技术架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构/">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码解析/">源码解析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法，剑指offer/">算法，剑指offer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
                     </div>
                 </section>
                 
@@ -243,6 +243,78 @@
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Java多线程之锁优化策略" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/30/Java多线程之锁优化策略/" class="article-date">
+      <time datetime="2017-09-30T02:26:04.000Z" itemprop="datePublished">2017-09-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/30/Java多线程之锁优化策略/">Java多线程之锁优化策略</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="一、编码过程中可采取的锁优化的思路："><a href="#一、编码过程中可采取的锁优化的思路：" class="headerlink" title="一、编码过程中可采取的锁优化的思路："></a>一、编码过程中可采取的锁优化的思路：</h1><h2 id="1、减少锁持有时间"><a href="#1、减少锁持有时间" class="headerlink" title="1、减少锁持有时间"></a>1、减少锁持有时间</h2><p>如：对一个方法加锁，不如对方法中需要同步的几行代码加锁。  </p>
+<h2 id="2、减小锁粒度"><a href="#2、减小锁粒度" class="headerlink" title="2、减小锁粒度"></a>2、减小锁粒度</h2><p>如：jdk1.6中，  ConcurrentHashMap中采取对segement加锁而不是整个map加锁，提高并发性。类似数据库中的行锁对表锁的优势。  </p>
+<h2 id="3、锁分离"><a href="#3、锁分离" class="headerlink" title="3、锁分离"></a>3、锁分离</h2><p>根据同步操作的性质，把锁划分为读锁和写锁，读锁之间不互斥，提高了并发性。  </p>
+<h2 id="4、锁粗化"><a href="#4、锁粗化" class="headerlink" title="4、锁粗化"></a>4、锁粗化</h2><p>在一个间隔性需要执行同步语句的线程中，如果在不连续的同步块间频繁加锁解锁是很耗性能的，因此把加锁范围扩大，把这些不连续的同步语句进行一次性加锁解锁。虽然线程持有锁的时间增加了，但是总体还是优化了的。  </p>
+<h2 id="5、锁消除"><a href="#5、锁消除" class="headerlink" title="5、锁消除"></a>5、锁消除</h2><p>锁消除是编译器做的事：根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸当前线程（即不会影响线程外的数据），那么可以认为这段代码是线程安全的，不需要加锁。  </p>
+<h1 id="二、Java虚拟机中采用的锁优化策略："><a href="#二、Java虚拟机中采用的锁优化策略：" class="headerlink" title="二、Java虚拟机中采用的锁优化策略："></a>二、Java虚拟机中采用的锁优化策略：</h1><p>主要包括偏向锁、轻量级锁和自旋锁。其中，<a href="http://xiaonanbobo.com/2017/08/13/synchronized的实现原理及锁的升级/" target="_blank" rel="external">偏向锁、轻量级锁及重量锁及其膨胀过程在之前博客中有了详细描述，</a>在这篇文章，我主要介绍下自旋锁。  </p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>如果当线程申请锁时，发现锁被占用，就让当前线程执行忙循环（自旋），观察持有锁的线程是否会很快释放锁。如果自旋后还没获得锁，才进入同步阻塞状态。  </p>
+<h3 id="自适应自旋"><a href="#自适应自旋" class="headerlink" title="自适应自旋"></a>自适应自旋</h3><p>自旋的线程的自旋时间为在同一个锁上，上一次线程自旋并获得锁的耗时。如果对于这个锁，自旋很少成功，就不自旋了，避免浪费CPU资源。 </p>
+<p>&emsp;<strong>为了尽量避免使用重量级锁，JVM首先会尝试轻量级锁，轻量级锁尝试使用CAS操作来获取锁，如果轻量级锁获取失败，说明存在竞争，但是可能很快就能获得锁，就会尝试自旋锁，将线程做几个空循环，每一次循环都不断尝试获得锁。如果自旋锁也失败，那么只能升级为重量级锁。</strong></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-26、复杂链表的复制" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -874,74 +946,6 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
     </div>
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-深入ReetrantLock" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/08/21/深入ReetrantLock/" class="article-date">
-      <time datetime="2017-08-21T13:18:04.000Z" itemprop="datePublished">2017-08-21</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/21/深入ReetrantLock/">深入ReetrantLock</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="一、Lock接口"><a href="#一、Lock接口" class="headerlink" title="一、Lock接口"></a>一、Lock接口</h1><p>在Lock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，在java5之后，并发包中增加了Lock接口（以及相关实现类）用来实现锁功能，它提供了与synchronized类似的功能，但是在使用时需要显式地获取和释放锁。虽然缺少了synchronized隐式获取释放锁的便捷性，但是却拥有锁获取和释放的可操作性、可中断的获取锁、超时获取锁等多种synchronized不具备的同步特性。<br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/java/">java</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java并发/">java并发</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/08/21/深入ReetrantLock/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
