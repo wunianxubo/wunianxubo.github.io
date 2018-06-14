@@ -852,36 +852,6 @@ stop=true;
   </entry>
   
   <entry>
-    <title>抽象工厂模式</title>
-    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
-    <published>2017-12-01T12:40:00.000Z</published>
-    <updated>2018-04-11T09:20:41.700Z</updated>
-    
-    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br><a id="more"></a><br>Sender接口：</p>
-<p><pre><br>public interface Sender{<br>    public void Send();<br>}<br></pre><br>两个实现类：  </p>
-<p><pre><br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</pre></p>
-<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}<br><br>两个工厂类：  </p>
-<p><pre><br>public class SendMailFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new MailSender();<br>    }<br>}</pre></p>
-<p>public class SendSmsFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new SmsSender();<br>    }<br>}<br><br>提供一个接口：  </p>
-<p><pre><br>public interface Provider{<br>    public Sender produce();<br>}<br></pre><br>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory3.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>单例模式</title>
     <link href="http://yoursite.com/2017/12/01/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
     <id>http://yoursite.com/2017/12/01/单例模式/</id>
@@ -952,6 +922,36 @@ stop=true;
   </entry>
   
   <entry>
+    <title>抽象工厂模式</title>
+    <link href="http://yoursite.com/2017/12/01/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://yoursite.com/2017/12/01/抽象工厂模式/</id>
+    <published>2017-12-01T12:40:00.000Z</published>
+    <updated>2018-04-11T09:20:41.700Z</updated>
+    
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。<br><img src="http://osrmzp0jr.bkt.clouddn.com/factory3.png" alt="image"><br><a id="more"></a><br>Sender接口：</p>
+<p><pre><br>public interface Sender{<br>    public void Send();<br>}<br></pre><br>两个实现类：  </p>
+<p><pre><br>public class MailSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is mailSender!”);<br>    }<br>}</pre></p>
+<p>public class SmsSender implements Sender{<br>    @Override<br>    public void Send(){<br>        System.out.println(“this is smsSender!”);<br>    }<br>}<br><br>两个工厂类：  </p>
+<p><pre><br>public class SendMailFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new MailSender();<br>    }<br>}</pre></p>
+<p>public class SendSmsFactory implements Provider{<br>    @Override<br>    public Sender produce(){<br>        return new SmsSender();<br>    }<br>}<br><br>提供一个接口：  </p>
+<p><pre><br>public interface Provider{<br>    public Sender produce();<br>}<br></pre><br>测试类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span>&#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">        Provider provider = <span class="keyword">new</span> SendMailFactory();</div><div class="line">        MailSender mailSender = provider.produce();</div><div class="line">        mailSender.Send();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&nbsp;&nbsp;这时如果想要增加一个功能：发及时信息，那么只需要做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就不用过去改动现有的代码。这么做的话，扩展性会更好！  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&amp;nbsp;&amp;nbsp;前面讲的工厂方法模式，存在一个问题：类的创建依赖于工厂类，也就是说，如果需要扩展程序，必须对工厂类进行修改。这时候我们使用抽象工厂类，就可以解决这个问题。创建多个工厂类，这样一旦需要增加新的功能，直接增加新的工厂类就可以了。&lt;br&gt;&lt;img src=&quot;http://osrmzp0jr.bkt.clouddn.com/factory3.png&quot; alt=&quot;image&quot;&gt;&lt;br&gt;
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://yoursite.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="http://yoursite.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>HashMap的四种遍历方式</title>
     <link href="http://yoursite.com/2017/12/01/HashMap%E7%9A%84%E5%9B%9B%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F/"/>
     <id>http://yoursite.com/2017/12/01/HashMap的四种遍历方式/</id>
@@ -1010,6 +1010,40 @@ stop=true;
   </entry>
   
   <entry>
+    <title>linux的五种I/O模型</title>
+    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
+    <published>2017-10-27T12:36:00.000Z</published>
+    <updated>2018-04-09T01:06:17.618Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
+<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
+<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
+<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
+<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
+<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
+<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
+<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
+    
+    </summary>
+    
+      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>IO多路复用select、poll、epoll的区别与使用</title>
     <link href="http://yoursite.com/2017/10/27/Linux%E7%B3%BB%E7%BB%9F%E2%80%94%E2%80%94IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8select%E3%80%81poll%E3%80%81epoll%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
     <id>http://yoursite.com/2017/10/27/Linux系统——IO多路复用select、poll、epoll的区别与使用/</id>
@@ -1034,40 +1068,6 @@ stop=true;
     <summary type="html">
     
       &lt;h2 id=&quot;I-O复用简述&quot;&gt;&lt;a href=&quot;#I-O复用简述&quot; class=&quot;headerlink&quot; title=&quot;I/O复用简述&quot;&gt;&lt;/a&gt;I/O复用简述&lt;/h2&gt;&lt;p&gt;&amp;emsp;I/O多路复用技术是为了解决进程或线程阻塞到某个I/O系统调用而出现的技术，使进程不阻塞
-    
-    </summary>
-    
-      <category term="操作系统" scheme="http://yoursite.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-      <category term="操作系统" scheme="http://yoursite.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux的五种I/O模型</title>
-    <link href="http://yoursite.com/2017/10/27/Linux%E7%9A%84%E4%BA%94%E7%A7%8DIO%E6%A8%A1%E5%9E%8B/"/>
-    <id>http://yoursite.com/2017/10/27/Linux的五种IO模型/</id>
-    <published>2017-10-27T12:36:00.000Z</published>
-    <updated>2018-04-09T01:06:17.618Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="linux的五种I-O模型："><a href="#linux的五种I-O模型：" class="headerlink" title="linux的五种I/O模型："></a>linux的五种I/O模型：</h2><p>1、阻塞I/O<br>2、非阻塞I/O<br>3、I/O复用<br>4、信号驱动I/O<br>5、异步I/O<br>前面四种都是同步I/O，只有最后一种是异步I/O。  </p>
-<h3 id="阻塞I-O模型"><a href="#阻塞I-O模型" class="headerlink" title="阻塞I/O模型"></a>阻塞I/O模型</h3><p><strong>进程会一直阻塞，直到数据拷贝完成。</strong> 应用程序调用一个IO函数，导致应用程序阻塞，等待数据准备好，一直等待… 数据准备好了，从内核空间拷贝到用户空间，IO函数返回成功提示。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%98%BB%E5%A1%9EIO.png" alt="image">  </p>
-<h3 id="非阻塞I-O模型"><a href="#非阻塞I-O模型" class="headerlink" title="非阻塞I/O模型"></a>非阻塞I/O模型</h3><p>通过进程反复调用IO函数（多次系统调用，并马上返回），在数据拷贝的过程中，进程是阻塞的。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E9%9D%9E%E9%98%BB%E5%A1%9Eio.jpg" alt="image">  </p>
-<h3 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h3><p>主要是select和epoll，对一个IO端口，两次调用，两次返回。能实现同时对多个IO端口进行监听。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E5%A4%8D%E7%94%A8.jpg" alt="image">  </p>
-<h3 id="信号驱动I-O模型"><a href="#信号驱动I-O模型" class="headerlink" title="信号驱动I/O模型"></a>信号驱动I/O模型</h3><p>也是两次调用，两次返回。首先允许套接口进行信号驱动IO，并安装一个信号处理函数，进程继续运行并不阻塞。当数据准备好时，进程会收到一个SIGIO信号，可以在信号处理函数中调用I/O操作函数处理数据。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E4%BF%A1%E5%8F%B7%E9%A9%B1%E5%8A%A8io.jpg" alt="image">  </p>
-<h3 id="异步I-O模型"><a href="#异步I-O模型" class="headerlink" title="异步I/O模型"></a>异步I/O模型</h3><p><strong>数据拷贝的时候进程无需阻塞</strong>。当一个异步过程调用发出后，调用者不能立刻得到结果。实际处理这个调用的部件在完成后，通过状态、通知和回调来通知调用者的输入输出操作。  </p>
-<p><img src="http://osrmzp0jr.bkt.clouddn.com/%E5%BC%82%E6%AD%A5io.jpg" alt="image">  </p>
-<h2 id="五种I-O模型的比较"><a href="#五种I-O模型的比较" class="headerlink" title="五种I/O模型的比较"></a>五种I/O模型的比较</h2><p><img src="http://osrmzp0jr.bkt.clouddn.com/io%E6%A8%A1%E5%9E%8B%E6%AF%94%E8%BE%83.jpg" alt="image">  </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;linux的五种I-O模型：&quot;&gt;&lt;a href=&quot;#linux的五种I-O模型：&quot; class=&quot;headerlink&quot; title=&quot;linux的五种I/O模型：&quot;&gt;&lt;/a&gt;linux的五种I/O模型：&lt;/h2&gt;&lt;p&gt;1、阻塞I/O&lt;br&gt;2、非阻塞I/O&lt;br
     
     </summary>
     
