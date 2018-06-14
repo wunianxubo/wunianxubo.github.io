@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-06-14T06:14:09.415Z</updated>
+  <updated>2018-06-14T09:18:37.352Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2018/06/13/Netty%E5%89%96%E6%9E%90%E4%B9%8B%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6/"/>
     <id>http://yoursite.com/2018/06/13/Netty剖析之核心组件/</id>
     <published>2018-06-13T13:53:00.000Z</published>
-    <updated>2018-06-14T06:14:09.415Z</updated>
+    <updated>2018-06-14T09:18:37.352Z</updated>
     
     <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在之前的博文《Java NIO原理解析》里面，主要讲了NIO的一些原理，几种IO模型的对比，NIO中三个重要的组件Channel，Selector以及Buffer，通过Selector单线程轮询状态实现了IO复用机制，这些在这就不重新讨论了。  </p>
 <p>然而，原生的NIO方法比较复杂，Netty进行了很好的封装，提供更易于使用的API，性能更好，健壮性、安全性也很好，在很多地方都能见到Netty的身影，比如阿里的Dubbo分布式框架，底层就使用Netty作为网络通信框架，接下来会用几篇博文来详细讲下Netty这个高性能的网络框架。<br><a id="more"></a></p>
